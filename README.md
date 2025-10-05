@@ -1,10 +1,10 @@
 # Dividend Portfolio Command Center
 
 [![CI](https://github.com/vadim-snitkovsky/portfolio-tracker/workflows/CI/badge.svg)](https://github.com/vadim-snitkovsky/portfolio-tracker/actions)
+[![codecov](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker/branch/main/graph/badge.svg?token=0daabe2c-a1a4-46fd-abf6-bd317bf499af)](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.1-61dafb.svg)](https://reactjs.org/)
-[![Test Coverage](https://img.shields.io/badge/coverage-93%25-brightgreen.svg)](https://github.com/vadim-snitkovsky/portfolio-tracker)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 A modern React 18 + TypeScript web app for monitoring income-oriented equity portfolios. Track performance, dividend cash flow, NAV erosion, and manage multiple portfolios with ease.

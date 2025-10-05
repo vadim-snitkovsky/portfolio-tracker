@@ -125,36 +125,30 @@ After running `npm run storybook`, open http://localhost:6006
 
 ### Configuration Files Created:
 - `codecov.yml` - Codecov configuration
-- `.github/workflows/ci.yml` - Updated with Codecov upload
+- `.github/workflows/ci.yml` - Updated with Codecov upload (v5)
 
-### Setup Steps:
+### ✅ Already Configured!
 
-1. **Sign up for Codecov**:
-   - Go to https://codecov.io/
-   - Sign in with your GitHub account
-   - Add your repository
+The following has been **automatically set up** for you:
 
-2. **Get Codecov Token**:
-   - Go to your repository settings on Codecov
-   - Copy the upload token
-
-3. **Add Token to GitHub Secrets**:
-   - Go to your GitHub repository
-   - Settings → Secrets and variables → Actions
-   - Click "New repository secret"
-   - Name: `CODECOV_TOKEN`
-   - Value: Paste your Codecov token
-
-4. **Add Badge to README**:
-   ```markdown
-   [![codecov](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker/branch/main/graph/badge.svg)](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker)
-   ```
+1. ✅ **Codecov Token**: Already added to GitHub repository secrets
+2. ✅ **GitHub Actions**: Updated to use `codecov/codecov-action@v5`
+3. ✅ **Coverage Badge**: Added to README.md
+4. ✅ **Codecov Config**: `codecov.yml` with 85% thresholds
 
 ### How It Works:
 - Every push/PR triggers the CI workflow
-- Tests run with coverage
-- Coverage report uploads to Codecov
+- Tests run with coverage using Vitest
+- Coverage report automatically uploads to Codecov
 - Codecov comments on PRs with coverage changes
+- Coverage badge in README updates automatically
+
+### View Your Coverage:
+Once you push to GitHub, visit:
+https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker
+
+### No Additional Setup Required!
+Everything is ready to go. Just push your code and Codecov will start tracking coverage automatically.
 
 ## 🚀 5. Vercel Deployment
 
