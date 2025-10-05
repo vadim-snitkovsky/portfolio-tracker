@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clear Portfolio Storage</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f8fafc;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      padding: 30px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h1 {
+      margin: 0 0 10px 0;
+      color: #0f172a;
+    }
+    p {
+      color: #64748b;
+      line-height: 1.6;
+    }
+    button {
+      background: #dc2626;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    button:hover {
+      background: #b91c1c;
+    }
+    .success {
+      background: #059669;
+      color: white;
+      padding: 12px;
+      border-radius: 8px;
+      margin-top: 20px;
+      display: none;
+    }
+    .info {
+      background: #f1f5f9;
+      padding: 15px;
+      border-radius: 8px;
+      margin-top: 20px;
+      border-left: 4px solid #3b82f6;
+    }
+    .info strong {
+      color: #0f172a;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>🔄 Reset Portfolio Data</h1>
+    <p>
+      This will clear your portfolio's localStorage and reset it to the new sample data with 
+      realistic acquisition dates and dividend filtering.
+    </p>
+    
+    <div class="info">
+      <strong>What will be reset:</strong>
+      <ul>
+        <li>Custom purchase lots</li>
+        <li>Portfolio snapshot data</li>
+      </ul>
+      <strong>New sample data includes:</strong>
+      <ul>
+        <li>AAPL: Acquired Jan 15, 2024 (all 4 dividends included)</li>
+        <li>MSFT: Acquired May 20, 2024 (only Q2-Q4 dividends included)</li>
+        <li>JEPI: Acquired Mar 10, 2024 (only Apr-Dec dividends included)</li>
+      </ul>
+    </div>
+
+    <button onclick="clearStorage()">Clear Storage & Reset</button>
+    <div class="success" id="success">
+      ✅ Storage cleared! Please refresh the portfolio tracker page.
+    </div>
+  </div>
+
+  <script>
+    function clearStorage() {
+      // Clear portfolio-related localStorage items
+      localStorage.removeItem('portfolio-custom-lots');
+      localStorage.removeItem('portfolio-snapshot');
+
+      // Show success message
+      document.getElementById('success').style.display = 'block';
+
+      // Log for confirmation
+      console.log('Portfolio storage cleared!');
+      console.log('Cleared items: portfolio-custom-lots, portfolio-snapshot');
+      console.log('Remaining localStorage items:', Object.keys(localStorage));
+    }
+  </script>
+</body>
+</html>
+
