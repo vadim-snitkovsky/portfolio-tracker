@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { deriveEquityViews, usePortfolioStore } from '../../store/portfolioStore';
 import { formatCurrency, formatDate } from '../../utils/formatters';
-import type { DividendPayment } from '../../types/portfolio';
 
 interface DividendTransaction {
   id: string;
@@ -55,7 +54,7 @@ export const CashFlowReport: React.FC = () => {
       const date = new Date(lot.tradeDate + 'T00:00:00');
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       const monthLabel = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-      
+
       if (!monthMap.has(monthKey)) {
         monthMap.set(monthKey, {
           month: monthKey,
@@ -136,7 +135,7 @@ export const CashFlowReport: React.FC = () => {
 
     // Sort by month and calculate cumulative values
     const sortedMonths = Array.from(monthMap.values()).sort((a, b) => a.month.localeCompare(b.month));
-    
+
     let cumulativeCash = 0;
     let cumulativeDivs = 0;
 
@@ -180,7 +179,7 @@ export const CashFlowReport: React.FC = () => {
             <span className="metric-tile__trend-label">{formatDate(seedDate)}</span>
           </div>
         </div>
-        
+
         <div className="metric-tile">
           <div className="metric-tile__label">Total Cash Invested</div>
           <div className="metric-tile__value">{formatCurrency(totals.totalCashInvested)}</div>

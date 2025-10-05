@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { usePortfolioStore } from './portfolioStore';
@@ -39,7 +40,7 @@ describe('portfolioStore', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
-    
+
     // Reset the store to initial state
     const { result } = renderHook(() => usePortfolioStore());
     act(() => {
@@ -555,7 +556,7 @@ describe('portfolioStore', () => {
       await act(async () => {
         try {
           await result.current.refreshQuotes();
-        } catch (e) {
+        } catch {
           // Expected to throw
         }
       });

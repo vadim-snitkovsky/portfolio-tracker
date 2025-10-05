@@ -1,6 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { describe, it, expect } from 'vitest';
 import { selectEquityViews, selectMergedEquities } from './portfolioStore';
-import type { PortfolioSnapshot, PurchaseLot } from '../types/portfolio';
 
 describe('portfolioStore selectors', () => {
   describe('selectEquityViews', () => {
@@ -34,7 +34,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const views = selectEquityViews(state);
-      
+
       expect(views).toHaveLength(1);
       expect(views[0].position.symbol).toBe('AAPL');
       expect(views[0].manualLots).toHaveLength(1);
@@ -51,7 +51,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const views = selectEquityViews(state);
-      
+
       expect(views).toHaveLength(0);
     });
 
@@ -95,7 +95,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const views = selectEquityViews(state);
-      
+
       expect(views[0].dividendsWithShares).toHaveLength(2);
       expect(views[0].dividendsWithShares[0].sharesOwned).toBe(50); // Only lot-1 owned at div-1 date
       expect(views[0].dividendsWithShares[1].sharesOwned).toBe(100); // Both lots owned at div-2 date
@@ -134,7 +134,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const views = selectEquityViews(state);
-      
+
       expect(views[0].dividendsWithShares).toHaveLength(1);
       expect(views[0].dividendsWithShares[0].id).toBe('div-2');
     });
@@ -158,7 +158,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const views = selectEquityViews(state);
-      
+
       expect(views).toHaveLength(1);
       expect(views[0].position.symbol).toBe('TSLA');
       expect(views[0].position.sector).toBe('Manual Entry');
@@ -191,7 +191,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const views = selectEquityViews(state);
-      
+
       expect(views).toHaveLength(2);
       expect(views[0].position.symbol).toBe('AAPL');
       expect(views[1].position.symbol).toBe('MSFT');
@@ -229,7 +229,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const equities = selectMergedEquities(state);
-      
+
       expect(equities).toHaveLength(1);
       expect(equities[0].symbol).toBe('AAPL');
       expect(equities[0].shares).toBe(100);
@@ -246,7 +246,7 @@ describe('portfolioStore selectors', () => {
       } as any;
 
       const equities = selectMergedEquities(state);
-      
+
       expect(equities).toHaveLength(0);
     });
   });

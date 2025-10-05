@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { parsePortfolioSnapshot, readSnapshotFile } from './portfolioImport';
-import type { PortfolioSnapshot, PurchaseLot } from '../types/portfolio';
+import type { PortfolioSnapshot } from '../types/portfolio';
 
 describe('portfolioImport', () => {
   describe('parsePortfolioSnapshot', () => {

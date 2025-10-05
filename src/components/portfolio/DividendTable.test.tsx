@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { render } from '@testing-library/react';
 import { DividendTable } from './DividendTable';
 import type { EquityView } from '../../types/portfolio';

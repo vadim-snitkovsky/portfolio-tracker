@@ -13,6 +13,7 @@ vi.mock('../../store/portfolioStore', async () => {
 
 describe('OverviewMetrics', () => {
   beforeEach(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockSelector = (selector: any) => {
       const state = {
         snapshot: {
@@ -44,6 +45,7 @@ describe('OverviewMetrics', () => {
       return selector(state);
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(portfolioStore.usePortfolioStore).mockImplementation(mockSelector as any);
   });
 
@@ -53,6 +55,7 @@ describe('OverviewMetrics', () => {
   });
 
   it('should render with empty portfolio', () => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const mockSelector = (selector: any) => {
       const state = {
         snapshot: {
@@ -65,6 +68,7 @@ describe('OverviewMetrics', () => {
       return selector(state);
     };
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     vi.mocked(portfolioStore.usePortfolioStore).mockImplementation(mockSelector as any);
 
     const { container } = render(<OverviewMetrics />);

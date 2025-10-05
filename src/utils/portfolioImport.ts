@@ -174,7 +174,7 @@ export const readSnapshotFile = async (file: File): Promise<PortfolioImportResul
 
   try {
     data = JSON.parse(contents);
-  } catch (error) {
+  } catch {
     throw new Error('File is not valid JSON');
   }
 
