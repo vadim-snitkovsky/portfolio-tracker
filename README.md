@@ -395,14 +395,6 @@ npm run lint:fix        # Fix linting issues
 npm run type-check      # TypeScript type checking
 ```
 
-### Component Documentation
-- **Storybook** - Interactive component explorer and documentation
-
-```bash
-npm run storybook       # Start Storybook dev server (http://localhost:6006)
-npm run build-storybook # Build static Storybook
-```
-
 ### Deployment Ready
 - **Vercel** configuration (`vercel.json`)
 - **Netlify** configuration (`netlify.toml`)
