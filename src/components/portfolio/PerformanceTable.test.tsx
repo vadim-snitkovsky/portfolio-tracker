@@ -14,10 +14,10 @@ describe('EquityPerformanceTable', () => {
         averageCost: 150,
         currentPrice: 180,
         dividends: [],
-        navHistory: []
+        navHistory: [],
       },
       manualLots: [],
-      dividendsWithShares: []
+      dividendsWithShares: [],
     },
     {
       position: {
@@ -28,11 +28,11 @@ describe('EquityPerformanceTable', () => {
         averageCost: 300,
         currentPrice: 380,
         dividends: [],
-        navHistory: []
+        navHistory: [],
       },
       manualLots: [],
-      dividendsWithShares: []
-    }
+      dividendsWithShares: [],
+    },
   ];
 
   it('should render without crashing', () => {
@@ -57,4 +57,3 @@ describe('EquityPerformanceTable', () => {
     expect(rows.length).toBeGreaterThan(0);
   });
 });
-

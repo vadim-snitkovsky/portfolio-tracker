@@ -18,16 +18,16 @@ export const DataMenu: React.FC = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
-  const activePortfolioName = usePortfolioStore((state) => state.activePortfolioName);
-  const loadPortfolio = usePortfolioStore((state) => state.loadPortfolio);
-  const refreshQuotes = usePortfolioStore((state) => state.refreshQuotes);
-  const quoteStatus = usePortfolioStore((state) => state.quoteStatus);
-  const refreshDividends = usePortfolioStore((state) => state.refreshDividends);
-  const dividendStatus = usePortfolioStore((state) => state.dividendStatus);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
+  const activePortfolioName = usePortfolioStore(state => state.activePortfolioName);
+  const loadPortfolio = usePortfolioStore(state => state.loadPortfolio);
+  const refreshQuotes = usePortfolioStore(state => state.refreshQuotes);
+  const quoteStatus = usePortfolioStore(state => state.quoteStatus);
+  const refreshDividends = usePortfolioStore(state => state.refreshDividends);
+  const dividendStatus = usePortfolioStore(state => state.dividendStatus);
 
-  const toggleMenu = () => setOpen((prev) => !prev);
+  const toggleMenu = () => setOpen(prev => !prev);
 
   const closeMenu = () => setOpen(false);
 
@@ -67,12 +67,12 @@ export const DataMenu: React.FC = () => {
         type: 'success',
         message: `Imported snapshot as of ${formatDate(result.snapshot.asOf)} with ${result.customLots.length} custom lot${
           result.customLots.length === 1 ? '' : 's'
-        }.`
+        }.`,
       });
     } catch (error) {
       setStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Failed to import portfolio file.'
+        message: error instanceof Error ? error.message : 'Failed to import portfolio file.',
       });
     } finally {
       event.target.value = '';
@@ -83,24 +83,24 @@ export const DataMenu: React.FC = () => {
     closeMenu();
     try {
       const quotes = await refreshQuotes();
-      const errors = quotes.filter((quote) => quote.error);
+      const errors = quotes.filter(quote => quote.error);
       const timestamp = new Intl.DateTimeFormat('en-US', {
         hour: 'numeric',
-        minute: 'numeric'
+        minute: 'numeric',
       }).format(new Date());
       setStatus({
         type: errors.length > 0 ? 'error' : 'success',
         message:
           errors.length > 0
             ? `Market prices refreshed with issues: ${errors
-                .map((quote) => `${quote.symbol}${quote.error ? ` (${quote.error})` : ''}`)
+                .map(quote => `${quote.symbol}${quote.error ? ` (${quote.error})` : ''}`)
                 .join(', ')}`
-            : `Market prices updated (${timestamp}).`
+            : `Market prices updated (${timestamp}).`,
       });
     } catch (error) {
       setStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Failed to refresh market prices.'
+        message: error instanceof Error ? error.message : 'Failed to refresh market prices.',
       });
     }
   };
@@ -109,25 +109,25 @@ export const DataMenu: React.FC = () => {
     closeMenu();
     try {
       const results = await refreshDividends(12); // Fetch last 12 months of dividends
-      const errors = results.filter((result) => result.error);
-      const successCount = results.filter((result) => result.dividends.length > 0).length;
+      const errors = results.filter(result => result.error);
+      const successCount = results.filter(result => result.dividends.length > 0).length;
       const timestamp = new Intl.DateTimeFormat('en-US', {
         hour: 'numeric',
-        minute: 'numeric'
+        minute: 'numeric',
       }).format(new Date());
       setStatus({
         type: errors.length > 0 ? 'error' : 'success',
         message:
           errors.length > 0
             ? `Dividends refreshed with issues: ${errors
-                .map((result) => `${result.symbol}${result.error ? ` (${result.error})` : ''}`)
+                .map(result => `${result.symbol}${result.error ? ` (${result.error})` : ''}`)
                 .join(', ')}`
-            : `Dividends updated for ${successCount} holding${successCount === 1 ? '' : 's'} (${timestamp}).`
+            : `Dividends updated for ${successCount} holding${successCount === 1 ? '' : 's'} (${timestamp}).`,
       });
     } catch (error) {
       setStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Failed to refresh dividends.'
+        message: error instanceof Error ? error.message : 'Failed to refresh dividends.',
       });
     }
   };
@@ -137,10 +137,10 @@ export const DataMenu: React.FC = () => {
       const payload = {
         exportedAt: new Date().toISOString(),
         snapshot,
-        customLots
+        customLots,
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], {
-        type: 'application/json'
+        type: 'application/json',
       });
       const url = URL.createObjectURL(blob);
       const anchor = document.createElement('a');
@@ -158,12 +158,12 @@ export const DataMenu: React.FC = () => {
       URL.revokeObjectURL(url);
       setStatus({
         type: 'success',
-        message: 'Portfolio exported.'
+        message: 'Portfolio exported.',
       });
     } catch (error) {
       setStatus({
         type: 'error',
-        message: error instanceof Error ? error.message : 'Could not create export file.'
+        message: error instanceof Error ? error.message : 'Could not create export file.',
       });
     } finally {
       closeMenu();
@@ -181,7 +181,7 @@ export const DataMenu: React.FC = () => {
         localStorage.removeItem('portfolio-custom-lots');
         setStatus({
           type: 'success',
-          message: 'Storage cleared. Reloading page...'
+          message: 'Storage cleared. Reloading page...',
         });
         setTimeout(() => {
           window.location.reload();
@@ -189,7 +189,7 @@ export const DataMenu: React.FC = () => {
       } catch (error) {
         setStatus({
           type: 'error',
-          message: error instanceof Error ? error.message : 'Failed to clear storage.'
+          message: error instanceof Error ? error.message : 'Failed to clear storage.',
         });
       } finally {
         closeMenu();
@@ -236,7 +236,11 @@ export const DataMenu: React.FC = () => {
           <button type="button" onClick={handleRefreshPrices} disabled={quoteStatus.isLoading}>
             {quoteStatus.isLoading ? 'Refreshing prices…' : 'Refresh market prices'}
           </button>
-          <button type="button" onClick={handleRefreshDividends} disabled={dividendStatus.isLoading}>
+          <button
+            type="button"
+            onClick={handleRefreshDividends}
+            disabled={dividendStatus.isLoading}
+          >
             {dividendStatus.isLoading ? 'Refreshing dividends…' : 'Refresh dividends (12mo)'}
           </button>
           <button type="button" onClick={handleClearStorage} className="button-ghost--danger">

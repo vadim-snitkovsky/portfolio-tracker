@@ -397,12 +397,9 @@ npm run type-check      # TypeScript type checking
 
 ### Deployment Ready
 - **Vercel** configuration (`vercel.json`)
-- **Netlify** configuration (`netlify.toml`)
 - **Docker** support (Dockerfile, docker-compose.yml)
 - **GitHub Actions** CI/CD pipeline
 - **Codecov** integration for coverage tracking
-
-See [SETUP_GUIDE.md](SETUP_GUIDE.md) for detailed setup instructions for all optional enhancements.
 
 ## 🔧 Development Notes
 
@@ -449,7 +446,6 @@ Output in `dist/` directory - deploy to any static hosting service.
 
 ### Hosting Options
 - **Vercel**: Zero-config deployment
-- **Netlify**: Drag-and-drop or Git integration
 - **GitHub Pages**: Free static hosting
 - **Docker**: Use included Dockerfile
 

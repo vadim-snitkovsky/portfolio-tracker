@@ -36,10 +36,13 @@ interface MonthlyData {
 }
 
 export const CashFlowReport: React.FC = () => {
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
-  const equityViews = useMemo(() => deriveEquityViews(snapshot, customLots), [snapshot, customLots]);
-  const removeDividend = usePortfolioStore((state) => state.removeDividend);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
+  const equityViews = useMemo(
+    () => deriveEquityViews(snapshot, customLots),
+    [snapshot, customLots]
+  );
+  const removeDividend = usePortfolioStore(state => state.removeDividend);
   const [expandedMonth, setExpandedMonth] = useState<string | null>(null);
 
   const seedAmount = snapshot.seedAmount ?? 0;
@@ -50,7 +53,7 @@ export const CashFlowReport: React.FC = () => {
     const monthMap = new Map<string, MonthlyData>();
 
     // Process all purchase lots
-    customLots.forEach((lot) => {
+    customLots.forEach(lot => {
       const date = new Date(lot.tradeDate + 'T00:00:00');
       const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
       const monthLabel = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
@@ -67,7 +70,7 @@ export const CashFlowReport: React.FC = () => {
           purchaseCount: 0,
           dividendCount: 0,
           dividendTransactions: [],
-          purchaseTransactions: []
+          purchaseTransactions: [],
         });
       }
 
@@ -83,15 +86,15 @@ export const CashFlowReport: React.FC = () => {
         date: lot.tradeDate,
         shares: lot.shares,
         pricePerShare: lot.pricePerShare,
-        totalCost
+        totalCost,
       });
     });
 
     // Process all dividends
-    equityViews.forEach((view) => {
+    equityViews.forEach(view => {
       const { position, earliestAcquisitionDate, dividendsWithShares } = view;
 
-      dividendsWithShares.forEach((dividend) => {
+      dividendsWithShares.forEach(dividend => {
         // Only count dividends on or after earliest acquisition date
         if (earliestAcquisitionDate && dividend.date >= earliestAcquisitionDate) {
           const date = new Date(dividend.date + 'T00:00:00');
@@ -110,7 +113,7 @@ export const CashFlowReport: React.FC = () => {
               purchaseCount: 0,
               dividendCount: 0,
               dividendTransactions: [],
-              purchaseTransactions: []
+              purchaseTransactions: [],
             });
           }
 
@@ -127,19 +130,21 @@ export const CashFlowReport: React.FC = () => {
             date: dividend.date,
             shares: dividend.sharesOwned,
             amountPerShare: dividend.amountPerShare,
-            totalAmount
+            totalAmount,
           });
         }
       });
     });
 
     // Sort by month and calculate cumulative values
-    const sortedMonths = Array.from(monthMap.values()).sort((a, b) => a.month.localeCompare(b.month));
+    const sortedMonths = Array.from(monthMap.values()).sort((a, b) =>
+      a.month.localeCompare(b.month)
+    );
 
     let cumulativeCash = 0;
     let cumulativeDivs = 0;
 
-    sortedMonths.forEach((data) => {
+    sortedMonths.forEach(data => {
       cumulativeCash += data.cashInvested;
       cumulativeDivs += data.dividendsReceived;
       data.cumulativeCashInvested = cumulativeCash;
@@ -164,7 +169,7 @@ export const CashFlowReport: React.FC = () => {
       netCashFlow,
       totalPurchases,
       totalDividendPayments,
-      returnOnInvestment: totalCashInvested > 0 ? (totalDividends / totalCashInvested) * 100 : 0
+      returnOnInvestment: totalCashInvested > 0 ? (totalDividends / totalCashInvested) * 100 : 0,
     };
   }, [monthlyData]);
 
@@ -192,17 +197,30 @@ export const CashFlowReport: React.FC = () => {
           <div className="metric-tile__label">Total Dividends Received</div>
           <div className="metric-tile__value">{formatCurrency(totals.totalDividends)}</div>
           <div className="metric-tile__trend">
-            <span className="metric-tile__trend-label">{totals.totalDividendPayments} payments</span>
+            <span className="metric-tile__trend-label">
+              {totals.totalDividendPayments} payments
+            </span>
           </div>
         </div>
 
         <div className="metric-tile">
           <div className="metric-tile__label">Net Cash Flow</div>
-          <div className="metric-tile__value" style={{ color: totals.netCashFlow >= 0 ? 'var(--color-positive)' : 'var(--color-negative)' }}>
+          <div
+            className="metric-tile__value"
+            style={{
+              color: totals.netCashFlow >= 0 ? 'var(--color-positive)' : 'var(--color-negative)',
+            }}
+          >
             {formatCurrency(totals.netCashFlow)}
           </div>
           <div className="metric-tile__trend">
-            <span className={totals.netCashFlow >= 0 ? 'metric-tile__trend-positive' : 'metric-tile__trend-negative'}>
+            <span
+              className={
+                totals.netCashFlow >= 0
+                  ? 'metric-tile__trend-positive'
+                  : 'metric-tile__trend-negative'
+              }
+            >
               {totals.netCashFlow >= 0 ? 'Positive' : 'Negative'} flow
             </span>
           </div>
@@ -210,7 +228,9 @@ export const CashFlowReport: React.FC = () => {
 
         <div className="metric-tile">
           <div className="metric-tile__label">Available Capital</div>
-          <div className="metric-tile__value">{formatCurrency(seedAmount - totals.totalCashInvested + totals.totalDividends)}</div>
+          <div className="metric-tile__value">
+            {formatCurrency(seedAmount - totals.totalCashInvested + totals.totalDividends)}
+          </div>
           <div className="metric-tile__trend">
             <span className="metric-tile__trend-label">Seed + Dividends - Invested</span>
           </div>
@@ -244,38 +264,55 @@ export const CashFlowReport: React.FC = () => {
             </tr>
           </thead>
           <tbody>
-            {monthlyData.map((data) => {
+            {monthlyData.map(data => {
               const isExpanded = expandedMonth === data.month;
-              const hasTransactions = data.dividendTransactions.length > 0 || data.purchaseTransactions.length > 0;
+              const hasTransactions =
+                data.dividendTransactions.length > 0 || data.purchaseTransactions.length > 0;
 
               return (
                 <>
                   <tr
                     key={data.month}
-                    onClick={() => hasTransactions && setExpandedMonth(isExpanded ? null : data.month)}
+                    onClick={() =>
+                      hasTransactions && setExpandedMonth(isExpanded ? null : data.month)
+                    }
                     style={{ cursor: hasTransactions ? 'pointer' : 'default' }}
                     className={isExpanded ? 'expanded-row' : ''}
                   >
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {hasTransactions && <span style={{ fontSize: '0.8rem' }}>{isExpanded ? '▼' : '▶'}</span>}
+                        {hasTransactions && (
+                          <span style={{ fontSize: '0.8rem' }}>{isExpanded ? '▼' : '▶'}</span>
+                        )}
                         {data.monthLabel}
                       </div>
                     </td>
                     <td style={{ textAlign: 'right' }}>{formatCurrency(data.cashInvested)}</td>
                     <td style={{ textAlign: 'right' }}>{formatCurrency(data.dividendsReceived)}</td>
-                    <td style={{ textAlign: 'right', color: data.netCashFlow >= 0 ? 'var(--color-positive)' : 'var(--color-negative)' }}>
+                    <td
+                      style={{
+                        textAlign: 'right',
+                        color:
+                          data.netCashFlow >= 0 ? 'var(--color-positive)' : 'var(--color-negative)',
+                      }}
+                    >
                       {formatCurrency(data.netCashFlow)}
                     </td>
-                    <td style={{ textAlign: 'right' }}>{formatCurrency(data.cumulativeCashInvested)}</td>
-                    <td style={{ textAlign: 'right' }}>{formatCurrency(data.cumulativeDividends)}</td>
+                    <td style={{ textAlign: 'right' }}>
+                      {formatCurrency(data.cumulativeCashInvested)}
+                    </td>
+                    <td style={{ textAlign: 'right' }}>
+                      {formatCurrency(data.cumulativeDividends)}
+                    </td>
                     <td style={{ textAlign: 'right' }}>{data.purchaseCount}</td>
                     <td style={{ textAlign: 'right' }}>{data.dividendCount}</td>
                   </tr>
                   {isExpanded && hasTransactions && (
                     <tr key={`${data.month}-details`} className="dividend-details-row">
                       <td colSpan={8} style={{ padding: 0 }}>
-                        <div style={{ padding: '1rem', backgroundColor: 'var(--color-bg-secondary)' }}>
+                        <div
+                          style={{ padding: '1rem', backgroundColor: 'var(--color-bg-secondary)' }}
+                        >
                           <h4 style={{ margin: '0 0 1rem 0', fontSize: '1rem' }}>Transactions</h4>
                           <table className="data-table">
                             <thead>
@@ -294,28 +331,42 @@ export const CashFlowReport: React.FC = () => {
                               {/* Combine and sort all transactions by date */}
                               {(() => {
                                 // Calculate purchase aggregates by symbol for dividend rows
-                                const purchasesBySymbol = new Map<string, { totalShares: number; totalCost: number }>();
+                                const purchasesBySymbol = new Map<
+                                  string,
+                                  { totalShares: number; totalCost: number }
+                                >();
                                 data.purchaseTransactions.forEach(p => {
-                                  const existing = purchasesBySymbol.get(p.symbol) || { totalShares: 0, totalCost: 0 };
+                                  const existing = purchasesBySymbol.get(p.symbol) || {
+                                    totalShares: 0,
+                                    totalCost: 0,
+                                  };
                                   purchasesBySymbol.set(p.symbol, {
                                     totalShares: existing.totalShares + p.shares,
-                                    totalCost: existing.totalCost + p.totalCost
+                                    totalCost: existing.totalCost + p.totalCost,
                                   });
                                 });
 
                                 return [
-                                  ...data.dividendTransactions.map(t => ({ ...t, type: 'dividend' as const })),
-                                  ...data.purchaseTransactions.map(t => ({ ...t, type: 'purchase' as const }))
+                                  ...data.dividendTransactions.map(t => ({
+                                    ...t,
+                                    type: 'dividend' as const,
+                                  })),
+                                  ...data.purchaseTransactions.map(t => ({
+                                    ...t,
+                                    type: 'purchase' as const,
+                                  })),
                                 ]
                                   .sort((a, b) => b.date.localeCompare(a.date))
-                                  .map((transaction) => {
+                                  .map(transaction => {
                                     // For dividend rows, get purchase aggregates for the same symbol
-                                    const purchaseAgg = transaction.type === 'dividend'
-                                      ? purchasesBySymbol.get(transaction.symbol)
-                                      : null;
-                                    const avgPricePerShare = purchaseAgg && purchaseAgg.totalShares > 0
-                                      ? purchaseAgg.totalCost / purchaseAgg.totalShares
-                                      : null;
+                                    const purchaseAgg =
+                                      transaction.type === 'dividend'
+                                        ? purchasesBySymbol.get(transaction.symbol)
+                                        : null;
+                                    const avgPricePerShare =
+                                      purchaseAgg && purchaseAgg.totalShares > 0
+                                        ? purchaseAgg.totalCost / purchaseAgg.totalShares
+                                        : null;
 
                                     return (
                                       <tr key={`${transaction.type}-${transaction.id}`}>
@@ -323,59 +374,63 @@ export const CashFlowReport: React.FC = () => {
                                         <td>
                                           {transaction.type === 'dividend' ? (
                                             <div>
-                                              <div className="table-cell__main">{transaction.name}</div>
-                                              <div className="table-cell__meta">{transaction.symbol}</div>
+                                              <div className="table-cell__main">
+                                                {transaction.name}
+                                              </div>
+                                              <div className="table-cell__meta">
+                                                {transaction.symbol}
+                                              </div>
                                             </div>
                                           ) : (
-                                            <div className="table-cell__meta">{transaction.symbol}</div>
+                                            <div className="table-cell__meta">
+                                              {transaction.symbol}
+                                            </div>
                                           )}
                                         </td>
                                         <td style={{ textAlign: 'right' }}>
                                           {transaction.type === 'dividend'
                                             ? transaction.shares.toFixed(2)
-                                            : transaction.shares.toFixed(2)
-                                          }
+                                            : transaction.shares.toFixed(2)}
                                         </td>
                                         <td style={{ textAlign: 'right' }}>
                                           {transaction.type === 'dividend'
                                             ? formatCurrency(transaction.amountPerShare)
-                                            : '—'
-                                          }
+                                            : '—'}
                                         </td>
                                         <td style={{ textAlign: 'right' }}>
                                           {transaction.type === 'dividend'
                                             ? formatCurrency(transaction.totalAmount)
-                                            : '—'
-                                          }
+                                            : '—'}
                                         </td>
                                         <td style={{ textAlign: 'right' }}>
                                           {transaction.type === 'purchase'
                                             ? formatCurrency(transaction.pricePerShare)
                                             : avgPricePerShare !== null
-                                            ? formatCurrency(avgPricePerShare)
-                                            : '—'
-                                          }
+                                              ? formatCurrency(avgPricePerShare)
+                                              : '—'}
                                         </td>
                                         <td style={{ textAlign: 'right' }}>
                                           {transaction.type === 'purchase'
                                             ? formatCurrency(transaction.totalCost)
                                             : purchaseAgg
-                                            ? formatCurrency(purchaseAgg.totalCost)
-                                            : '—'
-                                          }
+                                              ? formatCurrency(purchaseAgg.totalCost)
+                                              : '—'}
                                         </td>
                                         <td>
                                           {transaction.type === 'dividend' && (
                                             <button
                                               type="button"
                                               className="button-ghost button-ghost--danger"
-                                              onClick={(e) => {
+                                              onClick={e => {
                                                 e.stopPropagation();
                                                 const shouldDelete = window.confirm(
                                                   `Delete dividend payment of ${formatCurrency(transaction.totalAmount)} from ${transaction.name}?`
                                                 );
                                                 if (shouldDelete) {
-                                                  removeDividend(transaction.symbol, transaction.id);
+                                                  removeDividend(
+                                                    transaction.symbol,
+                                                    transaction.id
+                                                  );
                                                 }
                                               }}
                                             >
@@ -399,16 +454,32 @@ export const CashFlowReport: React.FC = () => {
           </tbody>
           <tfoot>
             <tr>
-              <td><strong>Total</strong></td>
-              <td style={{ textAlign: 'right' }}><strong>{formatCurrency(totals.totalCashInvested)}</strong></td>
-              <td style={{ textAlign: 'right' }}><strong>{formatCurrency(totals.totalDividends)}</strong></td>
-              <td style={{ textAlign: 'right', color: totals.netCashFlow >= 0 ? 'var(--color-positive)' : 'var(--color-negative)' }}>
+              <td>
+                <strong>Total</strong>
+              </td>
+              <td style={{ textAlign: 'right' }}>
+                <strong>{formatCurrency(totals.totalCashInvested)}</strong>
+              </td>
+              <td style={{ textAlign: 'right' }}>
+                <strong>{formatCurrency(totals.totalDividends)}</strong>
+              </td>
+              <td
+                style={{
+                  textAlign: 'right',
+                  color:
+                    totals.netCashFlow >= 0 ? 'var(--color-positive)' : 'var(--color-negative)',
+                }}
+              >
                 <strong>{formatCurrency(totals.netCashFlow)}</strong>
               </td>
               <td style={{ textAlign: 'right' }}>—</td>
               <td style={{ textAlign: 'right' }}>—</td>
-              <td style={{ textAlign: 'right' }}><strong>{totals.totalPurchases}</strong></td>
-              <td style={{ textAlign: 'right' }}><strong>{totals.totalDividendPayments}</strong></td>
+              <td style={{ textAlign: 'right' }}>
+                <strong>{totals.totalPurchases}</strong>
+              </td>
+              <td style={{ textAlign: 'right' }}>
+                <strong>{totals.totalDividendPayments}</strong>
+              </td>
             </tr>
           </tfoot>
         </table>
@@ -416,4 +487,3 @@ export const CashFlowReport: React.FC = () => {
     </div>
   );
 };
-

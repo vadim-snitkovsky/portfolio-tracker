@@ -3,7 +3,7 @@ import { render, screen } from '@testing-library/react';
 import App from './App';
 
 vi.mock('./pages/Dashboard', () => ({
-  Dashboard: () => <div>Dashboard Component</div>
+  Dashboard: () => <div>Dashboard Component</div>,
 }));
 
 describe('App', () => {
@@ -17,4 +17,3 @@ describe('App', () => {
     expect(container.querySelector('div')).toBeDefined();
   });
 });
-

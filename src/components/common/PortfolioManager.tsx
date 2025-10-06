@@ -17,14 +17,14 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
   const [renameValue, setRenameValue] = useState('');
   const [message, setMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  const activePortfolioId = usePortfolioStore((state) => state.activePortfolioId);
-  const activePortfolioName = usePortfolioStore((state) => state.activePortfolioName);
-  const getSavedPortfolios = usePortfolioStore((state) => state.getSavedPortfolios);
-  const loadSavedPortfolio = usePortfolioStore((state) => state.loadSavedPortfolio);
-  const deleteSavedPortfolio = usePortfolioStore((state) => state.deleteSavedPortfolio);
-  const renameSavedPortfolio = usePortfolioStore((state) => state.renameSavedPortfolio);
-  const saveCurrentPortfolio = usePortfolioStore((state) => state.saveCurrentPortfolio);
-  const createNewPortfolio = usePortfolioStore((state) => state.createNewPortfolio);
+  const activePortfolioId = usePortfolioStore(state => state.activePortfolioId);
+  const activePortfolioName = usePortfolioStore(state => state.activePortfolioName);
+  const getSavedPortfolios = usePortfolioStore(state => state.getSavedPortfolios);
+  const loadSavedPortfolio = usePortfolioStore(state => state.loadSavedPortfolio);
+  const deleteSavedPortfolio = usePortfolioStore(state => state.deleteSavedPortfolio);
+  const renameSavedPortfolio = usePortfolioStore(state => state.renameSavedPortfolio);
+  const saveCurrentPortfolio = usePortfolioStore(state => state.saveCurrentPortfolio);
+  const createNewPortfolio = usePortfolioStore(state => state.createNewPortfolio);
 
   const portfolios = getSavedPortfolios();
 
@@ -110,10 +110,12 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
 
   return (
     <div className="portfolio-manager-overlay" onClick={onClose}>
-      <div className="portfolio-manager" onClick={(e) => e.stopPropagation()}>
+      <div className="portfolio-manager" onClick={e => e.stopPropagation()}>
         <header className="portfolio-manager__header">
           <h2>Portfolio Manager</h2>
-          <button className="close-button" onClick={onClose}>×</button>
+          <button className="close-button" onClick={onClose}>
+            ×
+          </button>
         </header>
 
         {message && (
@@ -132,13 +134,10 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
                 {activePortfolioId && <span className="portfolio-id">ID: {activePortfolioId}</span>}
               </div>
               <div className="current-portfolio__actions">
-                <button 
-                  className="btn btn--primary"
-                  onClick={handleSaveCurrent}
-                >
+                <button className="btn btn--primary" onClick={handleSaveCurrent}>
                   Save
                 </button>
-                <button 
+                <button
                   className="btn btn--secondary"
                   onClick={() => setShowSaveAsForm(!showSaveAsForm)}
                 >
@@ -153,8 +152,8 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
                   type="text"
                   placeholder="Enter portfolio name"
                   value={saveAsName}
-                  onChange={(e) => setSaveAsName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleSaveAs()}
+                  onChange={e => setSaveAsName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleSaveAs()}
                 />
                 <button className="btn btn--primary" onClick={handleSaveAs}>
                   Save
@@ -170,7 +169,7 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
           <section className="portfolio-manager__section">
             <div className="section-header">
               <h3>Saved Portfolios ({portfolios.length})</h3>
-              <button 
+              <button
                 className="btn btn--primary btn--small"
                 onClick={() => setShowNewForm(!showNewForm)}
               >
@@ -184,8 +183,8 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
                   type="text"
                   placeholder="Enter portfolio name"
                   value={newPortfolioName}
-                  onChange={(e) => setNewPortfolioName(e.target.value)}
-                  onKeyDown={(e) => e.key === 'Enter' && handleCreateNew()}
+                  onChange={e => setNewPortfolioName(e.target.value)}
+                  onKeyDown={e => e.key === 'Enter' && handleCreateNew()}
                 />
                 <button className="btn btn--primary" onClick={handleCreateNew}>
                   Create
@@ -200,7 +199,7 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
               <p className="empty-state">No saved portfolios yet. Create one to get started!</p>
             ) : (
               <div className="portfolio-list">
-                {portfolios.map((portfolio) => {
+                {portfolios.map(portfolio => {
                   const isRenaming = renamingId === portfolio.id;
 
                   return (
@@ -209,21 +208,35 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
                       className={`portfolio-item ${portfolio.id === activePortfolioId ? 'portfolio-item--active' : ''}`}
                     >
                       {isRenaming ? (
-                        <div className="portfolio-form" style={{ margin: 0, padding: 0, background: 'transparent', border: 'none' }}>
+                        <div
+                          className="portfolio-form"
+                          style={{
+                            margin: 0,
+                            padding: 0,
+                            background: 'transparent',
+                            border: 'none',
+                          }}
+                        >
                           <input
                             type="text"
                             value={renameValue}
-                            onChange={(e) => setRenameValue(e.target.value)}
-                            onKeyDown={(e) => {
+                            onChange={e => setRenameValue(e.target.value)}
+                            onKeyDown={e => {
                               if (e.key === 'Enter') handleRename(portfolio.id);
                               if (e.key === 'Escape') handleCancelRename();
                             }}
                             autoFocus
                           />
-                          <button className="btn btn--small btn--primary" onClick={() => handleRename(portfolio.id)}>
+                          <button
+                            className="btn btn--small btn--primary"
+                            onClick={() => handleRename(portfolio.id)}
+                          >
                             Save
                           </button>
-                          <button className="btn btn--small btn--secondary" onClick={handleCancelRename}>
+                          <button
+                            className="btn btn--small btn--secondary"
+                            onClick={handleCancelRename}
+                          >
                             Cancel
                           </button>
                         </div>
@@ -271,4 +284,3 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
     </div>
   );
 };
-

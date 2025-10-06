@@ -7,7 +7,7 @@ vi.mock('../../store/portfolioStore', async () => {
   const actual = await vi.importActual('../../store/portfolioStore');
   return {
     ...actual,
-    usePortfolioStore: vi.fn()
+    usePortfolioStore: vi.fn(),
   };
 });
 
@@ -28,9 +28,9 @@ describe('OverviewMetrics', () => {
               averageCost: 150,
               currentPrice: 180,
               dividends: [],
-              navHistory: []
-            }
-          ]
+              navHistory: [],
+            },
+          ],
         },
         customLots: [
           {
@@ -38,9 +38,9 @@ describe('OverviewMetrics', () => {
             symbol: 'AAPL',
             tradeDate: '2024-01-01',
             shares: 100,
-            pricePerShare: 150
-          }
-        ]
+            pricePerShare: 150,
+          },
+        ],
       };
       return selector(state);
     };
@@ -61,9 +61,9 @@ describe('OverviewMetrics', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: []
+          equities: [],
         },
-        customLots: []
+        customLots: [],
       };
       return selector(state);
     };
@@ -75,4 +75,3 @@ describe('OverviewMetrics', () => {
     expect(container).toBeDefined();
   });
 });
-

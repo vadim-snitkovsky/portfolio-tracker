@@ -7,7 +7,7 @@ import type {
   PortfolioSnapshot,
   PurchaseLot,
   SavedPortfolio,
-  PortfolioMetadata
+  PortfolioMetadata,
 } from '../types/portfolio';
 import {
   loadCustomLots,
@@ -20,7 +20,7 @@ import {
   renamePortfolio,
   getPortfolioMetadataList,
   getActivePortfolioId,
-  setActivePortfolioId
+  setActivePortfolioId,
 } from '../utils/storage';
 import {
   fetchQuotes,
@@ -28,9 +28,8 @@ import {
   fetchDividends,
   mergeDividendsIntoPositions,
   type QuoteResult,
-  type DividendResult
+  type DividendResult,
 } from '../services/marketData';
-
 
 const isPurchaseLot = (value: unknown): value is PurchaseLot => {
   if (!value || typeof value !== 'object') return false;
@@ -46,26 +45,26 @@ const isPurchaseLot = (value: unknown): value is PurchaseLot => {
 
 const createSeedLotsFromSnapshot = (snapshot: PortfolioSnapshot): PurchaseLot[] =>
   snapshot.equities
-    .filter((equity) => equity.shares > 0)
+    .filter(equity => equity.shares > 0)
     .map((equity, index) => ({
       id: `seed-${equity.symbol}-${index}`,
       symbol: equity.symbol,
       tradeDate: snapshot.asOf,
       shares: equity.shares,
-      pricePerShare: equity.averageCost
+      pricePerShare: equity.averageCost,
     }));
 
 const sanitizeSnapshotEquities = (snapshot: PortfolioSnapshot): PortfolioSnapshot => ({
   ...snapshot,
-  equities: snapshot.equities.map((equity) => ({
+  equities: snapshot.equities.map(equity => ({
     ...equity,
-    shares: 0
-  }))
+    shares: 0,
+  })),
 });
 
 const mergeSeedLots = (existing: PurchaseLot[], seeds: PurchaseLot[]): PurchaseLot[] => {
-  const existingSymbols = new Set(existing.map((lot) => lot.symbol.toUpperCase()));
-  const missingSeeds = seeds.filter((seed) => !existingSymbols.has(seed.symbol.toUpperCase()));
+  const existingSymbols = new Set(existing.map(lot => lot.symbol.toUpperCase()));
+  const missingSeeds = seeds.filter(seed => !existingSymbols.has(seed.symbol.toUpperCase()));
   return [...existing, ...missingSeeds];
 };
 
@@ -152,7 +151,7 @@ export const calculateEquityMetrics = (equity: EquityPosition): EquityMetrics =>
     roi,
     dividendYieldOnCost,
     navPeak,
-    navDecayPercent
+    navDecayPercent,
   };
 };
 
@@ -170,7 +169,7 @@ export const calculatePortfolioMetrics = (equities: EquityPosition[]): Portfolio
       totalCostBasis: 0,
       totalMarketValue: 0,
       totalDividends: 0,
-      totalReturn: 0
+      totalReturn: 0,
     }
   );
 
@@ -181,18 +180,14 @@ export const calculatePortfolioMetrics = (equities: EquityPosition[]): Portfolio
   return {
     ...base,
     roi,
-    incomeYieldOnCost
+    incomeYieldOnCost,
   };
 };
-
 
 const isPortfolioSnapshot = (value: unknown): value is PortfolioSnapshot => {
   if (typeof value !== 'object' || value === null) return false;
   const obj = value as Record<string, unknown>;
-  return (
-    typeof obj.asOf === 'string' &&
-    Array.isArray(obj.equities)
-  );
+  return typeof obj.asOf === 'string' && Array.isArray(obj.equities);
 };
 
 const parseStoredSnapshot = (data: unknown): PortfolioSnapshot | null => {
@@ -205,7 +200,9 @@ const storedLots = loadCustomLots(parseStoredLots, []);
 const storedSnapshot = loadSnapshot(parseStoredSnapshot, null);
 
 // Use stored snapshot if available, otherwise use sample
-const initialSnapshot = storedSnapshot ? sanitizeSnapshotEquities(storedSnapshot) : sanitizedSamplePortfolio;
+const initialSnapshot = storedSnapshot
+  ? sanitizeSnapshotEquities(storedSnapshot)
+  : sanitizedSamplePortfolio;
 
 // Use sample purchase lots with realistic acquisition dates instead of creating seed lots
 const initialCustomLots = storedLots.length > 0 ? storedLots : samplePurchaseLots;
@@ -223,7 +220,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
   customLots: initialCustomLots,
   activePortfolioId: getActivePortfolioId(),
   activePortfolioName: null,
-  setSnapshot: (snapshot) => {
+  setSnapshot: snapshot => {
     const sanitized = sanitizeSnapshotEquities(snapshot);
     persistSnapshot(sanitized);
     set({ snapshot: sanitized });
@@ -236,23 +233,23 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       persistCustomLots(normalized);
       return { snapshot: sanitized, customLots: normalized };
     }),
-  addPurchaseLot: (lot) =>
-    set((state) => {
+  addPurchaseLot: lot =>
+    set(state => {
       const updatedLots = [...state.customLots, lot];
       persistCustomLots(updatedLots);
       return { customLots: updatedLots };
     }),
   updatePurchaseLot: (id, updates) =>
-    set((state) => {
-      const updatedLots = state.customLots.map((lot) =>
+    set(state => {
+      const updatedLots = state.customLots.map(lot =>
         lot.id === id ? { ...lot, ...updates } : lot
       );
       persistCustomLots(updatedLots);
       return { customLots: updatedLots };
     }),
-  removePurchaseLot: (id) =>
-    set((state) => {
-      const updatedLots = state.customLots.filter((lot) => lot.id !== id);
+  removePurchaseLot: id =>
+    set(state => {
+      const updatedLots = state.customLots.filter(lot => lot.id !== id);
       persistCustomLots(updatedLots);
 
       // Clean up equities with 0 shares from snapshot
@@ -269,23 +266,23 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
       const updatedSnapshot = {
         ...state.snapshot,
-        equities: cleanedEquities
+        equities: cleanedEquities,
       };
 
       persistSnapshot(updatedSnapshot);
 
       return {
         customLots: updatedLots,
-        snapshot: updatedSnapshot
+        snapshot: updatedSnapshot,
       };
     }),
   removeDividend: (symbol, dividendId) =>
-    set((state) => {
-      const updatedEquities = state.snapshot.equities.map((equity) => {
+    set(state => {
+      const updatedEquities = state.snapshot.equities.map(equity => {
         if (equity.symbol.toUpperCase() === symbol.toUpperCase()) {
           return {
             ...equity,
-            dividends: equity.dividends.filter((div) => div.id !== dividendId)
+            dividends: equity.dividends.filter(div => div.id !== dividendId),
           };
         }
         return equity;
@@ -293,39 +290,39 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
       const updatedSnapshot = {
         ...state.snapshot,
-        equities: updatedEquities
+        equities: updatedEquities,
       };
 
       persistSnapshot(updatedSnapshot);
 
       return {
-        snapshot: updatedSnapshot
+        snapshot: updatedSnapshot,
       };
     }),
   quoteStatus: {
-    isLoading: false
+    isLoading: false,
   },
   dividendStatus: {
-    isLoading: false
+    isLoading: false,
   },
   refreshQuotes: async () => {
     const { snapshot, customLots } = get();
 
     // Get symbols from both snapshot equities AND custom lots
-    const snapshotSymbols = snapshot.equities.map((equity) => equity.symbol);
-    const lotSymbols = customLots.map((lot) => lot.symbol);
+    const snapshotSymbols = snapshot.equities.map(equity => equity.symbol);
+    const lotSymbols = customLots.map(lot => lot.symbol);
     const allSymbols = [...new Set([...snapshotSymbols, ...lotSymbols])].filter(Boolean);
 
     if (allSymbols.length === 0) {
       return [];
     }
 
-    set((state) => ({
+    set(state => ({
       quoteStatus: {
         ...state.quoteStatus,
         isLoading: true,
-        error: undefined
-      }
+        error: undefined,
+      },
     }));
 
     const quotes = await fetchQuotes(allSymbols);
@@ -340,7 +337,9 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     quotes.forEach(quote => {
       if (!existingSymbols.has(quote.symbol.toUpperCase()) && quote.regularMarketPrice) {
         // Find lots for this symbol to get average cost
-        const lotsForSymbol = customLots.filter(lot => lot.symbol.toUpperCase() === quote.symbol.toUpperCase());
+        const lotsForSymbol = customLots.filter(
+          lot => lot.symbol.toUpperCase() === quote.symbol.toUpperCase()
+        );
         const { totalShares, totalCost } = aggregateLots(lotsForSymbol);
         const averageCost = totalShares > 0 ? totalCost / totalShares : quote.regularMarketPrice;
 
@@ -352,18 +351,18 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
           averageCost,
           currentPrice: quote.regularMarketPrice,
           dividends: [],
-          navHistory: quote.navHistory || []
+          navHistory: quote.navHistory || [],
         });
       }
     });
 
     mergedEquities = [...mergedEquities, ...newEquities];
 
-    const erroredSymbols = quotes.filter((quote) => quote.error);
+    const erroredSymbols = quotes.filter(quote => quote.error);
     const errorMessage =
       erroredSymbols.length > 0
         ? `Failed to refresh: ${erroredSymbols
-            .map((quote) => `${quote.symbol}${quote.error ? ` (${quote.error})` : ''}`)
+            .map(quote => `${quote.symbol}${quote.error ? ` (${quote.error})` : ''}`)
             .join(', ')}`
         : undefined;
 
@@ -371,7 +370,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const updatedSnapshot = {
       ...snapshot,
       equities: mergedEquities,
-      lastPriceUpdate: now
+      lastPriceUpdate: now,
     };
 
     persistSnapshot(updatedSnapshot);
@@ -381,8 +380,8 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       quoteStatus: {
         isLoading: false,
         lastUpdated: now,
-        error: errorMessage
-      }
+        error: errorMessage,
+      },
     });
 
     return quotes;
@@ -391,20 +390,20 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const { snapshot, customLots } = get();
 
     // Get symbols from both snapshot equities AND custom lots
-    const snapshotSymbols = snapshot.equities.map((equity) => equity.symbol);
-    const lotSymbols = customLots.map((lot) => lot.symbol);
+    const snapshotSymbols = snapshot.equities.map(equity => equity.symbol);
+    const lotSymbols = customLots.map(lot => lot.symbol);
     const allSymbols = [...new Set([...snapshotSymbols, ...lotSymbols])].filter(Boolean);
 
     if (allSymbols.length === 0) {
       return [];
     }
 
-    set((state) => ({
+    set(state => ({
       dividendStatus: {
         ...state.dividendStatus,
         isLoading: true,
-        error: undefined
-      }
+        error: undefined,
+      },
     }));
 
     const dividendResults = await fetchDividends(allSymbols, monthsBack);
@@ -419,7 +418,9 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     dividendResults.forEach(result => {
       if (!existingSymbols.has(result.symbol.toUpperCase()) && result.dividends.length > 0) {
         // Find lots for this symbol to get average cost
-        const lotsForSymbol = customLots.filter(lot => lot.symbol.toUpperCase() === result.symbol.toUpperCase());
+        const lotsForSymbol = customLots.filter(
+          lot => lot.symbol.toUpperCase() === result.symbol.toUpperCase()
+        );
         const { totalShares, totalCost } = aggregateLots(lotsForSymbol);
         const averageCost = totalShares > 0 ? totalCost / totalShares : 0;
 
@@ -431,18 +432,18 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
           averageCost,
           currentPrice: averageCost, // Use average cost as placeholder
           dividends: result.dividends,
-          navHistory: []
+          navHistory: [],
         });
       }
     });
 
     mergedEquities = [...mergedEquities, ...newEquities];
 
-    const erroredSymbols = dividendResults.filter((result) => result.error);
+    const erroredSymbols = dividendResults.filter(result => result.error);
     const errorMessage =
       erroredSymbols.length > 0
         ? `Failed to refresh dividends: ${erroredSymbols
-            .map((result) => `${result.symbol}${result.error ? ` (${result.error})` : ''}`)
+            .map(result => `${result.symbol}${result.error ? ` (${result.error})` : ''}`)
             .join(', ')}`
         : undefined;
 
@@ -450,7 +451,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const updatedSnapshot = {
       ...snapshot,
       equities: mergedEquities,
-      lastDividendUpdate: now
+      lastDividendUpdate: now,
     };
 
     persistSnapshot(updatedSnapshot);
@@ -460,8 +461,8 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       dividendStatus: {
         isLoading: false,
         lastUpdated: now,
-        error: errorMessage
-      }
+        error: errorMessage,
+      },
     });
 
     return dividendResults;
@@ -477,7 +478,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
     set({
       activePortfolioId: id,
-      activePortfolioName: name
+      activePortfolioName: name,
     });
 
     return saved;
@@ -499,7 +500,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       snapshot: sanitized,
       customLots: portfolio.customLots,
       activePortfolioId: id,
-      activePortfolioName: portfolio.name
+      activePortfolioName: portfolio.name,
     });
 
     return true;
@@ -511,7 +512,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     if (success && get().activePortfolioId === id) {
       set({
         activePortfolioId: null,
-        activePortfolioName: null
+        activePortfolioName: null,
       });
     }
 
@@ -524,7 +525,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     // If the renamed portfolio is the active one, update the active name
     if (success && get().activePortfolioId === id) {
       set({
-        activePortfolioName: newName
+        activePortfolioName: newName,
       });
     }
 
@@ -548,12 +549,12 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       snapshot: newSnapshot,
       customLots: newLots,
       activePortfolioId: id,
-      activePortfolioName: name
+      activePortfolioName: name,
     });
 
     // Save the new portfolio
     savePortfolio(id, name, newSnapshot, newLots);
-  }
+  },
 }));
 
 const groupLotsBySymbol = (lots: PurchaseLot[]): Map<string, PurchaseLot[]> => {
@@ -598,7 +599,7 @@ const filterDividendsByAcquisitionDate = (
   acquisitionDate: string | undefined
 ): DividendPayment[] => {
   if (!acquisitionDate) return dividends;
-  return dividends.filter((dividend) => dividend.date >= acquisitionDate);
+  return dividends.filter(dividend => dividend.date >= acquisitionDate);
 };
 
 /**
@@ -606,9 +607,7 @@ const filterDividendsByAcquisitionDate = (
  * Only counts lots purchased on or before the given date.
  */
 const calculateSharesAtDate = (lots: PurchaseLot[], date: string): number => {
-  return lots
-    .filter((lot) => lot.tradeDate <= date)
-    .reduce((total, lot) => total + lot.shares, 0);
+  return lots.filter(lot => lot.tradeDate <= date).reduce((total, lot) => total + lot.shares, 0);
 };
 
 export const deriveEquityViews = (
@@ -618,7 +617,7 @@ export const deriveEquityViews = (
   const lotsBySymbol = groupLotsBySymbol(customLots);
   const views: EquityWithLots[] = [];
 
-  snapshot.equities.forEach((equity) => {
+  snapshot.equities.forEach(equity => {
     const lots = lotsBySymbol.get(equity.symbol) ?? [];
     const { totalShares, totalCost } = aggregateLots(lots);
     const earliestAcquisitionDate = getEarliestAcquisitionDate(lots);
@@ -630,12 +629,12 @@ export const deriveEquityViews = (
     );
 
     // Calculate shares owned at each dividend payment date
-    const dividendsWithShares: DividendPaymentWithShares[] = filteredDividends.map((dividend) => {
+    const dividendsWithShares: DividendPaymentWithShares[] = filteredDividends.map(dividend => {
       const sharesFromLots = calculateSharesAtDate(lots, dividend.date);
       const sharesOwned = equity.shares + sharesFromLots;
       return {
         ...dividend,
-        sharesOwned
+        sharesOwned,
       };
     });
 
@@ -649,12 +648,12 @@ export const deriveEquityViews = (
         ...equity,
         shares: combinedShares,
         averageCost: combinedShares === 0 ? equity.averageCost : combinedCost / combinedShares,
-        dividends: filteredDividends
+        dividends: filteredDividends,
       };
     } else {
       combinedPosition = {
         ...equity,
-        dividends: filteredDividends
+        dividends: filteredDividends,
       };
     }
 
@@ -664,7 +663,7 @@ export const deriveEquityViews = (
       manualTotalShares: totalShares,
       manualTotalCost: totalCost,
       earliestAcquisitionDate,
-      dividendsWithShares
+      dividendsWithShares,
     });
 
     lotsBySymbol.delete(equity.symbol);
@@ -683,7 +682,7 @@ export const deriveEquityViews = (
       averageCost,
       currentPrice: lots[lots.length - 1]?.pricePerShare ?? averageCost,
       dividends: [],
-      navHistory: []
+      navHistory: [],
     };
 
     // No dividends for lot-only symbols (they'll be added when dividends are refreshed)
@@ -695,7 +694,7 @@ export const deriveEquityViews = (
       manualTotalShares: totalShares,
       manualTotalCost: totalCost,
       earliestAcquisitionDate,
-      dividendsWithShares
+      dividendsWithShares,
     });
   });
 
@@ -706,4 +705,4 @@ export const selectEquityViews = (state: PortfolioState): EquityWithLots[] =>
   deriveEquityViews(state.snapshot, state.customLots);
 
 export const selectMergedEquities = (state: PortfolioState): EquityPosition[] =>
-  selectEquityViews(state).map((view) => view.position);
+  selectEquityViews(state).map(view => view.position);

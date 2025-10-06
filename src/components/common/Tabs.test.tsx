@@ -6,7 +6,7 @@ describe('Tabs', () => {
   const mockTabs = [
     { id: 'tab1', label: 'Tab 1' },
     { id: 'tab2', label: 'Tab 2' },
-    { id: 'tab3', label: 'Tab 3' }
+    { id: 'tab3', label: 'Tab 3' },
   ];
 
   afterEach(() => {
@@ -26,9 +26,7 @@ describe('Tabs', () => {
 
   it('should highlight active tab', () => {
     const onChange = vi.fn();
-    const { container } = render(
-      <Tabs tabs={mockTabs} activeTab="tab2" onChange={onChange} />
-    );
+    const { container } = render(<Tabs tabs={mockTabs} activeTab="tab2" onChange={onChange} />);
 
     const buttons = container.querySelectorAll('button');
     expect(buttons[1].className).toContain('tabs__tab--active');
@@ -56,9 +54,7 @@ describe('Tabs', () => {
 
   it('should render with correct number of tabs', () => {
     const onChange = vi.fn();
-    const { container } = render(
-      <Tabs tabs={mockTabs} activeTab="tab1" onChange={onChange} />
-    );
+    const { container } = render(<Tabs tabs={mockTabs} activeTab="tab1" onChange={onChange} />);
 
     const buttons = container.querySelectorAll('button');
     expect(buttons.length).toBe(3);
@@ -66,9 +62,7 @@ describe('Tabs', () => {
 
   it('should render tab with icon', () => {
     const onChange = vi.fn();
-    const tabsWithIcon = [
-      { id: 'tab1', label: 'Tab 1', icon: <span>📊</span> }
-    ];
+    const tabsWithIcon = [{ id: 'tab1', label: 'Tab 1', icon: <span>📊</span> }];
 
     const { container } = render(<Tabs tabs={tabsWithIcon} activeTab="tab1" onChange={onChange} />);
 
@@ -76,4 +70,3 @@ describe('Tabs', () => {
     expect(icon).toBeDefined();
   });
 });
-

@@ -15,10 +15,8 @@ describe('CombinedEquityTable', () => {
         shares: 100,
         averageCost: 150,
         currentPrice: 180,
-        dividends: [
-          { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }
-        ],
-        navHistory: []
+        dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }],
+        navHistory: [],
       },
       manualLots: [
         {
@@ -26,17 +24,17 @@ describe('CombinedEquityTable', () => {
           symbol: 'AAPL',
           tradeDate: '2024-01-01',
           shares: 100,
-          pricePerShare: 150
-        }
+          pricePerShare: 150,
+        },
       ],
       dividendsWithShares: [
         {
           id: 'div-1',
           date: '2024-01-15',
           amountPerShare: 0.25,
-          sharesOwned: 100
-        }
-      ]
+          sharesOwned: 100,
+        },
+      ],
     },
     {
       position: {
@@ -47,15 +45,15 @@ describe('CombinedEquityTable', () => {
         averageCost: 300,
         currentPrice: 380,
         dividends: [],
-        navHistory: []
+        navHistory: [],
       },
       manualLots: [],
-      dividendsWithShares: []
-    }
+      dividendsWithShares: [],
+    },
   ];
 
   it('should render without crashing', () => {
-    const { container} = render(
+    const { container } = render(
       <CombinedEquityTable equityViews={mockEquityViews} onDeleteDividend={mockOnDeleteDividend} />
     );
     expect(container).toBeDefined();
@@ -108,11 +106,11 @@ describe('CombinedEquityTable', () => {
           averageCost: 0,
           currentPrice: 140,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
-        dividendsWithShares: []
-      }
+        dividendsWithShares: [],
+      },
     ];
 
     const { container } = render(
@@ -147,8 +145,8 @@ describe('CombinedEquityTable', () => {
 
       // Find and click delete button if it exists
       const deleteButtons = container.querySelectorAll('button');
-      const deleteButton = Array.from(deleteButtons).find(btn =>
-        btn.textContent?.includes('Delete') || btn.textContent?.includes('×')
+      const deleteButton = Array.from(deleteButtons).find(
+        btn => btn.textContent?.includes('Delete') || btn.textContent?.includes('×')
       );
 
       if (deleteButton) {
@@ -158,4 +156,3 @@ describe('CombinedEquityTable', () => {
     }
   });
 });
-

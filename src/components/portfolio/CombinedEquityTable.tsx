@@ -2,24 +2,37 @@ import { useMemo, useState } from 'react';
 import {
   calculateEquityMetrics,
   deriveEquityViews,
-  usePortfolioStore
+  usePortfolioStore,
 } from '../../store/portfolioStore';
 import { formatCurrency, formatDate, formatPercent } from '../../utils/formatters';
 
-type SortField = 'name' | 'shares' | 'marketValue' | 'costBasis' | 'unrealizedPnL' | 'totalReturn' | 'roi' | 'navPeak' | 'currentNav' | 'navDecayPercent' | 'totalDividends' | 'dividendYieldOnCost' | 'lastDividendAmount';
+type SortField =
+  | 'name'
+  | 'shares'
+  | 'marketValue'
+  | 'costBasis'
+  | 'unrealizedPnL'
+  | 'totalReturn'
+  | 'roi'
+  | 'navPeak'
+  | 'currentNav'
+  | 'navDecayPercent'
+  | 'totalDividends'
+  | 'dividendYieldOnCost'
+  | 'lastDividendAmount';
 type SortDirection = 'asc' | 'desc';
 
 export const CombinedEquityTable: React.FC = () => {
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
   const [expandedSymbol, setExpandedSymbol] = useState<string | null>(null);
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
   const data = useMemo(() => {
     return deriveEquityViews(snapshot, customLots)
-      .filter((view) => view.position.shares > 0)
-      .map((view) => {
+      .filter(view => view.position.shares > 0)
+      .map(view => {
         const equity = view.position;
         const metrics = calculateEquityMetrics(equity);
 
@@ -29,7 +42,8 @@ export const CombinedEquityTable: React.FC = () => {
           0
         );
 
-        const lastDividendWithShares = view.dividendsWithShares[view.dividendsWithShares.length - 1];
+        const lastDividendWithShares =
+          view.dividendsWithShares[view.dividendsWithShares.length - 1];
         const lastDividendAmount = lastDividendWithShares
           ? lastDividendWithShares.amountPerShare * lastDividendWithShares.sharesOwned
           : undefined;
@@ -61,7 +75,7 @@ export const CombinedEquityTable: React.FC = () => {
           totalDividends,
           dividendYieldOnCost,
           lastDividend: lastDividendWithShares,
-          lastDividendAmount
+          lastDividendAmount,
         };
       });
   }, [snapshot, customLots]);
@@ -154,7 +168,7 @@ export const CombinedEquityTable: React.FC = () => {
         costBasis: acc.costBasis + row.costBasis,
         unrealizedPnL: acc.unrealizedPnL + row.unrealizedPnL,
         totalReturn: acc.totalReturn + row.totalReturn,
-        totalDividends: acc.totalDividends + row.totalDividends
+        totalDividends: acc.totalDividends + row.totalDividends,
       }),
       { marketValue: 0, costBasis: 0, unrealizedPnL: 0, totalReturn: 0, totalDividends: 0 }
     );
@@ -168,46 +182,83 @@ export const CombinedEquityTable: React.FC = () => {
             <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
               Symbol {sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('shares')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('shares')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Shares {sortField === 'shares' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('marketValue')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('marketValue')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Market Value {sortField === 'marketValue' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('costBasis')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('costBasis')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Cost Basis {sortField === 'costBasis' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('unrealizedPnL')} style={{ cursor: 'pointer', textAlign: 'right' }}>
-              Unrealized P&L {sortField === 'unrealizedPnL' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th
+              onClick={() => handleSort('unrealizedPnL')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
+              Unrealized P&L{' '}
+              {sortField === 'unrealizedPnL' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('totalReturn')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('totalReturn')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Total Return {sortField === 'totalReturn' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
             <th onClick={() => handleSort('roi')} style={{ cursor: 'pointer', textAlign: 'right' }}>
               ROI {sortField === 'roi' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('navPeak')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('navPeak')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               NAV Peak {sortField === 'navPeak' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('currentNav')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('currentNav')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Current NAV {sortField === 'currentNav' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('navDecayPercent')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('navDecayPercent')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               NAV Erosion {sortField === 'navDecayPercent' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('totalDividends')} style={{ cursor: 'pointer', textAlign: 'right' }}>
-              Dividend Income {sortField === 'totalDividends' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th
+              onClick={() => handleSort('totalDividends')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
+              Dividend Income{' '}
+              {sortField === 'totalDividends' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('dividendYieldOnCost')} style={{ cursor: 'pointer', textAlign: 'right' }}>
-              Yield on Cost {sortField === 'dividendYieldOnCost' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th
+              onClick={() => handleSort('dividendYieldOnCost')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
+              Yield on Cost{' '}
+              {sortField === 'dividendYieldOnCost' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('lastDividendAmount')} style={{ cursor: 'pointer', textAlign: 'right' }}>
-              Last Payment {sortField === 'lastDividendAmount' && (sortDirection === 'asc' ? '▲' : '▼')}
+            <th
+              onClick={() => handleSort('lastDividendAmount')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
+              Last Payment{' '}
+              {sortField === 'lastDividendAmount' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedData.map((row) => {
+          {sortedData.map(row => {
             const isExpanded = expandedSymbol === row.symbol;
             return (
               <>
@@ -275,23 +326,33 @@ export const CombinedEquityTable: React.FC = () => {
                               </div>
                               <div className="metric-row">
                                 <span className="metric-label">Current NAV:</span>
-                                <span className="metric-value">{formatCurrency(row.currentNav)}</span>
+                                <span className="metric-value">
+                                  {formatCurrency(row.currentNav)}
+                                </span>
                               </div>
                               <div className="metric-row">
                                 <span className="metric-label">NAV Decay:</span>
-                                <span className={`metric-value ${row.navDecayPercent > 0 ? 'value-negative' : 'value-positive'}`}>
+                                <span
+                                  className={`metric-value ${row.navDecayPercent > 0 ? 'value-negative' : 'value-positive'}`}
+                                >
                                   {formatPercent(row.navDecayPercent)}
                                 </span>
                               </div>
                               <div className="metric-row">
                                 <span className="metric-label">Unrealized Gain/Loss:</span>
-                                <span className={`metric-value ${row.unrealizedPnL >= 0 ? 'value-positive' : 'value-negative'}`}>
+                                <span
+                                  className={`metric-value ${row.unrealizedPnL >= 0 ? 'value-positive' : 'value-negative'}`}
+                                >
                                   {formatCurrency(row.unrealizedPnL)}
                                 </span>
                               </div>
                               <div className="metric-row">
-                                <span className="metric-label">Total Return (incl. dividends):</span>
-                                <span className={`metric-value ${row.totalReturn >= 0 ? 'value-positive' : 'value-negative'}`}>
+                                <span className="metric-label">
+                                  Total Return (incl. dividends):
+                                </span>
+                                <span
+                                  className={`metric-value ${row.totalReturn >= 0 ? 'value-positive' : 'value-negative'}`}
+                                >
                                   {formatCurrency(row.totalReturn)}
                                 </span>
                               </div>
@@ -316,19 +377,27 @@ export const CombinedEquityTable: React.FC = () => {
                                     {row.dividendsWithShares
                                       .slice()
                                       .reverse()
-                                      .map((dividend) => (
+                                      .map(dividend => (
                                         <tr key={dividend.id}>
                                           <td>{formatDate(dividend.date)}</td>
                                           <td>{dividend.sharesOwned.toFixed(2)}</td>
                                           <td>{formatCurrency(dividend.amountPerShare)}</td>
-                                          <td>{formatCurrency(dividend.amountPerShare * dividend.sharesOwned)}</td>
+                                          <td>
+                                            {formatCurrency(
+                                              dividend.amountPerShare * dividend.sharesOwned
+                                            )}
+                                          </td>
                                         </tr>
                                       ))}
                                   </tbody>
                                   <tfoot>
                                     <tr>
-                                      <td colSpan={3}><strong>Total</strong></td>
-                                      <td><strong>{formatCurrency(row.totalDividends)}</strong></td>
+                                      <td colSpan={3}>
+                                        <strong>Total</strong>
+                                      </td>
+                                      <td>
+                                        <strong>{formatCurrency(row.totalDividends)}</strong>
+                                      </td>
                                     </tr>
                                   </tfoot>
                                 </table>
@@ -348,9 +417,15 @@ export const CombinedEquityTable: React.FC = () => {
         </tbody>
         <tfoot>
           <tr>
-            <td colSpan={2}><strong>Portfolio Total</strong></td>
-            <td><strong>{formatCurrency(totals.marketValue)}</strong></td>
-            <td><strong>{formatCurrency(totals.costBasis)}</strong></td>
+            <td colSpan={2}>
+              <strong>Portfolio Total</strong>
+            </td>
+            <td>
+              <strong>{formatCurrency(totals.marketValue)}</strong>
+            </td>
+            <td>
+              <strong>{formatCurrency(totals.costBasis)}</strong>
+            </td>
             <td className={totals.unrealizedPnL >= 0 ? 'value-positive' : 'value-negative'}>
               <strong>{formatCurrency(totals.unrealizedPnL)}</strong>
             </td>
@@ -359,16 +434,22 @@ export const CombinedEquityTable: React.FC = () => {
             </td>
             <td>
               <strong>
-                {totals.costBasis > 0 ? formatPercent((totals.totalReturn / totals.costBasis) * 100) : '—'}
+                {totals.costBasis > 0
+                  ? formatPercent((totals.totalReturn / totals.costBasis) * 100)
+                  : '—'}
               </strong>
             </td>
             <td></td>
             <td></td>
             <td></td>
-            <td><strong>{formatCurrency(totals.totalDividends)}</strong></td>
+            <td>
+              <strong>{formatCurrency(totals.totalDividends)}</strong>
+            </td>
             <td>
               <strong>
-                {totals.costBasis > 0 ? formatPercent((totals.totalDividends / totals.costBasis) * 100) : '—'}
+                {totals.costBasis > 0
+                  ? formatPercent((totals.totalDividends / totals.costBasis) * 100)
+                  : '—'}
               </strong>
             </td>
             <td></td>
@@ -378,4 +459,3 @@ export const CombinedEquityTable: React.FC = () => {
     </div>
   );
 };
-

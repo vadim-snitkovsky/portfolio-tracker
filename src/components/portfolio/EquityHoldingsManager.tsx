@@ -33,7 +33,7 @@ export const EquityHoldingsManager: React.FC = () => {
     symbol: '',
     shares: '',
     pricePerShare: '',
-    tradeDate: ''
+    tradeDate: '',
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [expandedSymbol, setExpandedSymbol] = useState<string | null>(null);
@@ -43,16 +43,19 @@ export const EquityHoldingsManager: React.FC = () => {
   const [sortField, setSortField] = useState<SortField>('name');
   const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
 
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
-  const equityViews = useMemo(() => deriveEquityViews(snapshot, customLots), [snapshot, customLots]);
-  const addPurchaseLot = usePortfolioStore((state) => state.addPurchaseLot);
-  const updatePurchaseLot = usePortfolioStore((state) => state.updatePurchaseLot);
-  const removePurchaseLot = usePortfolioStore((state) => state.removePurchaseLot);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
+  const equityViews = useMemo(
+    () => deriveEquityViews(snapshot, customLots),
+    [snapshot, customLots]
+  );
+  const addPurchaseLot = usePortfolioStore(state => state.addPurchaseLot);
+  const updatePurchaseLot = usePortfolioStore(state => state.updatePurchaseLot);
+  const removePurchaseLot = usePortfolioStore(state => state.removePurchaseLot);
 
   // Sort equity views
   const sortedEquityViews = useMemo(() => {
-    const filtered = equityViews.filter((view) => view.position.shares > 0);
+    const filtered = equityViews.filter(view => view.position.shares > 0);
 
     return filtered.sort((a, b) => {
       let aValue: number | string;
@@ -108,7 +111,7 @@ export const EquityHoldingsManager: React.FC = () => {
   );
 
   const handleChange = (field: keyof FormState) => (event: ChangeEvent<HTMLInputElement>) => {
-    setFormState((prev) => ({ ...prev, [field]: event.target.value }));
+    setFormState(prev => ({ ...prev, [field]: event.target.value }));
   };
 
   const handlePriceChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -117,13 +120,13 @@ export const EquityHoldingsManager: React.FC = () => {
     const digitsOnly = value.replace(/[^\d]/g, '');
 
     if (digitsOnly === '') {
-      setFormState((prev) => ({ ...prev, pricePerShare: '' }));
+      setFormState(prev => ({ ...prev, pricePerShare: '' }));
       return;
     }
 
     // Convert to number and divide by 100 to add decimal point 2 places from right
     const numericValue = parseInt(digitsOnly, 10) / 100;
-    setFormState((prev) => ({ ...prev, pricePerShare: numericValue.toFixed(2) }));
+    setFormState(prev => ({ ...prev, pricePerShare: numericValue.toFixed(2) }));
   };
 
   const resetForm = () => {
@@ -132,7 +135,7 @@ export const EquityHoldingsManager: React.FC = () => {
       symbol: lastSymbol,
       shares: '',
       pricePerShare: '',
-      tradeDate: lastTradeDate
+      tradeDate: lastTradeDate,
     });
     setEditingLotId(null);
     setFormError(null);
@@ -172,7 +175,7 @@ export const EquityHoldingsManager: React.FC = () => {
         symbol,
         shares,
         pricePerShare,
-        tradeDate
+        tradeDate,
       });
       setExpandedSymbol(symbol);
       resetForm();
@@ -182,7 +185,7 @@ export const EquityHoldingsManager: React.FC = () => {
         symbol,
         shares,
         pricePerShare,
-        tradeDate
+        tradeDate,
       });
       // Save symbol and trade date for next entry (only when adding, not editing)
       setLastSymbol(symbol);
@@ -193,7 +196,7 @@ export const EquityHoldingsManager: React.FC = () => {
         symbol: symbol,
         shares: '',
         pricePerShare: '',
-        tradeDate: tradeDate
+        tradeDate: tradeDate,
       });
       setEditingLotId(null);
       setFormError(null);
@@ -205,7 +208,7 @@ export const EquityHoldingsManager: React.FC = () => {
       symbol: lot.symbol,
       shares: lot.shares.toString(),
       pricePerShare: lot.pricePerShare.toString(),
-      tradeDate: lot.tradeDate
+      tradeDate: lot.tradeDate,
     });
     setEditingLotId(lot.id);
     setFormError(null);
@@ -214,11 +217,15 @@ export const EquityHoldingsManager: React.FC = () => {
 
   const handleDeleteLot = (lotId: string, symbol: string) => {
     const shouldDelete =
-      typeof window === 'undefined' ? true : window.confirm('Remove this lot? This cannot be undone.');
+      typeof window === 'undefined'
+        ? true
+        : window.confirm('Remove this lot? This cannot be undone.');
     if (!shouldDelete) return;
 
     // Check if this is the last lot for this symbol
-    const lotsForSymbol = customLots.filter(lot => lot.symbol.toUpperCase() === symbol.toUpperCase());
+    const lotsForSymbol = customLots.filter(
+      lot => lot.symbol.toUpperCase() === symbol.toUpperCase()
+    );
     const isLastLot = lotsForSymbol.length === 1 && lotsForSymbol[0].id === lotId;
 
     removePurchaseLot(lotId);
@@ -271,7 +278,12 @@ export const EquityHoldingsManager: React.FC = () => {
           </label>
           <label>
             <span>Trade Date</span>
-            <input type="date" value={formState.tradeDate} onChange={handleChange('tradeDate')} required />
+            <input
+              type="date"
+              value={formState.tradeDate}
+              onChange={handleChange('tradeDate')}
+              required
+            />
           </label>
         </div>
         {formError && <div className="form-error">{formError}</div>}
@@ -297,19 +309,28 @@ export const EquityHoldingsManager: React.FC = () => {
             <th onClick={() => handleSort('name')} style={{ cursor: 'pointer' }}>
               Equity {sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('shares')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('shares')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Total Shares {sortField === 'shares' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('avgPrice')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('avgPrice')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Avg Price/Share {sortField === 'avgPrice' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
-            <th onClick={() => handleSort('totalCost')} style={{ cursor: 'pointer', textAlign: 'right' }}>
+            <th
+              onClick={() => handleSort('totalCost')}
+              style={{ cursor: 'pointer', textAlign: 'right' }}
+            >
               Total Cost {sortField === 'totalCost' && (sortDirection === 'asc' ? '▲' : '▼')}
             </th>
           </tr>
         </thead>
         <tbody>
-          {sortedEquityViews.map((view) => {
+          {sortedEquityViews.map(view => {
             const { position, manualLots } = view;
             const isExpanded = expandedSymbol === position.symbol;
             const totalCost = position.shares * position.averageCost;
@@ -338,7 +359,9 @@ export const EquityHoldingsManager: React.FC = () => {
                 {isExpanded && (
                   <tr key={`${position.symbol}-details`} className="dividend-details-row">
                     <td colSpan={4} style={{ padding: 0 }}>
-                      <div style={{ padding: '1rem', backgroundColor: 'var(--color-bg-secondary)' }}>
+                      <div
+                        style={{ padding: '1rem', backgroundColor: 'var(--color-bg-secondary)' }}
+                      >
                         {manualLots.length > 0 ? (
                           <table className="data-table">
                             <thead>
@@ -353,8 +376,11 @@ export const EquityHoldingsManager: React.FC = () => {
                             <tbody>
                               {manualLots
                                 .slice()
-                                .sort((a, b) => Number(new Date(b.tradeDate)) - Number(new Date(a.tradeDate)))
-                                .map((lot) => (
+                                .sort(
+                                  (a, b) =>
+                                    Number(new Date(b.tradeDate)) - Number(new Date(a.tradeDate))
+                                )
+                                .map(lot => (
                                   <tr key={lot.id}>
                                     <td>{formatDate(lot.tradeDate)}</td>
                                     <td>{lot.shares.toLocaleString()}</td>
@@ -365,14 +391,14 @@ export const EquityHoldingsManager: React.FC = () => {
                                         <button
                                           type="button"
                                           className="button-ghost"
-                                          onClick={(e) => {
+                                          onClick={e => {
                                             e.stopPropagation();
                                             handleEditLot({
                                               id: lot.id,
                                               symbol: lot.symbol,
                                               shares: lot.shares,
                                               pricePerShare: lot.pricePerShare,
-                                              tradeDate: lot.tradeDate
+                                              tradeDate: lot.tradeDate,
                                             });
                                           }}
                                         >
@@ -381,7 +407,7 @@ export const EquityHoldingsManager: React.FC = () => {
                                         <button
                                           type="button"
                                           className="button-ghost button-ghost--danger"
-                                          onClick={(e) => {
+                                          onClick={e => {
                                             e.stopPropagation();
                                             handleDeleteLot(lot.id, lot.symbol);
                                           }}

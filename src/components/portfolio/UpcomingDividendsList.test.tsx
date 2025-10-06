@@ -13,10 +13,8 @@ describe('RecentDividendsList', () => {
         shares: 100,
         averageCost: 150,
         currentPrice: 180,
-        dividends: [
-          { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }
-        ],
-        navHistory: []
+        dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }],
+        navHistory: [],
       },
       manualLots: [],
       dividendsWithShares: [
@@ -24,10 +22,10 @@ describe('RecentDividendsList', () => {
           id: 'div-1',
           date: '2024-01-15',
           amountPerShare: 0.25,
-          sharesOwned: 100
-        }
-      ]
-    }
+          sharesOwned: 100,
+        },
+      ],
+    },
   ];
 
   it('should render without crashing', () => {
@@ -45,4 +43,3 @@ describe('RecentDividendsList', () => {
     expect(container.querySelector('div')).toBeDefined();
   });
 });
-

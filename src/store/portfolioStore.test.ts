@@ -18,22 +18,22 @@ vi.mock('../utils/storage', () => ({
     snapshot,
     customLots: lots,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   })),
   loadPortfolioById: vi.fn(() => null),
   deletePortfolio: vi.fn(() => true),
   renamePortfolio: vi.fn(() => true),
   getPortfolioMetadataList: vi.fn(() => []),
   getActivePortfolioId: vi.fn(() => null),
-  setActivePortfolioId: vi.fn()
+  setActivePortfolioId: vi.fn(),
 }));
 
 // Mock the marketData module
 vi.mock('../services/marketData', () => ({
   fetchQuotes: vi.fn(() => Promise.resolve([])),
-  mergeQuotesIntoPositions: vi.fn((positions) => positions),
+  mergeQuotesIntoPositions: vi.fn(positions => positions),
   fetchDividends: vi.fn(() => Promise.resolve([])),
-  mergeDividendsIntoPositions: vi.fn((positions) => positions)
+  mergeDividendsIntoPositions: vi.fn(positions => positions),
 }));
 
 describe('portfolioStore', () => {
@@ -44,10 +44,7 @@ describe('portfolioStore', () => {
     // Reset the store to initial state
     const { result } = renderHook(() => usePortfolioStore());
     act(() => {
-      result.current.loadPortfolio(
-        { asOf: '2025-01-01', seedAmount: 10000, equities: [] },
-        []
-      );
+      result.current.loadPortfolio({ asOf: '2025-01-01', seedAmount: 10000, equities: [] }, []);
     });
   });
 
@@ -91,7 +88,7 @@ describe('portfolioStore', () => {
       const newSnapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 20000,
-        equities: []
+        equities: [],
       };
 
       act(() => {
@@ -116,9 +113,9 @@ describe('portfolioStore', () => {
             averageCost: 150,
             currentPrice: 180,
             dividends: [],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       act(() => {
@@ -133,7 +130,7 @@ describe('portfolioStore', () => {
       const newSnapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 20000,
-        equities: []
+        equities: [],
       };
 
       act(() => {
@@ -152,7 +149,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -169,7 +166,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -186,14 +183,14 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
       const lot2: PurchaseLot = {
         id: 'lot-2',
         symbol: 'MSFT',
         tradeDate: '2025-01-02',
         shares: 20,
-        pricePerShare: 380
+        pricePerShare: 380,
       };
 
       act(() => {
@@ -214,7 +211,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -233,7 +230,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -241,7 +238,7 @@ describe('portfolioStore', () => {
         result.current.updatePurchaseLot('lot-1', {
           shares: 20,
           pricePerShare: 160,
-          tradeDate: '2025-01-02'
+          tradeDate: '2025-01-02',
         });
       });
 
@@ -269,7 +266,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -290,7 +287,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -308,7 +305,7 @@ describe('portfolioStore', () => {
         symbol: 'AAPL',
         tradeDate: '2025-01-01',
         shares: 10,
-        pricePerShare: 150
+        pricePerShare: 150,
       };
 
       act(() => {
@@ -338,11 +335,11 @@ describe('portfolioStore', () => {
             currentPrice: 180,
             dividends: [
               { id: 'div-1', date: '2025-01-01', amountPerShare: 0.25 },
-              { id: 'div-2', date: '2025-01-02', amountPerShare: 0.30 }
+              { id: 'div-2', date: '2025-01-02', amountPerShare: 0.3 },
             ],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       act(() => {
@@ -368,12 +365,10 @@ describe('portfolioStore', () => {
             shares: 0,
             averageCost: 150,
             currentPrice: 180,
-            dividends: [
-              { id: 'div-1', date: '2025-01-01', amountPerShare: 0.25 }
-            ],
-            navHistory: []
-          }
-        ]
+            dividends: [{ id: 'div-1', date: '2025-01-01', amountPerShare: 0.25 }],
+            navHistory: [],
+          },
+        ],
       };
 
       act(() => {
@@ -398,12 +393,10 @@ describe('portfolioStore', () => {
             shares: 0,
             averageCost: 150,
             currentPrice: 180,
-            dividends: [
-              { id: 'div-1', date: '2025-01-01', amountPerShare: 0.25 }
-            ],
-            navHistory: []
-          }
-        ]
+            dividends: [{ id: 'div-1', date: '2025-01-01', amountPerShare: 0.25 }],
+            navHistory: [],
+          },
+        ],
       };
 
       act(() => {
@@ -422,7 +415,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-20',
         seedAmount: 50000,
-        equities: []
+        equities: [],
       };
       const lots: PurchaseLot[] = [
         {
@@ -430,8 +423,8 @@ describe('portfolioStore', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 10,
-          pricePerShare: 150
-        }
+          pricePerShare: 150,
+        },
       ];
 
       act(() => {
@@ -457,9 +450,9 @@ describe('portfolioStore', () => {
             averageCost: 150,
             currentPrice: 180,
             dividends: [],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       act(() => {
@@ -474,7 +467,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-20',
         seedAmount: 50000,
-        equities: []
+        equities: [],
       };
 
       act(() => {
@@ -496,15 +489,16 @@ describe('portfolioStore', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 10,
-          pricePerShare: 150
+          pricePerShare: 150,
         });
       });
 
       let resolvePromise: any;
-      vi.mocked(marketData.fetchQuotes).mockImplementation(() =>
-        new Promise(resolve => {
-          resolvePromise = resolve;
-        })
+      vi.mocked(marketData.fetchQuotes).mockImplementation(
+        () =>
+          new Promise(resolve => {
+            resolvePromise = resolve;
+          })
       );
 
       let promise: Promise<any>;
@@ -534,7 +528,7 @@ describe('portfolioStore', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 10,
-          pricePerShare: 150
+          pricePerShare: 150,
         });
       });
 
@@ -576,15 +570,16 @@ describe('portfolioStore', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 10,
-          pricePerShare: 150
+          pricePerShare: 150,
         });
       });
 
       let resolvePromise: any;
-      vi.mocked(marketData.fetchDividends).mockImplementation(() =>
-        new Promise(resolve => {
-          resolvePromise = resolve;
-        })
+      vi.mocked(marketData.fetchDividends).mockImplementation(
+        () =>
+          new Promise(resolve => {
+            resolvePromise = resolve;
+          })
       );
 
       let promise: Promise<any>;
@@ -614,7 +609,7 @@ describe('portfolioStore', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 10,
-          pricePerShare: 150
+          pricePerShare: 150,
         });
       });
 
@@ -682,11 +677,11 @@ describe('portfolioStore', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 30000,
-          equities: []
+          equities: [],
         },
         customLots: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       vi.mocked(storage.loadPortfolioById).mockReturnValue(savedPortfolio);
@@ -720,11 +715,11 @@ describe('portfolioStore', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 30000,
-          equities: []
+          equities: [],
         },
         customLots: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       vi.mocked(storage.loadPortfolioById).mockReturnValue(savedPortfolio);
@@ -745,11 +740,11 @@ describe('portfolioStore', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 30000,
-          equities: []
+          equities: [],
         },
         customLots: [],
         createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString()
+        updatedAt: new Date().toISOString(),
       };
 
       vi.mocked(storage.loadPortfolioById).mockReturnValue(savedPortfolio);
@@ -854,14 +849,14 @@ describe('portfolioStore', () => {
           id: 'portfolio-1',
           name: 'Portfolio 1',
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
         },
         {
           id: 'portfolio-2',
           name: 'Portfolio 2',
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
-        }
+          updatedAt: new Date().toISOString(),
+        },
       ];
 
       vi.mocked(storage.getPortfolioMetadataList).mockReturnValue(portfolios);
@@ -918,7 +913,7 @@ describe('portfolioStore', () => {
         result.current.setSnapshot({
           asOf: '2025-01-15',
           seedAmount: 50000,
-          equities: []
+          equities: [],
         });
       });
 
@@ -947,13 +942,13 @@ describe('calculateEquityMetrics', () => {
       currentPrice: 180,
       dividends: [
         { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 },
-        { id: 'div-2', date: '2024-04-15', amountPerShare: 0.25 }
+        { id: 'div-2', date: '2024-04-15', amountPerShare: 0.25 },
       ],
       navHistory: [
         { date: '2024-01-01', value: 175 },
         { date: '2024-04-01', value: 190 },
-        { date: '2024-07-01', value: 180 }
-      ]
+        { date: '2024-07-01', value: 180 },
+      ],
     };
 
     const metrics = calculateEquityMetrics(equity);
@@ -979,7 +974,7 @@ describe('calculateEquityMetrics', () => {
       averageCost: 150,
       currentPrice: 180,
       dividends: [],
-      navHistory: []
+      navHistory: [],
     };
 
     const metrics = calculateEquityMetrics(equity);
@@ -1004,10 +999,8 @@ describe('calculatePortfolioMetrics', () => {
         shares: 100,
         averageCost: 150,
         currentPrice: 180,
-        dividends: [
-          { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }
-        ],
-        navHistory: []
+        dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }],
+        navHistory: [],
       },
       {
         symbol: 'MSFT',
@@ -1016,11 +1009,9 @@ describe('calculatePortfolioMetrics', () => {
         shares: 50,
         averageCost: 300,
         currentPrice: 380,
-        dividends: [
-          { id: 'div-1', date: '2024-01-15', amountPerShare: 0.62 }
-        ],
-        navHistory: []
-      }
+        dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.62 }],
+        navHistory: [],
+      },
     ];
 
     const metrics = calculatePortfolioMetrics(equities);
@@ -1058,8 +1049,8 @@ describe('calculatePortfolioMetrics', () => {
         averageCost: 150,
         currentPrice: 180,
         dividends: [],
-        navHistory: []
-      }
+        navHistory: [],
+      },
     ];
 
     const metrics = calculatePortfolioMetrics(equities);
@@ -1082,8 +1073,8 @@ describe('calculatePortfolioMetrics', () => {
         averageCost: 150,
         currentPrice: 180,
         dividends: [],
-        navHistory: []
-      }
+        navHistory: [],
+      },
     ];
 
     const metrics = calculatePortfolioMetrics(equities);
@@ -1108,12 +1099,10 @@ describe('deriveEquityViews', () => {
           shares: 0,
           averageCost: 150,
           currentPrice: 180,
-          dividends: [
-            { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }
-          ],
-          navHistory: []
-        }
-      ]
+          dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }],
+          navHistory: [],
+        },
+      ],
     };
 
     const lots: PurchaseLot[] = [
@@ -1122,8 +1111,8 @@ describe('deriveEquityViews', () => {
         symbol: 'AAPL',
         tradeDate: '2024-01-01',
         shares: 100,
-        pricePerShare: 150
-      }
+        pricePerShare: 150,
+      },
     ];
 
     const views = deriveEquityViews(snapshot, lots);
@@ -1142,7 +1131,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: []
+      equities: [],
     };
 
     const lots: PurchaseLot[] = [
@@ -1151,8 +1140,8 @@ describe('deriveEquityViews', () => {
         symbol: 'TSLA',
         tradeDate: '2024-01-01',
         shares: 50,
-        pricePerShare: 200
-      }
+        pricePerShare: 200,
+      },
     ];
 
     const views = deriveEquityViews(snapshot, lots);
@@ -1179,11 +1168,11 @@ describe('deriveEquityViews', () => {
           currentPrice: 180,
           dividends: [
             { id: 'div-1', date: '2024-02-01', amountPerShare: 0.25 },
-            { id: 'div-2', date: '2024-05-01', amountPerShare: 0.25 }
+            { id: 'div-2', date: '2024-05-01', amountPerShare: 0.25 },
           ],
-          navHistory: []
-        }
-      ]
+          navHistory: [],
+        },
+      ],
     };
 
     const lots: PurchaseLot[] = [
@@ -1192,15 +1181,15 @@ describe('deriveEquityViews', () => {
         symbol: 'AAPL',
         tradeDate: '2024-01-01',
         shares: 50,
-        pricePerShare: 150
+        pricePerShare: 150,
       },
       {
         id: 'lot-2',
         symbol: 'AAPL',
         tradeDate: '2024-03-01',
         shares: 50,
-        pricePerShare: 160
-      }
+        pricePerShare: 160,
+      },
     ];
 
     const views = deriveEquityViews(snapshot, lots);
@@ -1226,11 +1215,11 @@ describe('deriveEquityViews', () => {
           currentPrice: 180,
           dividends: [
             { id: 'div-1', date: '2023-12-01', amountPerShare: 0.25 }, // Before acquisition
-            { id: 'div-2', date: '2024-02-01', amountPerShare: 0.25 }  // After acquisition
+            { id: 'div-2', date: '2024-02-01', amountPerShare: 0.25 }, // After acquisition
           ],
-          navHistory: []
-        }
-      ]
+          navHistory: [],
+        },
+      ],
     };
 
     const lots: PurchaseLot[] = [
@@ -1239,8 +1228,8 @@ describe('deriveEquityViews', () => {
         symbol: 'AAPL',
         tradeDate: '2024-01-01',
         shares: 100,
-        pricePerShare: 150
-      }
+        pricePerShare: 150,
+      },
     ];
 
     const views = deriveEquityViews(snapshot, lots);
@@ -1255,7 +1244,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: []
+      equities: [],
     };
 
     const lots: PurchaseLot[] = [
@@ -1264,15 +1253,15 @@ describe('deriveEquityViews', () => {
         symbol: 'AAPL',
         tradeDate: '2024-01-01',
         shares: 100,
-        pricePerShare: 150
+        pricePerShare: 150,
       },
       {
         id: 'lot-2',
         symbol: 'MSFT',
         tradeDate: '2024-01-01',
         shares: 50,
-        pricePerShare: 300
-      }
+        pricePerShare: 300,
+      },
     ];
 
     const views = deriveEquityViews(snapshot, lots);
@@ -1282,4 +1271,3 @@ describe('deriveEquityViews', () => {
     expect(views[1].position.symbol).toBe('MSFT');
   });
 });
-

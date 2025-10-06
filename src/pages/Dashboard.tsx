@@ -15,15 +15,15 @@ const TAB_DEFINITIONS: Tab[] = [
   { id: 'overview', label: 'Portfolio Overview' },
   { id: 'equities', label: 'Equity Performance' },
   { id: 'cashflow', label: 'Cash Flow & Investment' },
-  { id: 'holdings', label: 'Holdings Manager' }
+  { id: 'holdings', label: 'Holdings Manager' },
 ];
 
 type TabId = 'overview' | 'equities' | 'cashflow' | 'holdings';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const activePortfolioName = usePortfolioStore((state) => state.activePortfolioName);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const activePortfolioName = usePortfolioStore(state => state.activePortfolioName);
 
   const getDataStatusText = () => {
     const parts: string[] = [];
@@ -89,7 +89,9 @@ export const Dashboard: React.FC = () => {
         <div>
           <h1>
             Dividend Portfolio Command Center
-            {activePortfolioName && <span className="portfolio-name"> - {activePortfolioName}</span>}
+            {activePortfolioName && (
+              <span className="portfolio-name"> - {activePortfolioName}</span>
+            )}
           </h1>
           <p>{getDataStatusText()}</p>
         </div>
@@ -98,7 +100,7 @@ export const Dashboard: React.FC = () => {
       <Tabs
         tabs={TAB_DEFINITIONS}
         activeTab={activeTab}
-        onChange={(tabId) => setActiveTab(tabId as TabId)}
+        onChange={tabId => setActiveTab(tabId as TabId)}
       />
       <main className="app-shell__content">{renderTabContent()}</main>
     </div>

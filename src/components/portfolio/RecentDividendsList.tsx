@@ -1,26 +1,29 @@
 import { useMemo } from 'react';
-import { calculateEquityMetrics, deriveEquityViews, usePortfolioStore } from '../../store/portfolioStore';
+import {
+  calculateEquityMetrics,
+  deriveEquityViews,
+  usePortfolioStore,
+} from '../../store/portfolioStore';
 import { formatCurrency, formatDate } from '../../utils/formatters';
 
 export const RecentDividendsList: React.FC = () => {
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
 
   const activeViews = useMemo(
-    () =>
-      deriveEquityViews(snapshot, customLots).filter((view) => view.position.shares > 0),
+    () => deriveEquityViews(snapshot, customLots).filter(view => view.position.shares > 0),
     [snapshot, customLots]
   );
 
   const payouts = useMemo(() => {
     return activeViews
-      .flatMap((view) =>
-        view.position.dividends.map((dividend) => ({
+      .flatMap(view =>
+        view.position.dividends.map(dividend => ({
           symbol: view.position.symbol,
           name: view.position.name,
           amountPerShare: dividend.amountPerShare,
           totalAmount: dividend.amountPerShare * view.position.shares,
-          date: dividend.date
+          date: dividend.date,
         }))
       )
       .sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
@@ -43,7 +46,7 @@ export const RecentDividendsList: React.FC = () => {
         <span>{formatCurrency(trailingIncome)} in trailing income</span>
       </header>
       <ul className="recent-dividends__list">
-        {payouts.map((payout) => (
+        {payouts.map(payout => (
           <li key={`${payout.symbol}-${payout.date}`}>
             <div>
               <div className="recent-dividends__symbol">{payout.symbol}</div>

@@ -3,7 +3,7 @@ import type {
   EquityPosition,
   NavPoint,
   PortfolioSnapshot,
-  PurchaseLot
+  PurchaseLot,
 } from '../types/portfolio';
 
 const normalizeDividendPayment = (value: unknown): DividendPayment | null => {
@@ -24,7 +24,7 @@ const normalizeDividendPayment = (value: unknown): DividendPayment | null => {
     return {
       id: payment.id,
       date: payment.date,
-      amountPerShare
+      amountPerShare,
     };
   }
 
@@ -37,7 +37,7 @@ const normalizeNavPoint = (value: unknown): NavPoint | null => {
   if (typeof nav.date === 'string' && typeof nav.value === 'number') {
     return {
       date: nav.date,
-      value: nav.value
+      value: nav.value,
     };
   }
   return null;
@@ -65,9 +65,7 @@ const normalizeEquityPosition = (value: unknown): EquityPosition | null => {
     : [];
 
   const navHistory = Array.isArray(equity.navHistory)
-    ? equity.navHistory
-        .map(normalizeNavPoint)
-        .filter((entry): entry is NavPoint => entry !== null)
+    ? equity.navHistory.map(normalizeNavPoint).filter((entry): entry is NavPoint => entry !== null)
     : [];
 
   return {
@@ -78,7 +76,7 @@ const normalizeEquityPosition = (value: unknown): EquityPosition | null => {
     averageCost: equity.averageCost,
     currentPrice: equity.currentPrice,
     dividends,
-    navHistory
+    navHistory,
   };
 };
 
@@ -98,7 +96,7 @@ const normalizePurchaseLot = (value: unknown): PurchaseLot | null => {
       symbol: lot.symbol,
       tradeDate: lot.tradeDate,
       shares: lot.shares,
-      pricePerShare: lot.pricePerShare
+      pricePerShare: lot.pricePerShare,
     };
   }
 
@@ -136,7 +134,7 @@ export const parsePortfolioSnapshot = (raw: unknown): PortfolioSnapshot => {
   return {
     asOf: snapshot.asOf,
     equities,
-    cashPosition: typeof snapshot.cashPosition === 'number' ? snapshot.cashPosition : undefined
+    cashPosition: typeof snapshot.cashPosition === 'number' ? snapshot.cashPosition : undefined,
   };
 };
 
@@ -151,20 +149,18 @@ const toImportResult = (raw: unknown): PortfolioImportResult => {
     const snapshot = parsePortfolioSnapshot(candidate.snapshot);
     const maybeLots = candidate.customLots;
     const customLots = Array.isArray(maybeLots)
-      ? maybeLots
-          .map(normalizePurchaseLot)
-          .filter((entry): entry is PurchaseLot => entry !== null)
+      ? maybeLots.map(normalizePurchaseLot).filter((entry): entry is PurchaseLot => entry !== null)
       : [];
 
     return {
       snapshot,
-      customLots
+      customLots,
     };
   }
 
   return {
     snapshot: parsePortfolioSnapshot(candidate),
-    customLots: []
+    customLots: [],
   };
 };
 

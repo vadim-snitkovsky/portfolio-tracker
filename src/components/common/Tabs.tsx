@@ -15,7 +15,7 @@ interface TabsProps {
 
 export const Tabs: React.FC<TabsProps> = ({ tabs, activeTab, onChange }) => (
   <nav className="tabs">
-    {tabs.map((tab) => (
+    {tabs.map(tab => (
       <button
         key={tab.id}
         type="button"

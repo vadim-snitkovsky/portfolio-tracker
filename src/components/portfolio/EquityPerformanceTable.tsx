@@ -1,16 +1,20 @@
 import { useMemo } from 'react';
-import { calculateEquityMetrics, deriveEquityViews, usePortfolioStore } from '../../store/portfolioStore';
+import {
+  calculateEquityMetrics,
+  deriveEquityViews,
+  usePortfolioStore,
+} from '../../store/portfolioStore';
 import { formatCurrency, formatPercent } from '../../utils/formatters';
 
 export const EquityPerformanceTable: React.FC = () => {
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
 
   const data = useMemo(() => {
     return deriveEquityViews(snapshot, customLots)
-      .map((view) => view.position)
-      .filter((equity) => equity.shares > 0)
-      .map((equity) => {
+      .map(view => view.position)
+      .filter(equity => equity.shares > 0)
+      .map(equity => {
         const metrics = calculateEquityMetrics(equity);
         return {
           symbol: equity.symbol,
@@ -24,7 +28,7 @@ export const EquityPerformanceTable: React.FC = () => {
           roi: metrics.roi,
           navDecayPercent: metrics.navDecayPercent,
           navPeak: metrics.navPeak,
-          currentNav: equity.navHistory[equity.navHistory.length - 1]?.value ?? equity.currentPrice
+          currentNav: equity.navHistory[equity.navHistory.length - 1]?.value ?? equity.currentPrice,
         };
       });
   }, [snapshot, customLots]);
@@ -45,7 +49,7 @@ export const EquityPerformanceTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => (
+          {data.map(row => (
             <tr key={row.symbol}>
               <td>
                 <div className="table-cell__main">{row.symbol}</div>
@@ -63,7 +67,9 @@ export const EquityPerformanceTable: React.FC = () => {
               <td>{formatPercent(row.roi)}</td>
               <td>
                 <div className="table-cell__main">{formatPercent(row.navDecayPercent)}</div>
-                <div className="table-cell__meta">Peak {formatCurrency(row.navPeak)} → Now {formatCurrency(row.currentNav)}</div>
+                <div className="table-cell__meta">
+                  Peak {formatCurrency(row.navPeak)} → Now {formatCurrency(row.currentNav)}
+                </div>
               </td>
             </tr>
           ))}

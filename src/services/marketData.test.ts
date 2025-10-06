@@ -1,5 +1,10 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { fetchQuotes, fetchDividends, mergeQuotesIntoPositions, mergeDividendsIntoPositions } from './marketData';
+import {
+  fetchQuotes,
+  fetchDividends,
+  mergeQuotesIntoPositions,
+  mergeDividendsIntoPositions,
+} from './marketData';
 import type { EquityPosition } from '../types/portfolio';
 
 // Mock fetch globally
@@ -22,12 +27,12 @@ describe('marketData', () => {
         ok: true,
         json: async () => ({
           results: [{ c: 180.5 }],
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       const result = await fetchQuotes(['AAPL', 'MSFT']);
-      
+
       expect(result).toHaveLength(2);
       expect(fetch).toHaveBeenCalledTimes(4); // 2 for quotes + 2 for NAV history
     });
@@ -37,12 +42,12 @@ describe('marketData', () => {
         ok: true,
         json: async () => ({
           results: [{ c: 180.5 }],
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       const result = await fetchQuotes(['AAPL']);
-      
+
       expect(result[0].symbol).toBe('AAPL');
       expect(result[0].regularMarketPrice).toBe(180.5);
       expect(result[0].error).toBeUndefined();
@@ -52,7 +57,7 @@ describe('marketData', () => {
       vi.mocked(fetch).mockRejectedValue(new Error('Network error'));
 
       const result = await fetchQuotes(['AAPL']);
-      
+
       expect(result[0].symbol).toBe('AAPL');
       expect(result[0].error).toBeDefined();
     });
@@ -61,11 +66,11 @@ describe('marketData', () => {
       vi.mocked(fetch).mockResolvedValue({
         ok: false,
         status: 404,
-        statusText: 'Not Found'
+        statusText: 'Not Found',
       } as Response);
 
       const result = await fetchQuotes(['INVALID']);
-      
+
       expect(result[0].symbol).toBe('INVALID');
       expect(result[0].error).toContain('404');
     });
@@ -74,12 +79,12 @@ describe('marketData', () => {
       vi.mocked(fetch).mockResolvedValue({
         ok: true,
         json: async () => ({
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       const result = await fetchQuotes(['AAPL']);
-      
+
       expect(result[0].symbol).toBe('AAPL');
       expect(result[0].regularMarketPrice).toBeUndefined();
     });
@@ -94,8 +99,8 @@ describe('marketData', () => {
             ok: true,
             json: async () => ({
               results: [{ c: 180.5 }],
-              status: 'OK'
-            })
+              status: 'OK',
+            }),
           } as Response;
         } else {
           // NAV history response
@@ -104,16 +109,16 @@ describe('marketData', () => {
             json: async () => ({
               results: [
                 { t: 1704067200000, c: 175.0 },
-                { t: 1706745600000, c: 180.5 }
+                { t: 1706745600000, c: 180.5 },
               ],
-              status: 'OK'
-            })
+              status: 'OK',
+            }),
           } as Response;
         }
       });
 
       const result = await fetchQuotes(['AAPL']);
-      
+
       expect(result[0].navHistory).toBeDefined();
       expect(result[0].navHistory).toHaveLength(2);
       expect(result[0].navHistory![0].value).toBe(175.0);
@@ -135,15 +140,15 @@ describe('marketData', () => {
             {
               cash_amount: 0.25,
               ex_dividend_date: '2024-01-15',
-              pay_date: '2024-01-20'
-            }
+              pay_date: '2024-01-20',
+            },
           ],
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       const result = await fetchDividends(['AAPL', 'MSFT'], 12);
-      
+
       expect(result).toHaveLength(2);
       expect(fetch).toHaveBeenCalledTimes(2);
     });
@@ -156,15 +161,15 @@ describe('marketData', () => {
             {
               cash_amount: 0.25,
               ex_dividend_date: '2024-01-15',
-              pay_date: '2024-01-20'
-            }
+              pay_date: '2024-01-20',
+            },
           ],
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       const result = await fetchDividends(['AAPL'], 12);
-      
+
       expect(result[0].symbol).toBe('AAPL');
       expect(result[0].dividends).toHaveLength(1);
       expect(result[0].dividends[0].amountPerShare).toBe(0.25);
@@ -175,7 +180,7 @@ describe('marketData', () => {
       vi.mocked(fetch).mockRejectedValue(new Error('Network error'));
 
       const result = await fetchDividends(['AAPL'], 12);
-      
+
       expect(result[0].symbol).toBe('AAPL');
       expect(result[0].error).toBeDefined();
       expect(result[0].dividends).toEqual([]);
@@ -185,11 +190,11 @@ describe('marketData', () => {
       vi.mocked(fetch).mockResolvedValue({
         ok: false,
         status: 404,
-        statusText: 'Not Found'
+        statusText: 'Not Found',
       } as Response);
 
       const result = await fetchDividends(['INVALID'], 12);
-      
+
       expect(result[0].symbol).toBe('INVALID');
       expect(result[0].error).toContain('404');
       expect(result[0].dividends).toEqual([]);
@@ -203,23 +208,23 @@ describe('marketData', () => {
             {
               cash_amount: 0.25,
               ex_dividend_date: '2024-01-15',
-              pay_date: '2024-01-20'
+              pay_date: '2024-01-20',
             },
             {
-              cash_amount: 0.30,
+              cash_amount: 0.3,
               ex_dividend_date: '2024-02-15',
-              pay_date: '2024-02-20'
-            }
+              pay_date: '2024-02-20',
+            },
           ],
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       const result = await fetchDividends(['AAPL'], 12);
 
       expect(result[0].dividends).toHaveLength(2);
       expect(result[0].dividends[0].amountPerShare).toBe(0.25);
-      expect(result[0].dividends[1].amountPerShare).toBe(0.30);
+      expect(result[0].dividends[1].amountPerShare).toBe(0.3);
     });
 
     it('should use custom monthsBack parameter', async () => {
@@ -227,12 +232,12 @@ describe('marketData', () => {
         ok: true,
         json: async () => ({
           results: [],
-          status: 'OK'
-        })
+          status: 'OK',
+        }),
       } as Response);
 
       await fetchDividends(['AAPL'], 24);
-      
+
       expect(fetch).toHaveBeenCalled();
       const callUrl = vi.mocked(fetch).mock.calls[0][0] as string;
       expect(callUrl).toContain('AAPL');
@@ -250,19 +255,19 @@ describe('marketData', () => {
           averageCost: 150,
           currentPrice: 160,
           dividends: [],
-          navHistory: []
-        }
+          navHistory: [],
+        },
       ];
 
       const quotes = [
         {
           symbol: 'AAPL',
-          regularMarketPrice: 180.5
-        }
+          regularMarketPrice: 180.5,
+        },
       ];
 
       const result = mergeQuotesIntoPositions(positions, quotes);
-      
+
       expect(result[0].currentPrice).toBe(180.5);
       expect(result[0].symbol).toBe('AAPL');
     });
@@ -277,19 +282,19 @@ describe('marketData', () => {
           averageCost: 150,
           currentPrice: 160,
           dividends: [],
-          navHistory: []
-        }
+          navHistory: [],
+        },
       ];
 
       const quotes = [
         {
           symbol: 'aapl',
-          regularMarketPrice: 180.5
-        }
+          regularMarketPrice: 180.5,
+        },
       ];
 
       const result = mergeQuotesIntoPositions(positions, quotes);
-      
+
       expect(result[0].currentPrice).toBe(180.5);
     });
 
@@ -303,19 +308,19 @@ describe('marketData', () => {
           averageCost: 150,
           currentPrice: 160,
           dividends: [],
-          navHistory: []
-        }
+          navHistory: [],
+        },
       ];
 
       const quotes = [
         {
           symbol: 'MSFT',
-          regularMarketPrice: 380.5
-        }
+          regularMarketPrice: 380.5,
+        },
       ];
 
       const result = mergeQuotesIntoPositions(positions, quotes);
-      
+
       expect(result[0].currentPrice).toBe(160);
       expect(result).toHaveLength(1);
     });
@@ -330,8 +335,8 @@ describe('marketData', () => {
           averageCost: 150,
           currentPrice: 160,
           dividends: [],
-          navHistory: []
-        }
+          navHistory: [],
+        },
       ];
 
       const quotes = [
@@ -340,13 +345,13 @@ describe('marketData', () => {
           regularMarketPrice: 180.5,
           navHistory: [
             { date: '2024-01-01', value: 175.0 },
-            { date: '2024-02-01', value: 180.5 }
-          ]
-        }
+            { date: '2024-02-01', value: 180.5 },
+          ],
+        },
       ];
 
       const result = mergeQuotesIntoPositions(positions, quotes);
-      
+
       expect(result[0].navHistory).toHaveLength(2);
       expect(result[0].navHistory[0].value).toBe(175.0);
     });
@@ -363,21 +368,19 @@ describe('marketData', () => {
           averageCost: 150,
           currentPrice: 180,
           dividends: [],
-          navHistory: []
-        }
+          navHistory: [],
+        },
       ];
 
       const dividendResults = [
         {
           symbol: 'AAPL',
-          dividends: [
-            { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }
-          ]
-        }
+          dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }],
+        },
       ];
 
       const result = mergeDividendsIntoPositions(positions, dividendResults);
-      
+
       expect(result[0].dividends).toHaveLength(1);
       expect(result[0].dividends[0].amountPerShare).toBe(0.25);
     });
@@ -392,21 +395,19 @@ describe('marketData', () => {
           averageCost: 150,
           currentPrice: 180,
           dividends: [],
-          navHistory: []
-        }
+          navHistory: [],
+        },
       ];
 
       const dividendResults = [
         {
           symbol: 'aapl',
-          dividends: [
-            { id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }
-          ]
-        }
+          dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.25 }],
+        },
       ];
 
       const result = mergeDividendsIntoPositions(positions, dividendResults);
-      
+
       expect(result[0].dividends).toHaveLength(1);
     });
 
@@ -419,27 +420,22 @@ describe('marketData', () => {
           shares: 100,
           averageCost: 150,
           currentPrice: 180,
-          dividends: [
-            { id: 'old-div', date: '2023-01-15', amountPerShare: 0.20 }
-          ],
-          navHistory: []
-        }
+          dividends: [{ id: 'old-div', date: '2023-01-15', amountPerShare: 0.2 }],
+          navHistory: [],
+        },
       ];
 
       const dividendResults = [
         {
           symbol: 'MSFT',
-          dividends: [
-            { id: 'div-1', date: '2024-01-15', amountPerShare: 0.62 }
-          ]
-        }
+          dividends: [{ id: 'div-1', date: '2024-01-15', amountPerShare: 0.62 }],
+        },
       ];
 
       const result = mergeDividendsIntoPositions(positions, dividendResults);
-      
+
       expect(result[0].dividends).toHaveLength(1);
       expect(result[0].dividends[0].id).toBe('old-div');
     });
   });
 });
-

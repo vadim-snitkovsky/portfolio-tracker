@@ -16,7 +16,7 @@ describe('CashFlowReport', () => {
         averageCost: 150,
         currentPrice: 180,
         dividends: [],
-        navHistory: []
+        navHistory: [],
       },
       manualLots: [
         {
@@ -24,23 +24,23 @@ describe('CashFlowReport', () => {
           symbol: 'AAPL',
           tradeDate: '2024-01-15',
           shares: 100,
-          pricePerShare: 150
-        }
+          pricePerShare: 150,
+        },
       ],
       dividendsWithShares: [
         {
           id: 'div-1',
           date: '2024-02-15',
           amountPerShare: 0.25,
-          sharesOwned: 100
+          sharesOwned: 100,
         },
         {
           id: 'div-2',
           date: '2024-05-15',
           amountPerShare: 0.25,
-          sharesOwned: 100
-        }
-      ]
+          sharesOwned: 100,
+        },
+      ],
     },
     {
       position: {
@@ -51,7 +51,7 @@ describe('CashFlowReport', () => {
         averageCost: 300,
         currentPrice: 380,
         dividends: [],
-        navHistory: []
+        navHistory: [],
       },
       manualLots: [
         {
@@ -59,18 +59,18 @@ describe('CashFlowReport', () => {
           symbol: 'MSFT',
           tradeDate: '2024-03-01',
           shares: 50,
-          pricePerShare: 300
-        }
+          pricePerShare: 300,
+        },
       ],
       dividendsWithShares: [
         {
           id: 'div-3',
           date: '2024-04-15',
           amountPerShare: 0.62,
-          sharesOwned: 50
-        }
-      ]
-    }
+          sharesOwned: 50,
+        },
+      ],
+    },
   ];
 
   it('should render without crashing', () => {
@@ -107,7 +107,7 @@ describe('CashFlowReport', () => {
     const { container } = render(
       <CashFlowReport equityViews={mockEquityViews} onDeleteDividend={mockOnDeleteDividend} />
     );
-    
+
     const firstRow = container.querySelector('tbody tr');
     if (firstRow) {
       const initialRowCount = container.querySelectorAll('tbody tr').length;
@@ -129,11 +129,11 @@ describe('CashFlowReport', () => {
           averageCost: 0,
           currentPrice: 140,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
-        dividendsWithShares: []
-      }
+        dividendsWithShares: [],
+      },
     ];
 
     const { container } = render(
@@ -153,11 +153,11 @@ describe('CashFlowReport', () => {
           averageCost: 0,
           currentPrice: 250,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
-        dividendsWithShares: []
-      }
+        dividendsWithShares: [],
+      },
     ];
 
     const { container } = render(
@@ -170,18 +170,18 @@ describe('CashFlowReport', () => {
     const { container } = render(
       <CashFlowReport equityViews={mockEquityViews} onDeleteDividend={mockOnDeleteDividend} />
     );
-    
+
     // Expand first row
     const firstRow = container.querySelector('tbody tr');
     if (firstRow) {
       fireEvent.click(firstRow);
-      
+
       // Find and click delete button if it exists
       const deleteButtons = container.querySelectorAll('button');
-      const deleteButton = Array.from(deleteButtons).find(btn => 
-        btn.textContent?.includes('Delete') || btn.textContent?.includes('×')
+      const deleteButton = Array.from(deleteButtons).find(
+        btn => btn.textContent?.includes('Delete') || btn.textContent?.includes('×')
       );
-      
+
       if (deleteButton) {
         fireEvent.click(deleteButton);
         expect(mockOnDeleteDividend).toHaveBeenCalled();
@@ -189,4 +189,3 @@ describe('CashFlowReport', () => {
     }
   });
 });
-

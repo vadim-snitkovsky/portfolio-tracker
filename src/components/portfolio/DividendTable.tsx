@@ -2,20 +2,20 @@ import { useMemo, useState } from 'react';
 import {
   calculateEquityMetrics,
   deriveEquityViews,
-  usePortfolioStore
+  usePortfolioStore,
 } from '../../store/portfolioStore';
 import { formatCurrency, formatDate, formatPercent } from '../../utils/formatters';
 
 export const DividendTable: React.FC = () => {
-  const snapshot = usePortfolioStore((state) => state.snapshot);
-  const customLots = usePortfolioStore((state) => state.customLots);
+  const snapshot = usePortfolioStore(state => state.snapshot);
+  const customLots = usePortfolioStore(state => state.customLots);
   const [expandedSymbol, setExpandedSymbol] = useState<string | null>(null);
 
   const data = useMemo(() => {
     return deriveEquityViews(snapshot, customLots)
-      .map((view) => view.position)
-      .filter((equity) => equity.shares > 0)
-      .map((equity) => {
+      .map(view => view.position)
+      .filter(equity => equity.shares > 0)
+      .map(equity => {
         const metrics = calculateEquityMetrics(equity);
         const lastDividend = equity.dividends[equity.dividends.length - 1];
         const lastDividendAmount = lastDividend
@@ -32,7 +32,7 @@ export const DividendTable: React.FC = () => {
           roi: metrics.roi,
           lastDividend,
           lastDividendAmount,
-          annualizedIncome
+          annualizedIncome,
         };
       });
   }, [snapshot, customLots]);
@@ -57,7 +57,7 @@ export const DividendTable: React.FC = () => {
           </tr>
         </thead>
         <tbody>
-          {data.map((row) => {
+          {data.map(row => {
             const isExpanded = expandedSymbol === row.symbol;
             return (
               <>
@@ -75,7 +75,9 @@ export const DividendTable: React.FC = () => {
                   </td>
                   <td>
                     <div className="table-cell__main">{row.name}</div>
-                    <div className="table-cell__meta">Annualized: {formatCurrency(row.annualizedIncome)}</div>
+                    <div className="table-cell__meta">
+                      Annualized: {formatCurrency(row.annualizedIncome)}
+                    </div>
                   </td>
                   <td>{formatCurrency(row.totalDividends)}</td>
                   <td>{formatPercent(row.dividendYieldOnCost)}</td>
@@ -109,7 +111,7 @@ export const DividendTable: React.FC = () => {
                               {row.dividends
                                 .slice()
                                 .reverse()
-                                .map((dividend) => (
+                                .map(dividend => (
                                   <tr key={dividend.id}>
                                     <td>{formatDate(dividend.date)}</td>
                                     <td>{formatCurrency(dividend.amountPerShare)}</td>
@@ -119,8 +121,12 @@ export const DividendTable: React.FC = () => {
                             </tbody>
                             <tfoot>
                               <tr>
-                                <td colSpan={2}><strong>Total ({row.dividends.length} payments)</strong></td>
-                                <td><strong>{formatCurrency(row.totalDividends)}</strong></td>
+                                <td colSpan={2}>
+                                  <strong>Total ({row.dividends.length} payments)</strong>
+                                </td>
+                                <td>
+                                  <strong>{formatCurrency(row.totalDividends)}</strong>
+                                </td>
                               </tr>
                             </tfoot>
                           </table>

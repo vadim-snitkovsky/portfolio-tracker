@@ -14,7 +14,7 @@ import {
   loadPortfolioById,
   deletePortfolio,
   renamePortfolio,
-  getPortfolioMetadataList
+  getPortfolioMetadataList,
 } from './storage';
 import type { SavedPortfolio, PortfolioSnapshot, PurchaseLot } from '../types/portfolio';
 
@@ -27,24 +27,24 @@ describe('storage', () => {
   describe('loadCustomLots', () => {
     it('should return fallback when no data exists', () => {
       const fallback: PurchaseLot[] = [];
-      const result = loadCustomLots((data) => data as PurchaseLot[], fallback);
+      const result = loadCustomLots(data => data as PurchaseLot[], fallback);
       expect(result).toEqual(fallback);
     });
 
     it('should load and parse custom lots from localStorage', () => {
       const lots: PurchaseLot[] = [
-        { id: '1', symbol: 'AAPL', shares: 10, tradeDate: '2025-01-01', pricePerShare: 150 }
+        { id: '1', symbol: 'AAPL', shares: 10, tradeDate: '2025-01-01', pricePerShare: 150 },
       ];
       localStorage.setItem('portfolio-custom-lots', JSON.stringify(lots));
 
-      const result = loadCustomLots((data) => data as PurchaseLot[], []);
+      const result = loadCustomLots(data => data as PurchaseLot[], []);
       expect(result).toEqual(lots);
     });
 
     it('should return fallback on parse error', () => {
       localStorage.setItem('portfolio-custom-lots', 'invalid json');
       const fallback: PurchaseLot[] = [];
-      const result = loadCustomLots((data) => data as PurchaseLot[], fallback);
+      const result = loadCustomLots(data => data as PurchaseLot[], fallback);
       expect(result).toEqual(fallback);
     });
 
@@ -61,7 +61,7 @@ describe('storage', () => {
   describe('persistCustomLots', () => {
     it('should save custom lots to localStorage', () => {
       const lots: PurchaseLot[] = [
-        { id: '1', symbol: 'AAPL', shares: 10, tradeDate: '2025-01-01', pricePerShare: 150 }
+        { id: '1', symbol: 'AAPL', shares: 10, tradeDate: '2025-01-01', pricePerShare: 150 },
       ];
       persistCustomLots(lots);
 
@@ -89,9 +89,9 @@ describe('storage', () => {
       const fallback: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
-      const result = loadSnapshot((data) => data as PortfolioSnapshot, fallback);
+      const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
     });
 
@@ -99,14 +99,14 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       localStorage.setItem('portfolio-snapshot', JSON.stringify(snapshot));
 
-      const result = loadSnapshot((data) => data as PortfolioSnapshot, {
+      const result = loadSnapshot(data => data as PortfolioSnapshot, {
         asOf: '',
         seedAmount: 0,
-        equities: []
+        equities: [],
       });
       expect(result).toEqual(snapshot);
     });
@@ -116,9 +116,9 @@ describe('storage', () => {
       const fallback: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 0,
-        equities: []
+        equities: [],
       };
-      const result = loadSnapshot((data) => data as PortfolioSnapshot, fallback);
+      const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
     });
   });
@@ -128,7 +128,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       persistSnapshot(snapshot);
 
@@ -159,8 +159,8 @@ describe('storage', () => {
           snapshot: { asOf: '2025-01-01', seedAmount: 10000, equities: [] },
           customLots: [],
           createdAt: '2025-01-01T00:00:00Z',
-          updatedAt: '2025-01-01T00:00:00Z'
-        }
+          updatedAt: '2025-01-01T00:00:00Z',
+        },
       ];
       localStorage.setItem('saved-portfolios', JSON.stringify(portfolios));
 
@@ -190,8 +190,8 @@ describe('storage', () => {
           snapshot: { asOf: '2025-01-01', seedAmount: 10000, equities: [] },
           customLots: [],
           createdAt: '2025-01-01T00:00:00Z',
-          updatedAt: '2025-01-01T00:00:00Z'
-        }
+          updatedAt: '2025-01-01T00:00:00Z',
+        },
       ];
       saveSavedPortfolios(portfolios);
 
@@ -232,7 +232,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       const lots: PurchaseLot[] = [];
 
@@ -254,12 +254,12 @@ describe('storage', () => {
       const snapshot1: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       const snapshot2: PortfolioSnapshot = {
         asOf: '2025-01-02',
         seedAmount: 20000,
-        equities: []
+        equities: [],
       };
 
       const created = savePortfolio('portfolio-1', 'Original', snapshot1, []);
@@ -290,7 +290,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       const saved = savePortfolio('portfolio-1', 'Test', snapshot, []);
 
@@ -309,7 +309,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       savePortfolio('portfolio-1', 'Test', snapshot, []);
 
@@ -324,7 +324,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       savePortfolio('portfolio-1', 'Test', snapshot, []);
       setActivePortfolioId('portfolio-1');
@@ -344,7 +344,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       savePortfolio('portfolio-1', 'Original Name', snapshot, []);
 
@@ -359,7 +359,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       const created = savePortfolio('portfolio-1', 'Original', snapshot, []);
 
@@ -383,7 +383,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       savePortfolio('portfolio-1', 'Portfolio 1', snapshot, []);
       savePortfolio('portfolio-2', 'Portfolio 2', snapshot, []);
@@ -407,24 +407,24 @@ describe('storage', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 100,
-          pricePerShare: 150
-        }
+          pricePerShare: 150,
+        },
       ];
       localStorage.setItem('portfolio-custom-lots', JSON.stringify(lots));
 
-      const result = loadCustomLots((data) => data as PurchaseLot[], []);
+      const result = loadCustomLots(data => data as PurchaseLot[], []);
       expect(result).toHaveLength(1);
       expect(result[0].symbol).toBe('AAPL');
     });
 
     it('should return fallback when no data exists', () => {
-      const result = loadCustomLots((data) => data as PurchaseLot[], []);
+      const result = loadCustomLots(data => data as PurchaseLot[], []);
       expect(result).toEqual([]);
     });
 
     it('should return fallback on parse error', () => {
       localStorage.setItem('portfolio-custom-lots', 'invalid json');
-      const result = loadCustomLots((data) => data as PurchaseLot[], []);
+      const result = loadCustomLots(data => data as PurchaseLot[], []);
       expect(result).toEqual([]);
     });
   });
@@ -437,8 +437,8 @@ describe('storage', () => {
           symbol: 'AAPL',
           tradeDate: '2025-01-01',
           shares: 100,
-          pricePerShare: 150
-        }
+          pricePerShare: 150,
+        },
       ];
       persistCustomLots(lots);
 
@@ -460,24 +460,28 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       localStorage.setItem('portfolio-snapshot', JSON.stringify(snapshot));
 
-      const result = loadSnapshot((data) => data as PortfolioSnapshot, { asOf: '', seedAmount: 0, equities: [] });
+      const result = loadSnapshot(data => data as PortfolioSnapshot, {
+        asOf: '',
+        seedAmount: 0,
+        equities: [],
+      });
       expect(result.asOf).toBe('2025-01-01');
     });
 
     it('should return fallback when no data exists', () => {
       const fallback: PortfolioSnapshot = { asOf: '', seedAmount: 0, equities: [] };
-      const result = loadSnapshot((data) => data as PortfolioSnapshot, fallback);
+      const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
     });
 
     it('should return fallback on parse error', () => {
       localStorage.setItem('portfolio-snapshot', 'invalid json');
       const fallback: PortfolioSnapshot = { asOf: '', seedAmount: 0, equities: [] };
-      const result = loadSnapshot((data) => data as PortfolioSnapshot, fallback);
+      const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
     });
   });
@@ -487,7 +491,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: []
+        equities: [],
       };
       persistSnapshot(snapshot);
 
@@ -504,4 +508,3 @@ describe('storage', () => {
     });
   });
 });
-

@@ -1,13 +1,13 @@
 const currencyFormatter = new Intl.NumberFormat('en-US', {
   style: 'currency',
   currency: 'USD',
-  maximumFractionDigits: 2
+  maximumFractionDigits: 2,
 });
 
 const percentFormatter = new Intl.NumberFormat('en-US', {
   style: 'percent',
   minimumFractionDigits: 1,
-  maximumFractionDigits: 1
+  maximumFractionDigits: 1,
 });
 
 export const formatCurrency = (value: number): string => currencyFormatter.format(value);
@@ -24,14 +24,14 @@ export const formatDate = (isoDate: string): string => {
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     }).format(date);
   } else {
     // ISO datetime format: parse normally
     return new Intl.DateTimeFormat('en-US', {
       month: 'short',
       day: 'numeric',
-      year: 'numeric'
+      year: 'numeric',
     }).format(new Date(isoDate));
   }
 };

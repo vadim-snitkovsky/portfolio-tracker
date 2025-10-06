@@ -29,4 +29,3 @@ describe('Card', () => {
     expect(screen.getByText('Action')).toBeDefined();
   });
 });
-

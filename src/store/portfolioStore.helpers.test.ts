@@ -18,9 +18,9 @@ describe('portfolioStore selectors', () => {
               averageCost: 150,
               currentPrice: 180,
               dividends: [],
-              navHistory: []
-            }
-          ]
+              navHistory: [],
+            },
+          ],
         },
         customLots: [
           {
@@ -28,9 +28,9 @@ describe('portfolioStore selectors', () => {
             symbol: 'AAPL',
             tradeDate: '2024-01-01',
             shares: 100,
-            pricePerShare: 150
-          }
-        ]
+            pricePerShare: 150,
+          },
+        ],
       } as any;
 
       const views = selectEquityViews(state);
@@ -45,9 +45,9 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: []
+          equities: [],
         },
-        customLots: []
+        customLots: [],
       } as any;
 
       const views = selectEquityViews(state);
@@ -70,11 +70,11 @@ describe('portfolioStore selectors', () => {
               currentPrice: 180,
               dividends: [
                 { id: 'div-1', date: '2024-02-01', amountPerShare: 0.25 },
-                { id: 'div-2', date: '2024-05-01', amountPerShare: 0.25 }
+                { id: 'div-2', date: '2024-05-01', amountPerShare: 0.25 },
               ],
-              navHistory: []
-            }
-          ]
+              navHistory: [],
+            },
+          ],
         },
         customLots: [
           {
@@ -82,16 +82,16 @@ describe('portfolioStore selectors', () => {
             symbol: 'AAPL',
             tradeDate: '2024-01-01',
             shares: 50,
-            pricePerShare: 150
+            pricePerShare: 150,
           },
           {
             id: 'lot-2',
             symbol: 'AAPL',
             tradeDate: '2024-03-01',
             shares: 50,
-            pricePerShare: 160
-          }
-        ]
+            pricePerShare: 160,
+          },
+        ],
       } as any;
 
       const views = selectEquityViews(state);
@@ -116,11 +116,11 @@ describe('portfolioStore selectors', () => {
               currentPrice: 180,
               dividends: [
                 { id: 'div-1', date: '2023-12-01', amountPerShare: 0.25 }, // Before acquisition
-                { id: 'div-2', date: '2024-02-01', amountPerShare: 0.25 }  // After acquisition
+                { id: 'div-2', date: '2024-02-01', amountPerShare: 0.25 }, // After acquisition
               ],
-              navHistory: []
-            }
-          ]
+              navHistory: [],
+            },
+          ],
         },
         customLots: [
           {
@@ -128,9 +128,9 @@ describe('portfolioStore selectors', () => {
             symbol: 'AAPL',
             tradeDate: '2024-01-01',
             shares: 100,
-            pricePerShare: 150
-          }
-        ]
+            pricePerShare: 150,
+          },
+        ],
       } as any;
 
       const views = selectEquityViews(state);
@@ -144,7 +144,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: []
+          equities: [],
         },
         customLots: [
           {
@@ -152,9 +152,9 @@ describe('portfolioStore selectors', () => {
             symbol: 'TSLA',
             tradeDate: '2024-01-01',
             shares: 50,
-            pricePerShare: 200
-          }
-        ]
+            pricePerShare: 200,
+          },
+        ],
       } as any;
 
       const views = selectEquityViews(state);
@@ -170,7 +170,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: []
+          equities: [],
         },
         customLots: [
           {
@@ -178,16 +178,16 @@ describe('portfolioStore selectors', () => {
             symbol: 'MSFT',
             tradeDate: '2024-01-01',
             shares: 50,
-            pricePerShare: 300
+            pricePerShare: 300,
           },
           {
             id: 'lot-2',
             symbol: 'AAPL',
             tradeDate: '2024-01-01',
             shares: 100,
-            pricePerShare: 150
-          }
-        ]
+            pricePerShare: 150,
+          },
+        ],
       } as any;
 
       const views = selectEquityViews(state);
@@ -213,9 +213,9 @@ describe('portfolioStore selectors', () => {
               averageCost: 150,
               currentPrice: 180,
               dividends: [],
-              navHistory: []
-            }
-          ]
+              navHistory: [],
+            },
+          ],
         },
         customLots: [
           {
@@ -223,9 +223,9 @@ describe('portfolioStore selectors', () => {
             symbol: 'AAPL',
             tradeDate: '2024-01-01',
             shares: 100,
-            pricePerShare: 150
-          }
-        ]
+            pricePerShare: 150,
+          },
+        ],
       } as any;
 
       const equities = selectMergedEquities(state);
@@ -240,9 +240,9 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: []
+          equities: [],
         },
-        customLots: []
+        customLots: [],
       } as any;
 
       const equities = selectMergedEquities(state);
@@ -251,4 +251,3 @@ describe('portfolioStore selectors', () => {
     });
   });
 });
-

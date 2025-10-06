@@ -11,7 +11,7 @@ describe('formatters', () => {
 
     it('should format negative numbers as USD currency', () => {
       expect(formatCurrency(-1234.56)).toBe('-$1,234.56');
-      expect(formatCurrency(-0.50)).toBe('-$0.50');
+      expect(formatCurrency(-0.5)).toBe('-$0.50');
     });
 
     it('should format zero correctly', () => {
@@ -105,4 +105,3 @@ describe('formatters', () => {
     });
   });
 });
-

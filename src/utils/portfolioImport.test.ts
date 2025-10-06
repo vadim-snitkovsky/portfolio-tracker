@@ -16,9 +16,9 @@ describe('portfolioImport', () => {
             averageCost: 150,
             currentPrice: 180,
             dividends: [],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -31,7 +31,7 @@ describe('portfolioImport', () => {
       const raw = {
         asOf: '2025-01-15',
         equities: [],
-        cashPosition: 5000
+        cashPosition: 5000,
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -46,15 +46,17 @@ describe('portfolioImport', () => {
 
     it('should throw error if asOf is missing', () => {
       const raw = {
-        equities: []
+        equities: [],
       };
-      expect(() => parsePortfolioSnapshot(raw)).toThrow('Snapshot requires an "asOf" ISO date string');
+      expect(() => parsePortfolioSnapshot(raw)).toThrow(
+        'Snapshot requires an "asOf" ISO date string'
+      );
     });
 
     it('should throw error if equities is not an array', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: 'not an array'
+        equities: 'not an array',
       };
       expect(() => parsePortfolioSnapshot(raw)).toThrow('Snapshot requires an array of equities');
     });
@@ -66,10 +68,12 @@ describe('portfolioImport', () => {
           {
             symbol: 'AAPL',
             // missing required fields
-          }
-        ]
+          },
+        ],
       };
-      expect(() => parsePortfolioSnapshot(raw)).toThrow('One or more equities contain invalid fields');
+      expect(() => parsePortfolioSnapshot(raw)).toThrow(
+        'One or more equities contain invalid fields'
+      );
     });
 
     it('should parse dividends correctly', () => {
@@ -85,17 +89,17 @@ describe('portfolioImport', () => {
             currentPrice: 180,
             dividends: [
               { id: '1', date: '2025-01-01', amountPerShare: 0.25 },
-              { id: '2', date: '2025-01-02', amount: 0.30 } // legacy 'amount' field
+              { id: '2', date: '2025-01-02', amount: 0.3 }, // legacy 'amount' field
             ],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
       expect(result.equities[0].dividends).toHaveLength(2);
       expect(result.equities[0].dividends[0].amountPerShare).toBe(0.25);
-      expect(result.equities[0].dividends[1].amountPerShare).toBe(0.30);
+      expect(result.equities[0].dividends[1].amountPerShare).toBe(0.3);
     });
 
     it('should filter out invalid dividends', () => {
@@ -112,11 +116,11 @@ describe('portfolioImport', () => {
             dividends: [
               { id: '1', date: '2025-01-01', amountPerShare: 0.25 },
               { id: '2', date: '2025-01-02' }, // missing amountPerShare
-              { invalid: 'dividend' }
+              { invalid: 'dividend' },
             ],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -137,10 +141,10 @@ describe('portfolioImport', () => {
             dividends: [],
             navHistory: [
               { date: '2024-12-01', value: 170 },
-              { date: '2025-01-01', value: 180 }
-            ]
-          }
-        ]
+              { date: '2025-01-01', value: 180 },
+            ],
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -163,10 +167,10 @@ describe('portfolioImport', () => {
             navHistory: [
               { date: '2024-12-01', value: 170 },
               { date: '2025-01-01' }, // missing value
-              { invalid: 'nav' }
-            ]
-          }
-        ]
+              { invalid: 'nav' },
+            ],
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -185,9 +189,9 @@ describe('portfolioImport', () => {
             averageCost: 150,
             currentPrice: 180,
             dividends: [],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -205,9 +209,9 @@ describe('portfolioImport', () => {
             sector: 'Technology',
             shares: 100,
             averageCost: 150,
-            currentPrice: 180
-          }
-        ]
+            currentPrice: 180,
+          },
+        ],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -219,7 +223,7 @@ describe('portfolioImport', () => {
       const raw = {
         asOf: '2025-01-15',
         cashPosition: 5000,
-        equities: []
+        equities: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -229,7 +233,7 @@ describe('portfolioImport', () => {
     it('should parse snapshot without cashPosition', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: []
+        equities: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -240,7 +244,7 @@ describe('portfolioImport', () => {
       const raw = {
         asOf: '2025-01-15',
         cashPosition: 'invalid',
-        equities: []
+        equities: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -261,9 +265,9 @@ describe('portfolioImport', () => {
             averageCost: 150,
             currentPrice: 180,
             dividends: [],
-            navHistory: []
-          }
-        ]
+            navHistory: [],
+          },
+        ],
       };
 
       const fileContent = JSON.stringify(snapshot);
@@ -283,7 +287,7 @@ describe('portfolioImport', () => {
       const data = {
         snapshot: {
           asOf: '2025-01-15',
-          equities: []
+          equities: [],
         },
         customLots: [
           {
@@ -291,9 +295,9 @@ describe('portfolioImport', () => {
             symbol: 'AAPL',
             tradeDate: '2025-01-01',
             shares: 10,
-            pricePerShare: 150
-          }
-        ]
+            pricePerShare: 150,
+          },
+        ],
       };
 
       const fileContent = JSON.stringify(data);
@@ -311,7 +315,7 @@ describe('portfolioImport', () => {
       const data = {
         snapshot: {
           asOf: '2025-01-15',
-          equities: []
+          equities: [],
         },
         customLots: [
           {
@@ -319,14 +323,14 @@ describe('portfolioImport', () => {
             symbol: 'AAPL',
             tradeDate: '2025-01-01',
             shares: 10,
-            pricePerShare: 150
+            pricePerShare: 150,
           },
           {
             id: '2',
-            symbol: 'MSFT'
+            symbol: 'MSFT',
             // missing required fields
-          }
-        ]
+          },
+        ],
       };
 
       const fileContent = JSON.stringify(data);
@@ -356,4 +360,3 @@ describe('portfolioImport', () => {
     });
   });
 });
-

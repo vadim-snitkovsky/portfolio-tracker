@@ -1,4 +1,9 @@
-import type { SavedPortfolio, PortfolioMetadata, PortfolioSnapshot, PurchaseLot } from '../types/portfolio';
+import type {
+  SavedPortfolio,
+  PortfolioMetadata,
+  PortfolioSnapshot,
+  PurchaseLot,
+} from '../types/portfolio';
 
 const STORAGE_KEY_LOTS = 'portfolio-custom-lots';
 const STORAGE_KEY_SNAPSHOT = 'portfolio-snapshot';
@@ -131,7 +136,7 @@ export const savePortfolio = (
     snapshot,
     customLots,
     createdAt: existingIndex >= 0 ? portfolios[existingIndex].createdAt : now,
-    updatedAt: now
+    updatedAt: now,
   };
 
   if (existingIndex >= 0) {
@@ -179,7 +184,7 @@ export const renamePortfolio = (id: string, newName: string): boolean => {
   portfolios[portfolioIndex] = {
     ...portfolios[portfolioIndex],
     name: newName,
-    updatedAt: now
+    updatedAt: now,
   };
 
   saveSavedPortfolios(portfolios);
@@ -192,6 +197,6 @@ export const getPortfolioMetadataList = (): PortfolioMetadata[] => {
     id: p.id,
     name: p.name,
     createdAt: p.createdAt,
-    updatedAt: p.updatedAt
+    updatedAt: p.updatedAt,
   }));
 };

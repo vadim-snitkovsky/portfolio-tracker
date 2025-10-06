@@ -53,7 +53,7 @@ const buildPolygonNavHistoryUrl = (symbol: string, monthsBack: number = 12): str
     adjusted: 'true',
     sort: 'asc',
     limit: '50',
-    apiKey: POLYGON_API_KEY
+    apiKey: POLYGON_API_KEY,
   });
 
   if (import.meta.env.DEV) {
@@ -81,10 +81,10 @@ const fetchNavHistory = async (symbol: string, monthsBack: number = 12): Promise
 
     // Convert Polygon aggregates to NavPoint format
     return data.results
-      .filter((bar) => typeof bar.t === 'number' && typeof bar.c === 'number')
-      .map((bar) => ({
+      .filter(bar => typeof bar.t === 'number' && typeof bar.c === 'number')
+      .map(bar => ({
         date: new Date(bar.t!).toISOString().split('T')[0],
-        value: bar.c!
+        value: bar.c!,
       }));
   } catch (error) {
     console.error(`Failed to fetch NAV history for ${symbol}:`, error);
@@ -98,7 +98,7 @@ export const fetchQuotes = async (symbols: string[]): Promise<QuoteResult[]> => 
   }
 
   const results = await Promise.all(
-    symbols.map(async (symbol) => {
+    symbols.map(async symbol => {
       try {
         const response = await fetch(buildPolygonUrl(symbol));
         if (!response.ok) {
@@ -116,8 +116,7 @@ export const fetchQuotes = async (symbols: string[]): Promise<QuoteResult[]> => 
 
         const open = typeof latest.o === 'number' ? latest.o : undefined;
         const price = latest.c;
-        const changePercent =
-          open && open !== 0 ? ((price - open) / open) * 100 : undefined;
+        const changePercent = open && open !== 0 ? ((price - open) / open) * 100 : undefined;
 
         // Fetch NAV history in parallel
         const navHistory = await fetchNavHistory(symbol, 12);
@@ -127,7 +126,7 @@ export const fetchQuotes = async (symbols: string[]): Promise<QuoteResult[]> => 
           regularMarketPrice: price,
           regularMarketChangePercent: changePercent,
           currency: 'USD',
-          navHistory
+          navHistory,
         } satisfies QuoteResult;
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error fetching quotes';
@@ -143,9 +142,9 @@ export const mergeQuotesIntoPositions = (
   positions: EquityPosition[],
   quotes: QuoteResult[]
 ): EquityPosition[] => {
-  const bySymbol = new Map(quotes.map((quote) => [quote.symbol.toUpperCase(), quote]));
+  const bySymbol = new Map(quotes.map(quote => [quote.symbol.toUpperCase(), quote]));
 
-  return positions.map((position) => {
+  return positions.map(position => {
     const quote = bySymbol.get(position.symbol.toUpperCase());
     if (!quote || typeof quote.regularMarketPrice !== 'number') {
       return position;
@@ -154,7 +153,8 @@ export const mergeQuotesIntoPositions = (
     return {
       ...position,
       currentPrice: quote.regularMarketPrice,
-      navHistory: quote.navHistory && quote.navHistory.length > 0 ? quote.navHistory : position.navHistory
+      navHistory:
+        quote.navHistory && quote.navHistory.length > 0 ? quote.navHistory : position.navHistory,
     };
   });
 };
@@ -172,7 +172,7 @@ const buildPolygonDividendsUrl = (symbol: string, monthsBack: number = 12): stri
     'ex_dividend_date.gte': formatDate(startDate),
     'ex_dividend_date.lte': formatDate(endDate),
     limit: '100',
-    apiKey: POLYGON_API_KEY
+    apiKey: POLYGON_API_KEY,
   });
 
   if (import.meta.env.DEV) {
@@ -191,7 +191,7 @@ export const fetchDividends = async (
   }
 
   const results = await Promise.all(
-    symbols.map(async (symbol) => {
+    symbols.map(async symbol => {
       try {
         const response = await fetch(buildPolygonDividendsUrl(symbol, monthsBack));
         if (!response.ok) {
@@ -212,13 +212,13 @@ export const fetchDividends = async (
           .map((div, index) => ({
             id: div.id || `${symbol}-${div.ex_dividend_date}-${index}`,
             date: div.ex_dividend_date,
-            amountPerShare: div.cash_amount
+            amountPerShare: div.cash_amount,
           }))
           .sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
         return {
           symbol,
-          dividends
+          dividends,
         } satisfies DividendResult;
       } catch (error) {
         const message = error instanceof Error ? error.message : 'Unknown error fetching dividends';
@@ -234,11 +234,9 @@ export const mergeDividendsIntoPositions = (
   positions: EquityPosition[],
   dividendResults: DividendResult[]
 ): EquityPosition[] => {
-  const bySymbol = new Map(
-    dividendResults.map((result) => [result.symbol.toUpperCase(), result])
-  );
+  const bySymbol = new Map(dividendResults.map(result => [result.symbol.toUpperCase(), result]));
 
-  return positions.map((position) => {
+  return positions.map(position => {
     const result = bySymbol.get(position.symbol.toUpperCase());
     if (!result || result.dividends.length === 0) {
       return position;
@@ -246,7 +244,7 @@ export const mergeDividendsIntoPositions = (
 
     return {
       ...position,
-      dividends: result.dividends
+      dividends: result.dividends,
     };
   });
 };

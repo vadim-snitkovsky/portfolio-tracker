@@ -14,7 +14,7 @@ describe('DividendTable', () => {
         averageCost: 150,
         currentPrice: 180,
         dividends: [],
-        navHistory: []
+        navHistory: [],
       },
       manualLots: [],
       dividendsWithShares: [
@@ -22,16 +22,16 @@ describe('DividendTable', () => {
           id: 'div-1',
           date: '2024-01-15',
           amountPerShare: 0.25,
-          sharesOwned: 100
+          sharesOwned: 100,
         },
         {
           id: 'div-2',
           date: '2024-04-15',
           amountPerShare: 0.25,
-          sharesOwned: 100
-        }
-      ]
-    }
+          sharesOwned: 100,
+        },
+      ],
+    },
   ];
 
   it('should render without crashing', () => {
@@ -67,11 +67,11 @@ describe('DividendTable', () => {
           averageCost: 300,
           currentPrice: 380,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
-        dividendsWithShares: []
-      }
+        dividendsWithShares: [],
+      },
     ];
 
     const { container } = render(<DividendTable equityViews={viewsWithNoDividends} />);
@@ -89,7 +89,7 @@ describe('DividendTable', () => {
           averageCost: 150,
           currentPrice: 180,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
         dividendsWithShares: [
@@ -97,9 +97,9 @@ describe('DividendTable', () => {
             id: 'div-1',
             date: '2024-01-15',
             amountPerShare: 0.25,
-            sharesOwned: 100
-          }
-        ]
+            sharesOwned: 100,
+          },
+        ],
       },
       {
         position: {
@@ -110,7 +110,7 @@ describe('DividendTable', () => {
           averageCost: 300,
           currentPrice: 380,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
         dividendsWithShares: [
@@ -118,10 +118,10 @@ describe('DividendTable', () => {
             id: 'div-2',
             date: '2024-01-15',
             amountPerShare: 0.62,
-            sharesOwned: 50
-          }
-        ]
-      }
+            sharesOwned: 50,
+          },
+        ],
+      },
     ];
 
     const { container } = render(<DividendTable equityViews={multipleViews} />);
@@ -140,7 +140,7 @@ describe('DividendTable', () => {
           averageCost: 150,
           currentPrice: 180,
           dividends: [],
-          navHistory: []
+          navHistory: [],
         },
         manualLots: [],
         dividendsWithShares: [
@@ -148,22 +148,22 @@ describe('DividendTable', () => {
             id: 'div-1',
             date: '2024-01-15',
             amountPerShare: 0.25,
-            sharesOwned: 100
+            sharesOwned: 100,
           },
           {
             id: 'div-2',
             date: '2024-04-15',
             amountPerShare: 0.25,
-            sharesOwned: 100
+            sharesOwned: 100,
           },
           {
             id: 'div-3',
             date: '2024-07-15',
             amountPerShare: 0.25,
-            sharesOwned: 100
-          }
-        ]
-      }
+            sharesOwned: 100,
+          },
+        ],
+      },
     ];
 
     const { container } = render(<DividendTable equityViews={viewsWithMultipleDividends} />);
@@ -171,4 +171,3 @@ describe('DividendTable', () => {
     expect(rows.length).toBeGreaterThan(0);
   });
 });
-

@@ -14,23 +14,13 @@ describe('MetricTile', () => {
   });
 
   it('should render trend when provided', () => {
-    render(
-      <MetricTile
-        label="ROI"
-        value="15.5%"
-        trend={{ label: '+2.3%', positive: true }}
-      />
-    );
+    render(<MetricTile label="ROI" value="15.5%" trend={{ label: '+2.3%', positive: true }} />);
     expect(screen.getByText('+2.3%')).toBeDefined();
   });
 
   it('should apply positive trend styling', () => {
     const { container } = render(
-      <MetricTile
-        label="Positive ROI"
-        value="15.5%"
-        trend={{ label: '+2.3%', positive: true }}
-      />
+      <MetricTile label="Positive ROI" value="15.5%" trend={{ label: '+2.3%', positive: true }} />
     );
     const trendElement = container.querySelector('.metric-tile__trend--positive');
     expect(trendElement).toBeDefined();
@@ -39,11 +29,7 @@ describe('MetricTile', () => {
 
   it('should apply negative trend styling', () => {
     const { container } = render(
-      <MetricTile
-        label="Negative ROI"
-        value="15.5%"
-        trend={{ label: '-1.2%', positive: false }}
-      />
+      <MetricTile label="Negative ROI" value="15.5%" trend={{ label: '-1.2%', positive: false }} />
     );
     const trendElement = container.querySelector('.metric-tile__trend--negative');
     expect(trendElement).toBeDefined();
@@ -56,4 +42,3 @@ describe('MetricTile', () => {
     expect(tile.className).toContain('metric-tile');
   });
 });
-
