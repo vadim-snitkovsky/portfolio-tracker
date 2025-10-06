@@ -20,9 +20,6 @@
         }
       ]
     }
-  ],
-  "env": {
-    "VITE_POLYGON_API_KEY": "@polygon_api_key"
-  }
+  ]
 }
 
