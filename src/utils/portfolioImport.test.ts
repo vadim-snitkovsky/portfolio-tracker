@@ -250,6 +250,56 @@ describe('portfolioImport', () => {
       const result = parsePortfolioSnapshot(raw);
       expect(result.cashPosition).toBeUndefined();
     });
+
+    it('should parse snapshot with seedAmount and seedDate', () => {
+      const raw = {
+        asOf: '2025-01-15',
+        equities: [],
+        seedAmount: 90000,
+        seedDate: '2025-02-10',
+      };
+
+      const result = parsePortfolioSnapshot(raw);
+      expect(result.seedAmount).toBe(90000);
+      expect(result.seedDate).toBe('2025-02-10');
+    });
+
+    it('should parse snapshot without seedAmount and seedDate', () => {
+      const raw = {
+        asOf: '2025-01-15',
+        equities: [],
+      };
+
+      const result = parsePortfolioSnapshot(raw);
+      expect(result.seedAmount).toBeUndefined();
+      expect(result.seedDate).toBeUndefined();
+    });
+
+    it('should ignore invalid seedAmount and seedDate types', () => {
+      const raw = {
+        asOf: '2025-01-15',
+        equities: [],
+        seedAmount: 'invalid',
+        seedDate: 12345,
+      };
+
+      const result = parsePortfolioSnapshot(raw);
+      expect(result.seedAmount).toBeUndefined();
+      expect(result.seedDate).toBeUndefined();
+    });
+
+    it('should parse snapshot with lastPriceUpdate and lastDividendUpdate', () => {
+      const raw = {
+        asOf: '2025-01-15',
+        equities: [],
+        lastPriceUpdate: '2025-01-15T10:00:00.000Z',
+        lastDividendUpdate: '2025-01-15T09:00:00.000Z',
+      };
+
+      const result = parsePortfolioSnapshot(raw);
+      expect(result.lastPriceUpdate).toBe('2025-01-15T10:00:00.000Z');
+      expect(result.lastDividendUpdate).toBe('2025-01-15T09:00:00.000Z');
+    });
   });
 
   describe('readSnapshotFile', () => {

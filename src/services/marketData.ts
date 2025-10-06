@@ -159,21 +159,22 @@ export const mergeQuotesIntoPositions = (
   });
 };
 
-const buildPolygonDividendsUrl = (symbol: string, monthsBack: number = 12): string => {
+const buildPolygonDividendsUrl = (symbol: string, startDate?: string): string => {
   const endDate = new Date();
-  const startDate = new Date();
-  startDate.setMonth(startDate.getMonth() - monthsBack);
-
   const formatDate = (date: Date): string => date.toISOString().split('T')[0];
 
   const basePath = `/v3/reference/dividends`;
   const params = new URLSearchParams({
     ticker: symbol,
-    'ex_dividend_date.gte': formatDate(startDate),
     'ex_dividend_date.lte': formatDate(endDate),
     limit: '100',
     apiKey: POLYGON_API_KEY,
   });
+
+  // Only add start date filter if provided
+  if (startDate) {
+    params.set('ex_dividend_date.gte', startDate);
+  }
 
   if (import.meta.env.DEV) {
     return `/api/polygon${basePath}?${params.toString()}`;
@@ -184,7 +185,7 @@ const buildPolygonDividendsUrl = (symbol: string, monthsBack: number = 12): stri
 
 export const fetchDividends = async (
   symbols: string[],
-  monthsBack: number = 12
+  startDate?: string
 ): Promise<DividendResult[]> => {
   if (symbols.length === 0) {
     return [];
@@ -193,7 +194,7 @@ export const fetchDividends = async (
   const results = await Promise.all(
     symbols.map(async symbol => {
       try {
-        const response = await fetch(buildPolygonDividendsUrl(symbol, monthsBack));
+        const response = await fetch(buildPolygonDividendsUrl(symbol, startDate));
         if (!response.ok) {
           throw new Error(`HTTP ${response.status}`);
         }

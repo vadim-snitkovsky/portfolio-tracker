@@ -108,7 +108,7 @@ export const DataMenu: React.FC = () => {
   const handleRefreshDividends = async () => {
     closeMenu();
     try {
-      const results = await refreshDividends(12); // Fetch last 12 months of dividends
+      const results = await refreshDividends(); // Fetch dividends from earliest transaction date
       const errors = results.filter(result => result.error);
       const successCount = results.filter(result => result.dividends.length > 0).length;
       const timestamp = new Intl.DateTimeFormat('en-US', {
@@ -134,9 +134,10 @@ export const DataMenu: React.FC = () => {
 
   const handleDownload = () => {
     try {
+      // Export includes full snapshot (with seedAmount, seedDate, equities, etc.) and custom lots
       const payload = {
         exportedAt: new Date().toISOString(),
-        snapshot,
+        snapshot, // Includes seedAmount and seedDate
         customLots,
       };
       const blob = new Blob([JSON.stringify(payload, null, 2)], {
@@ -241,7 +242,7 @@ export const DataMenu: React.FC = () => {
             onClick={handleRefreshDividends}
             disabled={dividendStatus.isLoading}
           >
-            {dividendStatus.isLoading ? 'Refreshing dividends…' : 'Refresh dividends (12mo)'}
+            {dividendStatus.isLoading ? 'Refreshing dividends…' : 'Refresh dividends'}
           </button>
           <button type="button" onClick={handleClearStorage} className="button-ghost--danger">
             Clear all storage

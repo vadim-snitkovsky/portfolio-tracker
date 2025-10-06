@@ -88,7 +88,7 @@ export const Dashboard: React.FC = () => {
       <header className="app-shell__header">
         <div>
           <h1>
-            Dividend Portfolio Command Center
+            Dividend Portfolio Facts
             {activePortfolioName && (
               <span className="portfolio-name"> - {activePortfolioName}</span>
             )}

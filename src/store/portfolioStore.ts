@@ -43,6 +43,21 @@ const isPurchaseLot = (value: unknown): value is PurchaseLot => {
   );
 };
 
+/**
+ * Check if a symbol represents a cash position or money market fund
+ * that should not be fetched from market data APIs.
+ *
+ * Common money market funds:
+ * - CASH: Generic cash position
+ * - SPAXX: Fidelity Government Money Market Fund
+ * - FDRXX: Fidelity Government Cash Reserves
+ * - FCASH: Fidelity Cash Reserves
+ */
+const isCashPosition = (symbol: string): boolean => {
+  const upper = symbol.toUpperCase();
+  return upper === 'CASH' || upper === 'SPAXX' || upper === 'FDRXX' || upper === 'FCASH';
+};
+
 const createSeedLotsFromSnapshot = (snapshot: PortfolioSnapshot): PurchaseLot[] =>
   snapshot.equities
     .filter(equity => equity.shares > 0)
@@ -115,7 +130,7 @@ interface PortfolioState {
     error?: string;
   };
   refreshQuotes: () => Promise<QuoteResult[]>;
-  refreshDividends: (monthsBack?: number) => Promise<DividendResult[]>;
+  refreshDividends: () => Promise<DividendResult[]>;
   // Multi-portfolio management
   saveCurrentPortfolio: (name: string) => SavedPortfolio;
   loadSavedPortfolio: (id: string) => boolean;
@@ -192,7 +207,18 @@ const isPortfolioSnapshot = (value: unknown): value is PortfolioSnapshot => {
 
 const parseStoredSnapshot = (data: unknown): PortfolioSnapshot | null => {
   if (!isPortfolioSnapshot(data)) return null;
-  return data;
+  const snapshot = data as PortfolioSnapshot;
+
+  // Migrate old snapshots that don't have seedAmount/seedDate
+  // Use sample portfolio values as defaults for backward compatibility
+  if (snapshot.seedAmount === undefined) {
+    snapshot.seedAmount = samplePortfolio.seedAmount;
+  }
+  if (snapshot.seedDate === undefined) {
+    snapshot.seedDate = samplePortfolio.seedDate;
+  }
+
+  return snapshot;
 };
 
 const sanitizedSamplePortfolio = sanitizeSnapshotEquities(samplePortfolio);
@@ -309,8 +335,13 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const { snapshot, customLots } = get();
 
     // Get symbols from both snapshot equities AND custom lots
-    const snapshotSymbols = snapshot.equities.map(equity => equity.symbol);
-    const lotSymbols = customLots.map(lot => lot.symbol);
+    // Filter out CASH and money market fund positions
+    const snapshotSymbols = snapshot.equities
+      .map(equity => equity.symbol)
+      .filter(symbol => !isCashPosition(symbol));
+    const lotSymbols = customLots
+      .map(lot => lot.symbol)
+      .filter(symbol => !isCashPosition(symbol));
     const allSymbols = [...new Set([...snapshotSymbols, ...lotSymbols])].filter(Boolean);
 
     if (allSymbols.length === 0) {
@@ -386,17 +417,42 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
     return quotes;
   },
-  refreshDividends: async (monthsBack = 12) => {
+  refreshDividends: async () => {
     const { snapshot, customLots } = get();
 
     // Get symbols from both snapshot equities AND custom lots
-    const snapshotSymbols = snapshot.equities.map(equity => equity.symbol);
-    const lotSymbols = customLots.map(lot => lot.symbol);
+    // Filter out CASH and money market fund positions
+    const snapshotSymbols = snapshot.equities
+      .map(equity => equity.symbol)
+      .filter(symbol => !isCashPosition(symbol));
+    const lotSymbols = customLots
+      .map(lot => lot.symbol)
+      .filter(symbol => !isCashPosition(symbol));
     const allSymbols = [...new Set([...snapshotSymbols, ...lotSymbols])].filter(Boolean);
 
     if (allSymbols.length === 0) {
       return [];
     }
+
+    // Find the earliest transaction date from custom lots and seed date
+    const dates: string[] = [];
+
+    // Add all lot trade dates
+    customLots.forEach(lot => {
+      if (lot.tradeDate) {
+        dates.push(lot.tradeDate);
+      }
+    });
+
+    // Add seed date if available
+    if (snapshot.seedDate) {
+      dates.push(snapshot.seedDate);
+    }
+
+    // Find the earliest date (or undefined if no dates)
+    const earliestDate = dates.length > 0
+      ? dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0]
+      : undefined;
 
     set(state => ({
       dividendStatus: {
@@ -406,7 +462,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       },
     }));
 
-    const dividendResults = await fetchDividends(allSymbols, monthsBack);
+    const dividendResults = await fetchDividends(allSymbols, earliestDate);
 
     // First, merge dividends into existing equities
     let mergedEquities = mergeDividendsIntoPositions(snapshot.equities, dividendResults);

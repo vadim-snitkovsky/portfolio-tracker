@@ -557,6 +557,44 @@ describe('portfolioStore', () => {
 
       expect(result.current.quoteStatus.isLoading).toBe(false);
     });
+
+    it('should filter out CASH and money market fund positions', async () => {
+      const { result } = renderHook(() => usePortfolioStore());
+
+      // Add various positions including cash positions
+      act(() => {
+        result.current.addPurchaseLot({
+          id: 'lot-1',
+          symbol: 'AAPL',
+          tradeDate: '2025-01-01',
+          shares: 10,
+          pricePerShare: 150,
+        });
+        result.current.addPurchaseLot({
+          id: 'lot-2',
+          symbol: 'CASH',
+          tradeDate: '2025-01-01',
+          shares: 1000,
+          pricePerShare: 1,
+        });
+        result.current.addPurchaseLot({
+          id: 'lot-3',
+          symbol: 'FDRXX',
+          tradeDate: '2025-01-01',
+          shares: 5000,
+          pricePerShare: 1,
+        });
+      });
+
+      vi.mocked(marketData.fetchQuotes).mockResolvedValue([]);
+
+      await act(async () => {
+        await result.current.refreshQuotes();
+      });
+
+      // Should only call fetchQuotes with AAPL, not CASH or FDRXX
+      expect(marketData.fetchQuotes).toHaveBeenCalledWith(['AAPL']);
+    });
   });
 
   describe('refreshDividends', () => {
@@ -584,7 +622,7 @@ describe('portfolioStore', () => {
 
       let promise: Promise<any>;
       act(() => {
-        promise = result.current.refreshDividends(12);
+        promise = result.current.refreshDividends();
       });
 
       // Check loading state immediately after calling
@@ -616,11 +654,49 @@ describe('portfolioStore', () => {
       vi.mocked(marketData.fetchDividends).mockResolvedValue([]);
 
       await act(async () => {
-        await result.current.refreshDividends(12);
+        await result.current.refreshDividends();
       });
 
       expect(result.current.dividendStatus.lastUpdated).toBeDefined();
       expect(result.current.dividendStatus.isLoading).toBe(false);
+    });
+
+    it('should filter out CASH and money market fund positions', async () => {
+      const { result } = renderHook(() => usePortfolioStore());
+
+      // Add various positions including cash positions
+      act(() => {
+        result.current.addPurchaseLot({
+          id: 'lot-1',
+          symbol: 'AAPL',
+          tradeDate: '2025-01-01',
+          shares: 10,
+          pricePerShare: 150,
+        });
+        result.current.addPurchaseLot({
+          id: 'lot-2',
+          symbol: 'CASH',
+          tradeDate: '2025-01-01',
+          shares: 1000,
+          pricePerShare: 1,
+        });
+        result.current.addPurchaseLot({
+          id: 'lot-3',
+          symbol: 'SPAXX',
+          tradeDate: '2025-01-01',
+          shares: 5000,
+          pricePerShare: 1,
+        });
+      });
+
+      vi.mocked(marketData.fetchDividends).mockResolvedValue([]);
+
+      await act(async () => {
+        await result.current.refreshDividends();
+      });
+
+      // Should only call fetchDividends with AAPL, not CASH or SPAXX
+      expect(marketData.fetchDividends).toHaveBeenCalledWith(['AAPL'], expect.any(String));
     });
   });
 

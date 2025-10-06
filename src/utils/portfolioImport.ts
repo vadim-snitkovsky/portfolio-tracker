@@ -135,6 +135,12 @@ export const parsePortfolioSnapshot = (raw: unknown): PortfolioSnapshot => {
     asOf: snapshot.asOf,
     equities,
     cashPosition: typeof snapshot.cashPosition === 'number' ? snapshot.cashPosition : undefined,
+    lastPriceUpdate:
+      typeof snapshot.lastPriceUpdate === 'string' ? snapshot.lastPriceUpdate : undefined,
+    lastDividendUpdate:
+      typeof snapshot.lastDividendUpdate === 'string' ? snapshot.lastDividendUpdate : undefined,
+    seedAmount: typeof snapshot.seedAmount === 'number' ? snapshot.seedAmount : undefined,
+    seedDate: typeof snapshot.seedDate === 'string' ? snapshot.seedDate : undefined,
   };
 };
 

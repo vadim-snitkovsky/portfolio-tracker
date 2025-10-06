@@ -1,6 +1,10 @@
 import { useMemo, useState } from 'react';
-import { deriveEquityViews, usePortfolioStore } from '../../store/portfolioStore';
-import { formatCurrency, formatDate } from '../../utils/formatters';
+import {
+  calculatePortfolioMetrics,
+  deriveEquityViews,
+  usePortfolioStore,
+} from '../../store/portfolioStore';
+import { formatCurrency, formatDate, formatPercent } from '../../utils/formatters';
 
 interface DividendTransaction {
   id: string;
@@ -38,15 +42,48 @@ interface MonthlyData {
 export const CashFlowReport: React.FC = () => {
   const snapshot = usePortfolioStore(state => state.snapshot);
   const customLots = usePortfolioStore(state => state.customLots);
+  const setSnapshot = usePortfolioStore(state => state.setSnapshot);
   const equityViews = useMemo(
     () => deriveEquityViews(snapshot, customLots),
     [snapshot, customLots]
   );
   const removeDividend = usePortfolioStore(state => state.removeDividend);
   const [expandedMonth, setExpandedMonth] = useState<string | null>(null);
+  const [isEditingSeed, setIsEditingSeed] = useState(false);
+  const [editSeedAmount, setEditSeedAmount] = useState('');
+  const [editSeedDate, setEditSeedDate] = useState('');
 
   const seedAmount = snapshot.seedAmount ?? 0;
   const seedDate = snapshot.seedDate ?? '2025-02-10';
+
+  // Calculate current portfolio value
+  const currentPortfolioValue = useMemo(() => {
+    const activePositions = equityViews
+      .map(view => view.position)
+      .filter(position => position.shares > 0);
+    const metrics = calculatePortfolioMetrics(activePositions);
+    return metrics.totalMarketValue;
+  }, [equityViews]);
+
+  const handleEditSeed = () => {
+    setEditSeedAmount(seedAmount.toString());
+    setEditSeedDate(seedDate);
+    setIsEditingSeed(true);
+  };
+
+  const handleSaveSeed = () => {
+    const newSeedAmount = parseFloat(editSeedAmount) || 0;
+    setSnapshot({
+      ...snapshot,
+      seedAmount: newSeedAmount,
+      seedDate: editSeedDate,
+    });
+    setIsEditingSeed(false);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingSeed(false);
+  };
 
   // Calculate monthly cash flow data
   const monthlyData = useMemo(() => {
@@ -163,6 +200,15 @@ export const CashFlowReport: React.FC = () => {
     const totalPurchases = monthlyData.reduce((sum, m) => sum + m.purchaseCount, 0);
     const totalDividendPayments = monthlyData.reduce((sum, m) => sum + m.dividendCount, 0);
 
+    // New calculations (as percentages for formatPercent, which divides by 100)
+    const dividendROI = seedAmount > 0 ? (totalDividends / seedAmount) * 100 : 0;
+
+    // Cash balance derived from seed - invested + dividends
+    const currentCashBalance = seedAmount - totalCashInvested + totalDividends;
+
+    // True ROI is based on portfolio market value vs initial seed
+    const trueROI = seedAmount > 0 ? ((currentPortfolioValue - seedAmount) / seedAmount) * 100 : 0;
+
     return {
       totalCashInvested,
       totalDividends,
@@ -170,19 +216,121 @@ export const CashFlowReport: React.FC = () => {
       totalPurchases,
       totalDividendPayments,
       returnOnInvestment: totalCashInvested > 0 ? (totalDividends / totalCashInvested) * 100 : 0,
+      dividendROI,
+      trueROI,
+      currentCashBalance,
     };
-  }, [monthlyData]);
+  }, [monthlyData, seedAmount, currentPortfolioValue]);
 
   return (
     <div className="cash-flow-report">
       {/* Summary Cards */}
       <div className="metric-grid" style={{ marginBottom: '2rem' }}>
-        <div className="metric-tile">
+        <div className="metric-tile" style={{ position: 'relative' }}>
           <div className="metric-tile__label">Initial Seed</div>
-          <div className="metric-tile__value">{formatCurrency(seedAmount)}</div>
-          <div className="metric-tile__trend">
-            <span className="metric-tile__trend-label">{formatDate(seedDate)}</span>
-          </div>
+          {!isEditingSeed ? (
+            <>
+              <div className="metric-tile__value">{formatCurrency(seedAmount)}</div>
+              <div className="metric-tile__trend">
+                <span className="metric-tile__trend-label">{formatDate(seedDate)}</span>
+              </div>
+              <button
+                onClick={handleEditSeed}
+                style={{
+                  position: 'absolute',
+                  top: '0.5rem',
+                  right: '0.5rem',
+                  background: 'none',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '1rem',
+                  opacity: 0.6,
+                  padding: '0.25rem',
+                }}
+                title="Edit seed amount and date"
+              >
+                ✏️
+              </button>
+            </>
+          ) : (
+            <div style={{ padding: '0.5rem 0' }}>
+              <input
+                type="number"
+                value={editSeedAmount}
+                onChange={e => setEditSeedAmount(e.target.value)}
+                placeholder="Amount"
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  marginBottom: '0.5rem',
+                  fontSize: '1rem',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: '4px',
+                }}
+              />
+              <input
+                type="date"
+                value={editSeedDate}
+                onChange={e => setEditSeedDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '0.5rem',
+                  marginBottom: '0.5rem',
+                  fontSize: '1rem',
+                  border: '1px solid var(--color-border)',
+                  borderRadius: '4px',
+                }}
+              />
+              <div style={{ display: 'flex', gap: '0.5rem' }}>
+                <button
+                  onClick={handleSaveSeed}
+                  style={{
+                    flex: 1,
+                    padding: '0.5rem 1rem',
+                    background: '#2563eb',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    fontWeight: '600',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.target as HTMLButtonElement).style.background = '#1d4ed8';
+                  }}
+                  onMouseLeave={e => {
+                    (e.target as HTMLButtonElement).style.background = '#2563eb';
+                  }}
+                >
+                  Save
+                </button>
+                <button
+                  onClick={handleCancelEdit}
+                  style={{
+                    flex: 1,
+                    padding: '0.5rem 1rem',
+                    background: '#e5e7eb',
+                    color: '#374151',
+                    border: '1px solid #d1d5db',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    fontSize: '0.875rem',
+                    fontWeight: '500',
+                    transition: 'background 0.2s',
+                  }}
+                  onMouseEnter={e => {
+                    (e.target as HTMLButtonElement).style.background = '#d1d5db';
+                  }}
+                  onMouseLeave={e => {
+                    (e.target as HTMLButtonElement).style.background = '#e5e7eb';
+                  }}
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          )}
         </div>
 
         <div className="metric-tile">
@@ -214,36 +362,79 @@ export const CashFlowReport: React.FC = () => {
             {formatCurrency(totals.netCashFlow)}
           </div>
           <div className="metric-tile__trend">
-            <span
-              className={
-                totals.netCashFlow >= 0
-                  ? 'metric-tile__trend-positive'
-                  : 'metric-tile__trend-negative'
-              }
-            >
-              {totals.netCashFlow >= 0 ? 'Positive' : 'Negative'} flow
-            </span>
+            <span className="metric-tile__trend-label">Dividends - Invested</span>
           </div>
         </div>
 
         <div className="metric-tile">
-          <div className="metric-tile__label">Available Capital</div>
-          <div className="metric-tile__value">
-            {formatCurrency(seedAmount - totals.totalCashInvested + totals.totalDividends)}
-          </div>
+          <div className="metric-tile__label">Current Cash Balance</div>
+          <div className="metric-tile__value">{formatCurrency(totals.currentCashBalance)}</div>
           <div className="metric-tile__trend">
-            <span className="metric-tile__trend-label">Seed + Dividends - Invested</span>
+            <span className="metric-tile__trend-label">Seed - Invested + Dividends</span>
           </div>
         </div>
 
         <div className="metric-tile">
-          <div className="metric-tile__label">Dividend Return on Investment</div>
-          <div className="metric-tile__value">{totals.returnOnInvestment.toFixed(2)}%</div>
-          <div className="metric-tile__trend">
-            <span className="metric-tile__trend-label metric-tile__trend-positive">
-              Dividends / Cash Invested
-            </span>
-          </div>
+          <div className="metric-tile__label">Dividend ROI</div>
+          {seedAmount > 0 ? (
+            <>
+              <div className="metric-tile__value">
+                {totals.dividendROI >= 0 ? '+' : ''}
+                {formatPercent(totals.dividendROI)}
+              </div>
+              <div className="metric-tile__trend">
+                <span className="metric-tile__trend-label metric-tile__trend-positive">
+                  Dividends / Initial Seed
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="metric-tile__value" style={{ fontSize: '1.25rem', opacity: 0.5 }}>
+                —
+              </div>
+              <div className="metric-tile__trend">
+                <span className="metric-tile__trend-label">Set initial seed to calculate</span>
+              </div>
+            </>
+          )}
+        </div>
+
+        <div className="metric-tile">
+          <div className="metric-tile__label">True ROI</div>
+          {seedAmount > 0 ? (
+            <>
+              <div
+                className="metric-tile__value"
+                style={{
+                  color: totals.trueROI >= 0 ? 'var(--color-positive)' : 'var(--color-negative)',
+                }}
+              >
+                {totals.trueROI >= 0 ? '+' : ''}
+                {formatPercent(totals.trueROI)}
+              </div>
+              <div className="metric-tile__trend">
+                <span
+                  className={
+                    totals.trueROI >= 0
+                      ? 'metric-tile__trend-positive'
+                      : 'metric-tile__trend-negative'
+                  }
+                >
+                  (Market Value - Seed) / Seed
+                </span>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="metric-tile__value" style={{ fontSize: '1.25rem', opacity: 0.5 }}>
+                —
+              </div>
+              <div className="metric-tile__trend">
+                <span className="metric-tile__trend-label">Set initial seed to calculate</span>
+              </div>
+            </>
+          )}
         </div>
       </div>
 
