@@ -4,18 +4,45 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   test: {
+    globals: true,
     environment: 'jsdom',
     setupFiles: ['./vitest.setup.ts'],
+    pool: 'forks',
+    poolOptions: {
+      forks: {
+        singleFork: true,
+      },
+    },
+    exclude: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/coverage/**',
+      '**/.storybook/**',
+      '**/src/stories/**',
+      '**/*.stories.tsx',
+      '**/*.stories.ts',
+    ],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
+      include: [
+        'src/**/*.{ts,tsx}',
+      ],
       exclude: [
         'node_modules/',
         'dist/',
+        'coverage/',
+        '.storybook/**',
         '**/*.config.ts',
         '**/*.config.js',
+        '**/*.stories.tsx',
+        '**/*.stories.ts',
+        'src/stories/**',
         '**/types/**',
         '**/*.d.ts',
+        '**/*.test.ts',
+        '**/*.test.tsx',
+        'tests/**',
         'src/main.tsx',
         'src/vite-env.d.ts',
         // Exclude complex UI components from coverage thresholds
