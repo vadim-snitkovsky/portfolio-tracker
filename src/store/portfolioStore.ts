@@ -58,8 +58,31 @@ const isCashPosition = (symbol: string): boolean => {
   return upper === 'CASH' || upper === 'SPAXX' || upper === 'FDRXX' || upper === 'FCASH';
 };
 
+const migrateSnapshot = (snapshot: PortfolioSnapshot): PortfolioSnapshot => {
+  // Migrate old 'equities' field to 'equityMetadata'
+  if (!snapshot.equityMetadata && snapshot.equities) {
+    snapshot.equityMetadata = snapshot.equities;
+    delete snapshot.equities;
+  }
+
+  // Ensure equityMetadata exists
+  if (!snapshot.equityMetadata) {
+    snapshot.equityMetadata = [];
+  }
+
+  // Migrate old snapshots that don't have seedAmount/seedDate
+  if (snapshot.seedAmount === undefined) {
+    snapshot.seedAmount = samplePortfolio.seedAmount;
+  }
+  if (snapshot.seedDate === undefined) {
+    snapshot.seedDate = samplePortfolio.seedDate;
+  }
+
+  return snapshot;
+};
+
 const createSeedLotsFromSnapshot = (snapshot: PortfolioSnapshot): PurchaseLot[] =>
-  snapshot.equities
+  snapshot.equityMetadata
     .filter(equity => equity.shares > 0)
     .map((equity, index) => ({
       id: `seed-${equity.symbol}-${index}`,
@@ -69,13 +92,18 @@ const createSeedLotsFromSnapshot = (snapshot: PortfolioSnapshot): PurchaseLot[] 
       pricePerShare: equity.averageCost,
     }));
 
-const sanitizeSnapshotEquities = (snapshot: PortfolioSnapshot): PortfolioSnapshot => ({
-  ...snapshot,
-  equities: snapshot.equities.map(equity => ({
-    ...equity,
-    shares: 0,
-  })),
-});
+const sanitizeSnapshotEquities = (snapshot: PortfolioSnapshot): PortfolioSnapshot => {
+  // Migrate first to ensure equityMetadata exists
+  const migrated = migrateSnapshot(snapshot);
+
+  return {
+    ...migrated,
+    equityMetadata: migrated.equityMetadata.map(equity => ({
+      ...equity,
+      shares: 0,
+    })),
+  };
+};
 
 const mergeSeedLots = (existing: PurchaseLot[], seeds: PurchaseLot[]): PurchaseLot[] => {
   const existingSymbols = new Set(existing.map(lot => lot.symbol.toUpperCase()));
@@ -202,23 +230,13 @@ export const calculatePortfolioMetrics = (equities: EquityPosition[]): Portfolio
 const isPortfolioSnapshot = (value: unknown): value is PortfolioSnapshot => {
   if (typeof value !== 'object' || value === null) return false;
   const obj = value as Record<string, unknown>;
-  return typeof obj.asOf === 'string' && Array.isArray(obj.equities);
+  // Support both old 'equities' and new 'equityMetadata' field names
+  return typeof obj.asOf === 'string' && (Array.isArray(obj.equities) || Array.isArray(obj.equityMetadata));
 };
 
 const parseStoredSnapshot = (data: unknown): PortfolioSnapshot | null => {
   if (!isPortfolioSnapshot(data)) return null;
-  const snapshot = data as PortfolioSnapshot;
-
-  // Migrate old snapshots that don't have seedAmount/seedDate
-  // Use sample portfolio values as defaults for backward compatibility
-  if (snapshot.seedAmount === undefined) {
-    snapshot.seedAmount = samplePortfolio.seedAmount;
-  }
-  if (snapshot.seedDate === undefined) {
-    snapshot.seedDate = samplePortfolio.seedDate;
-  }
-
-  return snapshot;
+  return migrateSnapshot(data as PortfolioSnapshot);
 };
 
 const sanitizedSamplePortfolio = sanitizeSnapshotEquities(samplePortfolio);
@@ -283,7 +301,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
       const symbolsWithLots = new Set(updatedLots.map(lot => lot.symbol.toUpperCase()));
 
       // Remove equities that have 0 shares in snapshot AND no lots
-      const cleanedEquities = state.snapshot.equities.filter(equity => {
+      const cleanedEquities = state.snapshot.equityMetadata.filter(equity => {
         const hasLotsForSymbol = symbolsWithLots.has(equity.symbol.toUpperCase());
         const hasSnapshotShares = equity.shares > 0;
         // Keep equity if it has snapshot shares OR has lots
@@ -292,7 +310,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
       const updatedSnapshot = {
         ...state.snapshot,
-        equities: cleanedEquities,
+        equityMetadata: cleanedEquities,
       };
 
       persistSnapshot(updatedSnapshot);
@@ -304,7 +322,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     }),
   removeDividend: (symbol, dividendId) =>
     set(state => {
-      const updatedEquities = state.snapshot.equities.map(equity => {
+      const updatedEquities = state.snapshot.equityMetadata.map(equity => {
         if (equity.symbol.toUpperCase() === symbol.toUpperCase()) {
           return {
             ...equity,
@@ -316,7 +334,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
       const updatedSnapshot = {
         ...state.snapshot,
-        equities: updatedEquities,
+        equityMetadata: updatedEquities,
       };
 
       persistSnapshot(updatedSnapshot);
@@ -336,7 +354,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
     // Get symbols from both snapshot equities AND custom lots
     // Filter out CASH and money market fund positions
-    const snapshotSymbols = snapshot.equities
+    const snapshotSymbols = snapshot.equityMetadata
       .map(equity => equity.symbol)
       .filter(symbol => !isCashPosition(symbol));
     const lotSymbols = customLots
@@ -359,7 +377,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const quotes = await fetchQuotes(allSymbols);
 
     // First, merge quotes into existing equities
-    let mergedEquities = mergeQuotesIntoPositions(snapshot.equities, quotes);
+    let mergedEquities = mergeQuotesIntoPositions(snapshot.equityMetadata, quotes);
 
     // Then, add new equities for symbols that only exist in lots
     const existingSymbols = new Set(mergedEquities.map(e => e.symbol.toUpperCase()));
@@ -400,7 +418,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const now = new Date().toISOString();
     const updatedSnapshot = {
       ...snapshot,
-      equities: mergedEquities,
+      equityMetadata: mergedEquities,
       lastPriceUpdate: now,
     };
 
@@ -422,7 +440,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
 
     // Get symbols from both snapshot equities AND custom lots
     // Filter out CASH and money market fund positions
-    const snapshotSymbols = snapshot.equities
+    const snapshotSymbols = snapshot.equityMetadata
       .map(equity => equity.symbol)
       .filter(symbol => !isCashPosition(symbol));
     const lotSymbols = customLots
@@ -465,7 +483,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const dividendResults = await fetchDividends(allSymbols, earliestDate);
 
     // First, merge dividends into existing equities
-    let mergedEquities = mergeDividendsIntoPositions(snapshot.equities, dividendResults);
+    let mergedEquities = mergeDividendsIntoPositions(snapshot.equityMetadata, dividendResults);
 
     // Then, add new equities for symbols that only exist in lots
     const existingSymbols = new Set(mergedEquities.map(e => e.symbol.toUpperCase()));
@@ -506,7 +524,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const now = new Date().toISOString();
     const updatedSnapshot = {
       ...snapshot,
-      equities: mergedEquities,
+      equityMetadata: mergedEquities,
       lastDividendUpdate: now,
     };
 
@@ -673,7 +691,7 @@ export const deriveEquityViews = (
   const lotsBySymbol = groupLotsBySymbol(customLots);
   const views: EquityWithLots[] = [];
 
-  snapshot.equities.forEach(equity => {
+  snapshot.equityMetadata.forEach(equity => {
     const lots = lotsBySymbol.get(equity.symbol) ?? [];
     const { totalShares, totalCost } = aggregateLots(lots);
     const earliestAcquisitionDate = getEarliestAcquisitionDate(lots);

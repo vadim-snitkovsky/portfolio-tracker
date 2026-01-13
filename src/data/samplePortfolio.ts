@@ -5,7 +5,7 @@ export const samplePortfolio: PortfolioSnapshot = {
   cashPosition: 0,
   seedAmount: 90000,
   seedDate: '2025-02-10',
-  equities: [
+  equityMetadata: [
     {
       symbol: 'AAPL',
       name: 'Apple Inc.',

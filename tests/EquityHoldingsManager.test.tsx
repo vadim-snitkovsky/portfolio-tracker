@@ -36,7 +36,7 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
+        equityMetadata: []
       }
     });
   });
@@ -67,7 +67,7 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
+        equityMetadata: []
       }
     });
 
@@ -89,7 +89,7 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
+        equityMetadata: []
       }
     });
 
@@ -104,7 +104,7 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
+        equityMetadata: []
       }
     });
 
@@ -140,7 +140,7 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
+        equityMetadata: []
       }
     });
 

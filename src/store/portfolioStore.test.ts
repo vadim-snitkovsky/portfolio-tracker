@@ -44,7 +44,7 @@ describe('portfolioStore', () => {
     // Reset the store to initial state
     const { result } = renderHook(() => usePortfolioStore());
     act(() => {
-      result.current.loadPortfolio({ asOf: '2025-01-01', seedAmount: 10000, equities: [] }, []);
+      result.current.loadPortfolio({ asOf: '2025-01-01', seedAmount: 10000, equityMetadata: [] }, []);
     });
   });
 
@@ -53,7 +53,7 @@ describe('portfolioStore', () => {
       const { result } = renderHook(() => usePortfolioStore());
       expect(result.current.snapshot).toBeDefined();
       expect(result.current.snapshot.asOf).toBeDefined();
-      expect(Array.isArray(result.current.snapshot.equities)).toBe(true);
+      expect(Array.isArray(result.current.snapshot.equityMetadata)).toBe(true);
     });
 
     it('should have initial customLots', () => {
@@ -88,7 +88,7 @@ describe('portfolioStore', () => {
       const newSnapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 20000,
-        equities: [],
+        equityMetadata: [],
       };
 
       act(() => {
@@ -104,7 +104,7 @@ describe('portfolioStore', () => {
       const newSnapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 20000,
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -122,7 +122,7 @@ describe('portfolioStore', () => {
         result.current.setSnapshot(newSnapshot);
       });
 
-      expect(result.current.snapshot.equities[0].shares).toBe(0);
+      expect(result.current.snapshot.equityMetadata[0].shares).toBe(0);
     });
 
     it('should persist snapshot to storage', () => {
@@ -130,7 +130,7 @@ describe('portfolioStore', () => {
       const newSnapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 20000,
-        equities: [],
+        equityMetadata: [],
       };
 
       act(() => {
@@ -325,7 +325,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -347,7 +347,7 @@ describe('portfolioStore', () => {
         result.current.removeDividend('AAPL', 'div-1');
       });
 
-      const equity = result.current.snapshot.equities.find(e => e.symbol === 'AAPL');
+      const equity = result.current.snapshot.equityMetadata.find(e => e.symbol === 'AAPL');
       expect(equity?.dividends).toHaveLength(1);
       expect(equity?.dividends[0].id).toBe('div-2');
     });
@@ -357,7 +357,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -376,7 +376,7 @@ describe('portfolioStore', () => {
         result.current.removeDividend('aapl', 'div-1');
       });
 
-      const equity = result.current.snapshot.equities.find(e => e.symbol === 'AAPL');
+      const equity = result.current.snapshot.equityMetadata.find(e => e.symbol === 'AAPL');
       expect(equity?.dividends).toHaveLength(0);
     });
 
@@ -385,7 +385,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -415,7 +415,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-20',
         seedAmount: 50000,
-        equities: [],
+        equityMetadata: [],
       };
       const lots: PurchaseLot[] = [
         {
@@ -441,7 +441,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-20',
         seedAmount: 50000,
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -459,7 +459,7 @@ describe('portfolioStore', () => {
         result.current.loadPortfolio(snapshot, []);
       });
 
-      expect(result.current.snapshot.equities[0].shares).toBe(0);
+      expect(result.current.snapshot.equityMetadata[0].shares).toBe(0);
     });
 
     it('should persist loaded portfolio', () => {
@@ -467,7 +467,7 @@ describe('portfolioStore', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-20',
         seedAmount: 50000,
-        equities: [],
+        equityMetadata: [],
       };
 
       act(() => {
@@ -753,7 +753,7 @@ describe('portfolioStore', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 30000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [],
         createdAt: new Date().toISOString(),
@@ -791,7 +791,7 @@ describe('portfolioStore', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 30000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [],
         createdAt: new Date().toISOString(),
@@ -816,7 +816,7 @@ describe('portfolioStore', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 30000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [],
         createdAt: new Date().toISOString(),
@@ -989,7 +989,7 @@ describe('portfolioStore', () => {
         result.current.setSnapshot({
           asOf: '2025-01-15',
           seedAmount: 50000,
-          equities: [],
+          equityMetadata: [],
         });
       });
 
@@ -1167,7 +1167,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: [
+      equityMetadata: [
         {
           symbol: 'AAPL',
           name: 'Apple Inc.',
@@ -1207,7 +1207,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: [],
+      equityMetadata: [],
     };
 
     const lots: PurchaseLot[] = [
@@ -1234,7 +1234,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: [
+      equityMetadata: [
         {
           symbol: 'AAPL',
           name: 'Apple Inc.',
@@ -1281,7 +1281,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: [
+      equityMetadata: [
         {
           symbol: 'AAPL',
           name: 'Apple Inc.',
@@ -1320,7 +1320,7 @@ describe('deriveEquityViews', () => {
     const snapshot: PortfolioSnapshot = {
       asOf: '2025-01-15',
       seedAmount: 10000,
-      equities: [],
+      equityMetadata: [],
     };
 
     const lots: PurchaseLot[] = [

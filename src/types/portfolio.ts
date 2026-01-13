@@ -19,6 +19,7 @@ export interface PurchaseLot {
   tradeDate: string;
   shares: number;
   pricePerShare: number;
+  fundingSource?: 'seed' | 'dividend' | 'external'; // Track how this lot was funded
 }
 
 export interface EquityPosition {
@@ -34,7 +35,8 @@ export interface EquityPosition {
 
 export interface PortfolioSnapshot {
   asOf: string;
-  equities: EquityPosition[];
+  equityMetadata: EquityPosition[]; // Metadata cache for API-fetched data (prices, dividends, names, sectors)
+  equities?: EquityPosition[]; // DEPRECATED: Use equityMetadata instead
   cashPosition?: number;
   lastPriceUpdate?: string; // ISO timestamp of last price refresh
   lastDividendUpdate?: string; // ISO timestamp of last dividend refresh

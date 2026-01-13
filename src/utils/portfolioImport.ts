@@ -119,21 +119,23 @@ export const parsePortfolioSnapshot = (raw: unknown): PortfolioSnapshot => {
     throw new Error('Snapshot requires an "asOf" ISO date string');
   }
 
-  if (!Array.isArray(snapshot.equities)) {
-    throw new Error('Snapshot requires an array of equities with valid fields');
+  // Support both old 'equities' and new 'equityMetadata' field names
+  const equitiesArray = snapshot.equityMetadata || snapshot.equities;
+  if (!Array.isArray(equitiesArray)) {
+    throw new Error('Snapshot must contain equityMetadata or equities array');
   }
 
-  const equities = snapshot.equities
+  const equities = equitiesArray
     .map(normalizeEquityPosition)
     .filter((entry): entry is EquityPosition => entry !== null);
 
-  if (equities.length !== snapshot.equities.length) {
+  if (equities.length !== equitiesArray.length) {
     throw new Error('One or more equities contain invalid fields');
   }
 
   return {
     asOf: snapshot.asOf,
-    equities,
+    equityMetadata: equities,
     cashPosition: typeof snapshot.cashPosition === 'number' ? snapshot.cashPosition : undefined,
     lastPriceUpdate:
       typeof snapshot.lastPriceUpdate === 'string' ? snapshot.lastPriceUpdate : undefined,

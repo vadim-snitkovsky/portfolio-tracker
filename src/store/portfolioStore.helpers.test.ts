@@ -9,7 +9,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [
+          equityMetadata: [
             {
               symbol: 'AAPL',
               name: 'Apple Inc.',
@@ -45,7 +45,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [],
       } as any;
@@ -60,7 +60,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [
+          equityMetadata: [
             {
               symbol: 'AAPL',
               name: 'Apple Inc.',
@@ -106,7 +106,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [
+          equityMetadata: [
             {
               symbol: 'AAPL',
               name: 'Apple Inc.',
@@ -144,7 +144,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [
           {
@@ -170,7 +170,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [
           {
@@ -204,7 +204,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [
+          equityMetadata: [
             {
               symbol: 'AAPL',
               name: 'Apple Inc.',
@@ -240,7 +240,7 @@ describe('portfolioStore selectors', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [],
       } as any;
