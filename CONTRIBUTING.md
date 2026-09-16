@@ -13,8 +13,8 @@ Thank you for your interest in contributing to Portfolio Tracker! This document 
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
-- npm >= 9.0.0
+- Node.js >= 24.0.0
+- npm >= 11.0.0
 - Git
 
 ### Setup Development Environment

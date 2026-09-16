@@ -20,7 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Portfolio snapshots store positions under equityMetadata instead of equities. Old snapshots and imports migrate automatically
 - Dividend refresh looks back to the earliest lot trade date or seed date instead of a fixed 12 months
 - Application title renamed from "Dividend Portfolio Command Center" to "Dividend Portfolio Facts"
-- CI runs on Node 20 only
+- Node 24 is the minimum supported runtime. The Docker image, CI, and .nvmrc use Node 24 as well
 
 ### Fixed
 

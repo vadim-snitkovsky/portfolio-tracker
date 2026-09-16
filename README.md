@@ -74,8 +74,8 @@ A modern React 19 + TypeScript web app for monitoring income-oriented equity por
 
 ### Prerequisites
 
-- Node.js >= 20.0.0
-- npm >= 9.0.0
+- Node.js >= 24.0.0
+- npm >= 11.0.0
 - Polygon.io API key (free tier available at https://polygon.io/)
 
 ### Environment Setup
