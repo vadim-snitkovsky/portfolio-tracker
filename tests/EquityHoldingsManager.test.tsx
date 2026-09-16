@@ -18,12 +18,12 @@ vi.mock('../src/utils/storage', () => ({
     snapshot,
     customLots: lots,
     createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString()
+    updatedAt: new Date().toISOString(),
   })),
   loadPortfolioById: () => null,
   deletePortfolio: () => true,
   renamePortfolio: () => true,
-  getPortfolioMetadataList: () => []
+  getPortfolioMetadataList: () => [],
 }));
 
 import { EquityHoldingsManager } from '../src/components/portfolio/EquityHoldingsManager';
@@ -36,8 +36,8 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
-      }
+        equities: [],
+      },
     });
   });
 
@@ -54,21 +54,21 @@ describe('EquityHoldingsManager', () => {
           symbol: 'AAPL',
           tradeDate: '2024-01-01',
           shares: 100,
-          pricePerShare: 150
+          pricePerShare: 150,
         },
         {
           id: 'lot-2',
           symbol: 'MSFT',
           tradeDate: '2024-02-01',
           shares: 50,
-          pricePerShare: 300
-        }
+          pricePerShare: 300,
+        },
       ],
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
-      }
+        equities: [],
+      },
     });
 
     const { container } = render(<EquityHoldingsManager />);
@@ -83,14 +83,14 @@ describe('EquityHoldingsManager', () => {
           symbol: 'AAPL',
           tradeDate: '2024-01-01',
           shares: 100,
-          pricePerShare: 150
-        }
+          pricePerShare: 150,
+        },
       ],
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
-      }
+        equities: [],
+      },
     });
 
     const { container } = render(<EquityHoldingsManager />);
@@ -104,8 +104,8 @@ describe('EquityHoldingsManager', () => {
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
-      }
+        equities: [],
+      },
     });
 
     const { container } = render(<EquityHoldingsManager />);
@@ -120,28 +120,28 @@ describe('EquityHoldingsManager', () => {
           symbol: 'AAPL',
           tradeDate: '2024-01-01',
           shares: 100,
-          pricePerShare: 150
+          pricePerShare: 150,
         },
         {
           id: 'lot-2',
           symbol: 'AAPL',
           tradeDate: '2024-02-01',
           shares: 50,
-          pricePerShare: 160
+          pricePerShare: 160,
         },
         {
           id: 'lot-3',
           symbol: 'MSFT',
           tradeDate: '2024-03-01',
           shares: 25,
-          pricePerShare: 300
-        }
+          pricePerShare: 300,
+        },
       ],
       snapshot: {
         asOf: '2025-01-15',
         seedAmount: 10000,
-        equities: []
-      }
+        equities: [],
+      },
     });
 
     const { container } = render(<EquityHoldingsManager />);

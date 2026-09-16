@@ -31,9 +31,9 @@ assignees: ''
 
 <!-- What needs to be true for this feature to be considered complete? -->
 
-- [ ] 
-- [ ] 
-- [ ] 
+- [ ]
+- [ ]
+- [ ]
 
 ## 📊 Additional Context
 
@@ -55,4 +55,3 @@ assignees: ''
 - [ ] High - Would significantly improve my workflow
 - [ ] Medium - Nice to have
 - [ ] Low - Minor improvement
-

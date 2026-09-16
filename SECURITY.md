@@ -95,4 +95,3 @@ If you have suggestions on how this process could be improved, please submit a p
 ## Attribution
 
 This security policy is adapted from the [Electron Security Policy](https://github.com/electron/electron/blob/main/SECURITY.md).
-

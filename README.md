@@ -12,6 +12,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 ## ✨ Key Features
 
 ### 📊 Multi-Portfolio Management
+
 - **Create & Save** unlimited portfolios with custom names
 - **Switch** between portfolios instantly
 - **Rename** portfolios on the fly
@@ -19,6 +20,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 - Active portfolio name displayed in dashboard header
 
 ### 📈 Performance Tracking
+
 - **Portfolio Overview** - Cost basis, market value, total return (dividends included), ROI
 - **Equity Performance Table** - 13 sortable columns including:
   - Unrealized P&L and ROI
@@ -28,6 +30,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 - **Expandable Holdings** - Click any equity to see individual purchase lots with dates and prices
 
 ### 💰 Cash Flow Analysis
+
 - **Monthly Cash Flow Report** - Track investments and dividend income over time
 - **Expandable Months** - Click any month to see:
   - Individual dividend transactions with shares owned at payment date
@@ -37,12 +40,14 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 - **Cumulative Tracking** - See running totals of invested capital and dividend income
 
 ### 🔄 Live Market Data (Polygon.io)
+
 - **One-click price refresh** - Updates all positions with latest market prices
 - **Automatic NAV history** - Fetches 12 months of monthly price data for erosion tracking
 - **One-click dividend refresh** - Pulls last 12 months of dividend history automatically
 - **Error handling** - Graceful fallback if symbols can't be fetched
 
 ### 📝 Holdings Management
+
 - **Add purchase lots** - Track individual buys with ticker, shares, date, and price
 - **Edit lots** - Update any purchase details inline
 - **Delete lots** - Remove positions (auto-cleanup when shares reach zero)
@@ -50,6 +55,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 - **Lot-level history** - Expand any equity to see all underlying purchases
 
 ### 💾 Data Management
+
 - **Import/Export** - JSON format for easy backup and restore
 - **Auto-persistence** - All changes saved to localStorage automatically
 - **Clear storage** - Reset to sample data with confirmation
@@ -67,6 +73,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 ## 🚀 Getting Started
 
 ### Prerequisites
+
 - Node.js >= 18.0.0
 - npm >= 8.0.0
 - Polygon.io API key (free tier available at https://polygon.io/)
@@ -74,11 +81,13 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 ### Environment Setup
 
 1. **Copy the sample environment file**:
+
 ```bash
 cp .env.sample .env
 ```
 
 2. **Add your Polygon.io API key** to `.env`:
+
 ```env
 VITE_POLYGON_API_KEY=your_actual_api_key_here
 VITE_POLYGON_BASE_URL=https://api.polygon.io
@@ -114,6 +123,7 @@ Then open http://localhost:5174 (or the URL shown in your terminal) to explore t
 Docker Compose automatically reads environment variables from your `.env` file, making deployment simple and secure.
 
 **1. Setup environment variables**:
+
 ```bash
 # Copy the sample environment file
 cp .env.sample .env
@@ -123,6 +133,7 @@ cp .env.sample .env
 ```
 
 **2. Build and run with Docker Compose**:
+
 ```bash
 # Build and start the container
 docker-compose up -d
@@ -225,11 +236,13 @@ portfolio-tracker/
 ### Importing & Exporting Data
 
 **Export a portfolio**:
+
 1. Open the hamburger menu (☰)
 2. Click "Export..."
 3. A JSON file downloads with the portfolio name (e.g., `my-retirement-2025-01-15.json`)
 
 **Import a portfolio**:
+
 1. Open the hamburger menu (☰)
 2. Click "Import..."
 3. Select a previously exported JSON file
@@ -238,6 +251,7 @@ portfolio-tracker/
 ### Refreshing Market Data
 
 **Update prices and NAV history**:
+
 1. Open the hamburger menu (☰)
 2. Click "Refresh market prices"
 3. Automatically fetches:
@@ -249,6 +263,7 @@ portfolio-tracker/
    - NAV Erosion % (decline from peak)
 
 **Update dividend history**:
+
 1. Open the hamburger menu (☰)
 2. Click "Refresh dividends (12mo)"
 3. Automatically fetches last 12 months of dividend payments
@@ -261,6 +276,7 @@ portfolio-tracker/
 ### Managing Holdings
 
 **Add a purchase lot**:
+
 1. Go to the "Holdings Manager" tab
 2. Fill in the form:
    - Ticker symbol (e.g., AAPL)
@@ -271,6 +287,7 @@ portfolio-tracker/
 4. The position updates automatically with blended cost basis
 
 **View lot details**:
+
 1. In the Holdings Manager table, click the ▶ arrow next to any equity
 2. See all individual purchase lots with:
    - Trade date
@@ -280,12 +297,14 @@ portfolio-tracker/
 3. Edit or delete individual lots inline
 
 **Edit a lot**:
+
 1. Expand the equity row
 2. Click "Edit" next to the lot
 3. Modify shares, date, or price
 4. Click "Save" - cost basis recalculates instantly
 
 **Delete a lot**:
+
 1. Expand the equity row
 2. Click "Delete" next to the lot
 3. Confirm deletion
@@ -294,6 +313,7 @@ portfolio-tracker/
 ### Analyzing Cash Flow
 
 **View monthly breakdown**:
+
 1. Go to the "Monthly Cash Flow" tab
 2. See monthly summary of:
    - Cash invested (purchases)
@@ -302,6 +322,7 @@ portfolio-tracker/
    - Cumulative totals
 
 **View transaction details**:
+
 1. Click any month row to expand
 2. See all transactions for that month:
    - **Dividend rows**: Shows dividend per share, total dividend, average purchase price, and total invested
@@ -311,6 +332,7 @@ portfolio-tracker/
 ### Clearing Storage
 
 **Reset to sample data**:
+
 1. Open the hamburger menu (☰)
 2. Click "Clear all storage"
 3. Confirm the action
@@ -321,12 +343,15 @@ portfolio-tracker/
 ## 📊 Dashboard Tabs
 
 ### 1. Portfolio Overview
+
 - **Key Metrics**: Market value, cost basis, total return, ROI
 - **Dividend Summary**: Total received, yield on cost, recent payments
 - **Recent Activity**: Last 10 dividend payments with dates and amounts
 
 ### 2. Equity Performance
+
 13 sortable columns per holding:
+
 - Symbol, Name, Shares, Average Cost, Current Price
 - Market Value, Cost Basis, Unrealized P&L, ROI %
 - NAV Peak, Current NAV, NAV Erosion %
@@ -335,18 +360,22 @@ portfolio-tracker/
 Click ▶ to expand and see individual purchase lots.
 
 ### 3. Monthly Cash Flow
+
 Monthly breakdown of:
+
 - Cash Invested (purchases)
 - Dividends Received
 - Net Cash Flow
 - Cumulative totals
 
 Click any month to see:
+
 - Individual dividend transactions (with delete option)
 - Individual purchase transactions
 - Aggregated purchase data per equity
 
 ### 4. Holdings Manager
+
 - Add new purchase lots
 - View all lots grouped by equity
 - Edit lot details (shares, date, price)
@@ -374,6 +403,7 @@ open coverage/index.html
 **Coverage target**: 85%+ across all modules
 
 **Test Statistics**:
+
 - 223 comprehensive tests
 - 93.5% line coverage
 - 96.1% function coverage
@@ -382,6 +412,7 @@ open coverage/index.html
 ## 🎨 Development Tools
 
 ### Code Quality & Formatting
+
 - **Prettier** - Automatic code formatting on save
 - **ESLint** - Code linting with auto-fix
 - **Husky** - Git hooks for pre-commit checks
@@ -396,6 +427,7 @@ npm run type-check      # TypeScript type checking
 ```
 
 ### Deployment Ready
+
 - **Vercel** configuration (`vercel.json`)
 - **Docker** support (Dockerfile, docker-compose.yml)
 - **GitHub Actions** CI/CD pipeline
@@ -404,16 +436,19 @@ npm run type-check      # TypeScript type checking
 ## 🔧 Development Notes
 
 ### API Rate Limits
+
 - Polygon.io free tier: 5 API calls/minute
 - The app batches requests efficiently
 - Consider upgrading for production use
 
 ### Data Persistence
+
 - All data stored in browser localStorage
 - Portfolios persist across sessions
 - Clear browser data to reset completely
 
 ### Browser Compatibility
+
 - Modern browsers (Chrome, Firefox, Safari, Edge)
 - Requires JavaScript enabled
 - localStorage support required
@@ -439,18 +474,23 @@ open http://localhost:4173
 ```
 
 ### Production Build
+
 ```bash
 npm run build
 ```
+
 Output in `dist/` directory - deploy to any static hosting service.
 
 ### Hosting Options
+
 - **Vercel**: Zero-config deployment
 - **GitHub Pages**: Free static hosting
 - **Docker**: Use included Dockerfile
 
 ### Environment Variables
+
 Set these in your hosting platform:
+
 - `VITE_POLYGON_API_KEY` - Your Polygon.io API key
 - `VITE_POLYGON_BASE_URL` - API base URL (default: https://api.polygon.io)
 
@@ -461,6 +501,7 @@ MIT License - feel free to use for personal or commercial projects.
 ## 🤝 Contributing
 
 Contributions welcome! Please:
+
 1. Fork the repository
 2. Create a feature branch
 3. Add tests for new features

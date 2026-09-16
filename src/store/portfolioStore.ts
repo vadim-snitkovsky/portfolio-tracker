@@ -339,9 +339,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const snapshotSymbols = snapshot.equities
       .map(equity => equity.symbol)
       .filter(symbol => !isCashPosition(symbol));
-    const lotSymbols = customLots
-      .map(lot => lot.symbol)
-      .filter(symbol => !isCashPosition(symbol));
+    const lotSymbols = customLots.map(lot => lot.symbol).filter(symbol => !isCashPosition(symbol));
     const allSymbols = [...new Set([...snapshotSymbols, ...lotSymbols])].filter(Boolean);
 
     if (allSymbols.length === 0) {
@@ -425,9 +423,7 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     const snapshotSymbols = snapshot.equities
       .map(equity => equity.symbol)
       .filter(symbol => !isCashPosition(symbol));
-    const lotSymbols = customLots
-      .map(lot => lot.symbol)
-      .filter(symbol => !isCashPosition(symbol));
+    const lotSymbols = customLots.map(lot => lot.symbol).filter(symbol => !isCashPosition(symbol));
     const allSymbols = [...new Set([...snapshotSymbols, ...lotSymbols])].filter(Boolean);
 
     if (allSymbols.length === 0) {
@@ -450,9 +446,10 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
     }
 
     // Find the earliest date (or undefined if no dates)
-    const earliestDate = dates.length > 0
-      ? dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0]
-      : undefined;
+    const earliestDate =
+      dates.length > 0
+        ? dates.sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0]
+        : undefined;
 
     set(state => ({
       dividendStatus: {

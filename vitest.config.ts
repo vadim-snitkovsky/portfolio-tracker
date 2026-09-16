@@ -13,17 +13,11 @@ export default defineConfig({
         singleFork: true,
       },
     },
-    exclude: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/coverage/**',
-    ],
+    exclude: ['**/node_modules/**', '**/dist/**', '**/coverage/**'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
-      include: [
-        'src/**/*.{ts,tsx}',
-      ],
+      include: ['src/**/*.{ts,tsx}'],
       exclude: [
         'node_modules/',
         'dist/',
@@ -47,14 +41,14 @@ export default defineConfig({
         'src/components/portfolio/DividendTable.tsx',
         'src/components/portfolio/CashFlowReport.tsx',
         // Exclude storage.ts due to SSR checks (typeof window === 'undefined')
-        'src/utils/storage.ts'
+        'src/utils/storage.ts',
       ],
       thresholds: {
         lines: 85,
         functions: 85,
         branches: 85,
-        statements: 85
-      }
-    }
-  }
+        statements: 85,
+      },
+    },
+  },
 });

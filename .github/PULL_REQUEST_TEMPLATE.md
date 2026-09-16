@@ -18,15 +18,16 @@
 ## Related Issue
 
 <!-- Link to the issue this PR addresses -->
+
 Closes #(issue number)
 
 ## Changes Made
 
 <!-- List the specific changes made in this PR -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Screenshots
 
@@ -63,4 +64,3 @@ Closes #(issue number)
 ## Additional Notes
 
 <!-- Add any additional notes or context about the PR here -->
-

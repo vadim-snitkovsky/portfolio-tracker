@@ -7,7 +7,7 @@ services:
         - VITE_POLYGON_API_KEY=${VITE_POLYGON_API_KEY}
         - VITE_POLYGON_BASE_URL=${VITE_POLYGON_BASE_URL}
     ports:
-      - "4173:4173"
+      - '4173:4173'
     environment:
       - NODE_ENV=production
     restart: unless-stopped

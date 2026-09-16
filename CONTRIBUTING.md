@@ -20,27 +20,32 @@ Thank you for your interest in contributing to Portfolio Tracker! This document 
 ### Setup Development Environment
 
 1. **Fork the repository**
+
    ```bash
    # Click the "Fork" button on GitHub
    ```
 
 2. **Clone your fork**
+
    ```bash
    git clone https://github.com/YOUR_USERNAME/portfolio-tracker.git
    cd portfolio-tracker
    ```
 
 3. **Add upstream remote**
+
    ```bash
    git remote add upstream https://github.com/ORIGINAL_OWNER/portfolio-tracker.git
    ```
 
 4. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 5. **Copy environment variables**
+
    ```bash
    cp .env.sample .env
    # Edit .env and add your Polygon.io API key
@@ -64,6 +69,7 @@ git checkout -b fix/your-bug-fix
 ```
 
 Branch naming conventions:
+
 - `feature/` - New features
 - `fix/` - Bug fixes
 - `docs/` - Documentation updates
@@ -93,6 +99,7 @@ npm test -- --watch
 ```
 
 **Coverage Requirements:**
+
 - Lines: 85%+
 - Functions: 85%+
 - Branches: 85%+
@@ -116,6 +123,7 @@ git commit -m "feat: add dividend yield calculation"
 ```
 
 **Commit Message Format:**
+
 - `feat:` - New feature
 - `fix:` - Bug fix
 - `docs:` - Documentation changes
@@ -275,4 +283,3 @@ git push origin main
 ## 🙏 Thank You!
 
 Your contributions make this project better for everyone. We appreciate your time and effort!
-

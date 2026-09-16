@@ -21,6 +21,7 @@ nano .env  # or vim, code, etc.
 ```
 
 Add your Polygon.io API key:
+
 ```env
 VITE_POLYGON_API_KEY=your_actual_api_key_here
 VITE_POLYGON_BASE_URL=https://api.polygon.io
@@ -133,14 +134,16 @@ Default: Container port `4173` → Host port `4173`
 To use a different host port:
 
 **Docker Compose** (`docker-compose.yml`):
+
 ```yaml
 services:
   portfolio-tracker:
     ports:
-      - "8080:4173"  # Access on http://localhost:8080
+      - '8080:4173' # Access on http://localhost:8080
 ```
 
 **Docker CLI**:
+
 ```bash
 docker run -d -p 8080:4173 --name portfolio-tracker portfolio-tracker:latest
 ```
@@ -149,12 +152,13 @@ docker run -d -p 8080:4173 --name portfolio-tracker portfolio-tracker:latest
 
 The application uses build-time environment variables for Vite:
 
-| Variable | Required | Default | Description |
-|----------|----------|---------|-------------|
-| `VITE_POLYGON_API_KEY` | Yes | - | Your Polygon.io API key |
-| `VITE_POLYGON_BASE_URL` | No | `https://api.polygon.io` | Polygon.io API base URL |
+| Variable                | Required | Default                  | Description             |
+| ----------------------- | -------- | ------------------------ | ----------------------- |
+| `VITE_POLYGON_API_KEY`  | Yes      | -                        | Your Polygon.io API key |
+| `VITE_POLYGON_BASE_URL` | No       | `https://api.polygon.io` | Polygon.io API base URL |
 
 > **Important**: These are build-time variables. Changes require rebuilding the image:
+>
 > ```bash
 > docker-compose build --no-cache
 > docker-compose up -d
@@ -220,6 +224,7 @@ docker stats portfolio-tracker
    - Use secrets management in production
 
 2. **Use environment-specific configs**
+
    ```bash
    # Production
    docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d
@@ -230,7 +235,7 @@ docker stats portfolio-tracker
    services:
      portfolio-tracker:
        healthcheck:
-         test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:4173"]
+         test: ['CMD', 'wget', '--quiet', '--tries=1', '--spider', 'http://localhost:4173']
          interval: 30s
          timeout: 10s
          retries: 3
@@ -266,10 +271,10 @@ services:
   portfolio-tracker:
     build: .
     labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.portfolio.rule=Host(`portfolio.example.com`)"
-      - "traefik.http.routers.portfolio.entrypoints=websecure"
-      - "traefik.http.routers.portfolio.tls.certresolver=letsencrypt"
+      - 'traefik.enable=true'
+      - 'traefik.http.routers.portfolio.rule=Host(`portfolio.example.com`)'
+      - 'traefik.http.routers.portfolio.entrypoints=websecure'
+      - 'traefik.http.routers.portfolio.tls.certresolver=letsencrypt'
 ```
 
 ## Image Size Optimization

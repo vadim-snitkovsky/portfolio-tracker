@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
 - Initial release of Portfolio Tracker
 - Multi-portfolio management with create, rename, delete, and switch functionality
 - Real-time stock quotes via Polygon.io API
@@ -24,6 +25,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Features
 
 #### Portfolio Management
+
 - Create and manage multiple portfolios
 - Rename portfolios with inline editing
 - Delete portfolios with confirmation
@@ -31,6 +33,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Auto-save to localStorage
 
 #### Investment Tracking
+
 - Track equity positions with real-time prices
 - Monitor dividend payments and history
 - View NAV history and peak decay
@@ -38,12 +41,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Track total return and ROI
 
 #### Cash Flow Analysis
+
 - Monthly cash flow breakdown
 - Expandable months showing individual transactions
 - Dividend and purchase transaction details
 - Aggregated purchase data per equity
 
 #### Data Management
+
 - Export portfolio data with portfolio name in filename
 - Import portfolio snapshots from JSON
 - Backup and restore functionality
@@ -52,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Technical
 
 #### Testing
+
 - 223 comprehensive tests
 - 93.56% line coverage
 - 95.16% function coverage
@@ -59,6 +65,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - 93.56% statement coverage
 
 #### Infrastructure
+
 - React 18 with TypeScript
 - Zustand for state management
 - Vite for fast development and builds
@@ -69,6 +76,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.0] - 2025-01-XX
 
 ### Initial Release
+
 - First stable release of Portfolio Tracker
 
 ---
@@ -81,4 +89,3 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Removed** - Removed features
 - **Fixed** - Bug fixes
 - **Security** - Security improvements
-

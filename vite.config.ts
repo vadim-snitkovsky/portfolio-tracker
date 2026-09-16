@@ -9,8 +9,8 @@ export default defineConfig({
       '/api/polygon': {
         target: 'https://api.polygon.io',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api\/polygon/, '')
-      }
-    }
-  }
+        rewrite: path => path.replace(/^\/api\/polygon/, ''),
+      },
+    },
+  },
 });
