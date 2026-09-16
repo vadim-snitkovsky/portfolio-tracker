@@ -29,13 +29,17 @@ jobs:
       - name: Run linter
         run: npm run lint
 
+      - name: Check formatting
+        run: npm run format:check
+
       - name: Run tests
         run: npx vitest run --coverage
 
       - name: Upload results to Codecov
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v7
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
+          plugins: noop
 
   build:
     name: Build
