@@ -50,6 +50,9 @@
       "prettier --write"
     ]
   },
+  "allowScripts": {
+    "esbuild": true
+  },
   "dependencies": {
     "clsx": "^2.1.1",
     "react": "^19.1.1",
