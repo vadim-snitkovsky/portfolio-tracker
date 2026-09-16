@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import {
   calculateEquityMetrics,
   deriveEquityViews,
@@ -261,9 +261,8 @@ export const CombinedEquityTable: React.FC = () => {
           {sortedData.map(row => {
             const isExpanded = expandedSymbol === row.symbol;
             return (
-              <>
+              <Fragment key={row.symbol}>
                 <tr
-                  key={row.symbol}
                   onClick={() => toggleExpand(row.symbol)}
                   style={{ cursor: 'pointer' }}
                   className={isExpanded ? 'expanded-row' : ''}
@@ -411,7 +410,7 @@ export const CombinedEquityTable: React.FC = () => {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </tbody>

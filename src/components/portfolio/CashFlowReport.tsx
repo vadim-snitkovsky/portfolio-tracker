@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import {
   calculatePortfolioMetrics,
   deriveEquityViews,
@@ -461,9 +461,8 @@ export const CashFlowReport: React.FC = () => {
                 data.dividendTransactions.length > 0 || data.purchaseTransactions.length > 0;
 
               return (
-                <>
+                <Fragment key={data.month}>
                   <tr
-                    key={data.month}
                     onClick={() =>
                       hasTransactions && setExpandedMonth(isExpanded ? null : data.month)
                     }
@@ -639,7 +638,7 @@ export const CashFlowReport: React.FC = () => {
                       </td>
                     </tr>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </tbody>

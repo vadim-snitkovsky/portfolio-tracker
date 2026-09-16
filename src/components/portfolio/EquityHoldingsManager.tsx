@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { Fragment, useMemo, useState } from 'react';
 import type { ChangeEvent, FormEvent } from 'react';
 import { deriveEquityViews, usePortfolioStore } from '../../store/portfolioStore';
 import { formatCurrency, formatDate } from '../../utils/formatters';
@@ -360,9 +360,8 @@ export const EquityHoldingsManager: React.FC = () => {
             const totalCost = position.shares * position.averageCost;
 
             return (
-              <>
+              <Fragment key={position.symbol}>
                 <tr
-                  key={position.symbol}
                   onClick={() => setExpandedSymbol(isExpanded ? null : position.symbol)}
                   style={{ cursor: 'pointer' }}
                   className={isExpanded ? 'expanded-row' : ''}
@@ -464,7 +463,7 @@ export const EquityHoldingsManager: React.FC = () => {
                     </td>
                   </tr>
                 )}
-              </>
+              </Fragment>
             );
           })}
         </tbody>

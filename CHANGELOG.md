@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- React no longer warns about missing keys on the expandable rows of the equity, cash flow, and holdings tables
 - Import parser now restores seed amount, seed date, and last-update timestamps from exported JSON
 - Percent formatting no longer divides by 100 twice on the Cash Flow report
 
