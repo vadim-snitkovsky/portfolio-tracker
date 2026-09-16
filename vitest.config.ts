@@ -38,6 +38,7 @@ export default defineConfig({
         'src/components/portfolio/EquityHoldingsManager.tsx',
         'src/components/portfolio/CombinedEquityTable.tsx',
         'src/components/portfolio/CashFlowReport.tsx',
+        'src/components/portfolio/StrategyAnalysis.tsx',
         // Exclude storage.ts due to SSR checks (typeof window === 'undefined')
         'src/utils/storage.ts',
       ],
