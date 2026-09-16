@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Strategy Analysis tab comparing the current reinvestment strategy against collecting dividends as cash, with a funding source (seed, dividend, or external) on each purchase lot
 - Editable initial seed amount and date on the Cash Flow report, persisted in the snapshot and included in export/import
 - Dividend ROI, True ROI, and Current Cash Balance tiles on the Cash Flow report
 - Cash and money market positions (CASH, SPAXX, FDRXX, FCASH) are tracked manually and skipped during Polygon refreshes
@@ -16,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Portfolio snapshots store positions under equityMetadata instead of equities. Old snapshots and imports migrate automatically
 - Dividend refresh looks back to the earliest lot trade date or seed date instead of a fixed 12 months
 - Application title renamed from "Dividend Portfolio Command Center" to "Dividend Portfolio Facts"
 - CI runs on Node 20 only

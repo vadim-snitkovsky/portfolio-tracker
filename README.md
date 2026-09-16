@@ -375,9 +375,18 @@ Click any month to see:
 - Individual purchase transactions
 - Aggregated purchase data per equity
 
-### 4. Holdings Manager
+### 4. Strategy Analysis
+
+Compares your portfolio with dividends reinvested (the current strategy) against a what-if where every dividend was collected as cash.
+
+- Lot-by-lot ledger with each purchase, its cost, cumulative dividends before and after, and how the purchase was classified
+- Side-by-side metrics for both strategies with the difference
+- Explanation of how each strategy is computed
+
+### 5. Holdings Manager
 
 - Add new purchase lots
+- Tag each lot with a funding source: seed capital, dividend reinvestment, or external deposit
 - View all lots grouped by equity
 - Edit lot details (shares, date, price)
 - Delete lots (auto-removes zero-share positions)
