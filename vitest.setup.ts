@@ -26,7 +26,16 @@ const localStorageMock = (() => {
   };
 })();
 
-global.localStorage = localStorageMock as Storage;
+// Vitest 4+ exposes jsdom's localStorage as a getter-only property, so it cannot be assigned directly.
+const storageDescriptor = {
+  value: localStorageMock as Storage,
+  writable: true,
+  configurable: true,
+};
+Object.defineProperty(globalThis, 'localStorage', storageDescriptor);
+if ((window as unknown) !== globalThis) {
+  Object.defineProperty(window, 'localStorage', storageDescriptor);
+}
 
 // Mock window.matchMedia
 Object.defineProperty(window, 'matchMedia', {

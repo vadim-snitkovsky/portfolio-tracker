@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Test tooling moves to Vitest 5. Coverage now uses AST-based remapping, which reports lower but more accurate numbers, so the branch threshold is recalibrated to 70%
 - Portfolio snapshots store positions under equityMetadata instead of equities. Old snapshots and imports migrate automatically
 - Dividend refresh looks back to the earliest lot trade date or seed date instead of a fixed 12 months
 - Application title renamed from "Dividend Portfolio Command Center" to "Dividend Portfolio Facts"
