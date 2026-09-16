@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import {
   loadCustomLots,
   persistCustomLots,
@@ -22,6 +22,12 @@ describe('storage', () => {
   beforeEach(() => {
     localStorage.clear();
     vi.clearAllMocks();
+    // The parse-error tests exercise paths that warn on purpose; keep them out of the test output.
+    vi.spyOn(console, 'warn').mockImplementation(() => {});
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
   });
 
   describe('loadCustomLots', () => {
