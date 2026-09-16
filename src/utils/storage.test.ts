@@ -89,7 +89,7 @@ describe('storage', () => {
       const fallback: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
@@ -99,14 +99,14 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       localStorage.setItem('portfolio-snapshot', JSON.stringify(snapshot));
 
       const result = loadSnapshot(data => data as PortfolioSnapshot, {
         asOf: '',
         seedAmount: 0,
-        equities: [],
+        equityMetadata: [],
       });
       expect(result).toEqual(snapshot);
     });
@@ -116,7 +116,7 @@ describe('storage', () => {
       const fallback: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 0,
-        equities: [],
+        equityMetadata: [],
       };
       const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
@@ -128,7 +128,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       persistSnapshot(snapshot);
 
@@ -156,7 +156,7 @@ describe('storage', () => {
         {
           id: '1',
           name: 'Test Portfolio',
-          snapshot: { asOf: '2025-01-01', seedAmount: 10000, equities: [] },
+          snapshot: { asOf: '2025-01-01', seedAmount: 10000, equityMetadata: [] },
           customLots: [],
           createdAt: '2025-01-01T00:00:00Z',
           updatedAt: '2025-01-01T00:00:00Z',
@@ -187,7 +187,7 @@ describe('storage', () => {
         {
           id: '1',
           name: 'Test',
-          snapshot: { asOf: '2025-01-01', seedAmount: 10000, equities: [] },
+          snapshot: { asOf: '2025-01-01', seedAmount: 10000, equityMetadata: [] },
           customLots: [],
           createdAt: '2025-01-01T00:00:00Z',
           updatedAt: '2025-01-01T00:00:00Z',
@@ -232,7 +232,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       const lots: PurchaseLot[] = [];
 
@@ -254,12 +254,12 @@ describe('storage', () => {
       const snapshot1: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       const snapshot2: PortfolioSnapshot = {
         asOf: '2025-01-02',
         seedAmount: 20000,
-        equities: [],
+        equityMetadata: [],
       };
 
       const created = savePortfolio('portfolio-1', 'Original', snapshot1, []);
@@ -290,7 +290,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       const saved = savePortfolio('portfolio-1', 'Test', snapshot, []);
 
@@ -309,7 +309,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       savePortfolio('portfolio-1', 'Test', snapshot, []);
 
@@ -324,7 +324,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       savePortfolio('portfolio-1', 'Test', snapshot, []);
       setActivePortfolioId('portfolio-1');
@@ -344,7 +344,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       savePortfolio('portfolio-1', 'Original Name', snapshot, []);
 
@@ -359,7 +359,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       const created = savePortfolio('portfolio-1', 'Original', snapshot, []);
 
@@ -383,7 +383,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       savePortfolio('portfolio-1', 'Portfolio 1', snapshot, []);
       savePortfolio('portfolio-2', 'Portfolio 2', snapshot, []);
@@ -460,27 +460,27 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       localStorage.setItem('portfolio-snapshot', JSON.stringify(snapshot));
 
       const result = loadSnapshot(data => data as PortfolioSnapshot, {
         asOf: '',
         seedAmount: 0,
-        equities: [],
+        equityMetadata: [],
       });
       expect(result.asOf).toBe('2025-01-01');
     });
 
     it('should return fallback when no data exists', () => {
-      const fallback: PortfolioSnapshot = { asOf: '', seedAmount: 0, equities: [] };
+      const fallback: PortfolioSnapshot = { asOf: '', seedAmount: 0, equityMetadata: [] };
       const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
     });
 
     it('should return fallback on parse error', () => {
       localStorage.setItem('portfolio-snapshot', 'invalid json');
-      const fallback: PortfolioSnapshot = { asOf: '', seedAmount: 0, equities: [] };
+      const fallback: PortfolioSnapshot = { asOf: '', seedAmount: 0, equityMetadata: [] };
       const result = loadSnapshot(data => data as PortfolioSnapshot, fallback);
       expect(result).toEqual(fallback);
     });
@@ -491,7 +491,7 @@ describe('storage', () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-01',
         seedAmount: 10000,
-        equities: [],
+        equityMetadata: [],
       };
       persistSnapshot(snapshot);
 

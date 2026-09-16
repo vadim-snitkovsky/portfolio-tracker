@@ -1,0 +1,736 @@
+{
+  "exportedAt": "2025-10-06T03:10:34.024Z",
+  "snapshot": {
+    "asOf": "2025-01-15",
+    "equities": [
+      {
+        "symbol": "MSTY",
+        "name": "MSTY",
+        "sector": "Manual Entry",
+        "shares": 0,
+        "averageCost": 25,
+        "currentPrice": 14.74,
+        "dividends": [
+          {
+            "id": "Edec6e1006475fa1181b607ac70e78224bd295eeb1a0af725897acbd0bd750dc6",
+            "date": "2025-02-13",
+            "amountPerShare": 2.0216
+          },
+          {
+            "id": "E9750a2467fb31c7d08d7e47dd1e667120604202ef1d0ae36bcd140b1acca9356",
+            "date": "2025-03-13",
+            "amountPerShare": 1.3775
+          },
+          {
+            "id": "Efba0baa82e81202986b5594a64e3e4a895f80e165a406454a90759faefb713c1",
+            "date": "2025-04-10",
+            "amountPerShare": 1.3356
+          },
+          {
+            "id": "E83405064cb0dc570422f61f37a9b38425af1e79fd88cf3fa1437afbfb1870f36",
+            "date": "2025-05-08",
+            "amountPerShare": 2.3734
+          },
+          {
+            "id": "E4d8d400a7012c2f078d7eb7846990add55936430985c0da8605fe7cebc497a14",
+            "date": "2025-06-05",
+            "amountPerShare": 1.4707
+          },
+          {
+            "id": "Edfcb1107d7a340493e4a83e39403feab8c59a4c67abcc86c64629cebf3fa4b4b",
+            "date": "2025-07-03",
+            "amountPerShare": 1.2382
+          },
+          {
+            "id": "E7b79caf217c7b9918c4e64801542f77059e7741dd4197a8c3f15b13b3effaf75",
+            "date": "2025-07-31",
+            "amountPerShare": 1.1835
+          },
+          {
+            "id": "Efc361c4a6b1e553b7fac99d250d42f0928be28811fffe7f0d8221dc44fbfb101",
+            "date": "2025-08-28",
+            "amountPerShare": 1.0899
+          },
+          {
+            "id": "E36dd9978d1a4627cde01cd81cad51a49c5867a9e0c4931222b073166be15b8ed",
+            "date": "2025-09-25",
+            "amountPerShare": 1.0105
+          }
+        ],
+        "navHistory": []
+      },
+      {
+        "symbol": "CONY",
+        "name": "CONY",
+        "sector": "Manual Entry",
+        "shares": 0,
+        "averageCost": 14,
+        "currentPrice": 7.54,
+        "dividends": [
+          {
+            "id": "E11fc563f531d9aeaf622202c1d925f8e912d99e8068679c9f675ca5c311d8a2f",
+            "date": "2025-03-06",
+            "amountPerShare": 0.5989
+          },
+          {
+            "id": "Ed1912ee143660ca5a992f10f281d94bb868c03dc5635768e720d2f8331c40fd2",
+            "date": "2025-04-03",
+            "amountPerShare": 0.4381
+          },
+          {
+            "id": "Ec4ef8924f77eb9f32bf00944e696f5d06a851dd889259a4c34d78c170a8c7459",
+            "date": "2025-05-01",
+            "amountPerShare": 0.651
+          },
+          {
+            "id": "E293ded783d58c89552da883aeb28b4288e3a73b500e89889d26d3ee3325bae0f",
+            "date": "2025-05-29",
+            "amountPerShare": 0.7351
+          },
+          {
+            "id": "Efd67bab1a1cfa083046426c111d4032ab436682fc5a5f1fe55808252e70f7b01",
+            "date": "2025-06-26",
+            "amountPerShare": 0.5354
+          },
+          {
+            "id": "E78f5f8cd0c317ae0b8b31ae7799a3df2783d7bc32ee9fb440eaf3e0ba7adcca3",
+            "date": "2025-07-24",
+            "amountPerShare": 0.7951
+          },
+          {
+            "id": "Eb2de0734dbe5941f997881d37aec93feb83bb970d45544192712428a0bb16886",
+            "date": "2025-08-21",
+            "amountPerShare": 0.3438
+          },
+          {
+            "id": "E508d818d477c9f338bfba96c750bd3b0886b3568ac8c8b69a2a7542ded6e6187",
+            "date": "2025-09-18",
+            "amountPerShare": 0.4522
+          }
+        ],
+        "navHistory": [
+          {
+            "date": "2024-10-01",
+            "value": 12.41
+          },
+          {
+            "date": "2024-11-01",
+            "value": 16.54
+          },
+          {
+            "date": "2024-12-01",
+            "value": 16.51
+          }
+        ]
+      },
+      {
+        "symbol": "ULTY",
+        "name": "ULTY",
+        "sector": "Manual Entry",
+        "shares": 0,
+        "averageCost": 6.0633333333333335,
+        "currentPrice": 5.47,
+        "dividends": [
+          {
+            "id": "Efe1deaf405e197e59e8cc494631ec80e44c8911e879a3a96a9625d8b0a5162f6",
+            "date": "2025-03-06",
+            "amountPerShare": 0.4653
+          },
+          {
+            "id": "E612d24e8227fe00a1494a48d0355f8faac64a38017300a4cafad167ceed8604d",
+            "date": "2025-03-13",
+            "amountPerShare": 0.1025
+          },
+          {
+            "id": "E4561837665679849e5a3d4d0efbab9624d92b222e43efb70d1655d70b18b90d3",
+            "date": "2025-03-20",
+            "amountPerShare": 0.0977
+          },
+          {
+            "id": "Ef7a319c5f451529e3b3f7d3c65ca0c5f5292d526b73d2ff4a0504d7306330aa3",
+            "date": "2025-03-27",
+            "amountPerShare": 0.0986
+          },
+          {
+            "id": "E5d1579cd0d8461b4ff398c027c34ae6d6ebe2c2f79a5ad177e657998456365f1",
+            "date": "2025-04-03",
+            "amountPerShare": 0.0916
+          },
+          {
+            "id": "E39a93fa922a15ed9ec3d8d6b18944216259cccff082ded1c66be0b0b027dff35",
+            "date": "2025-04-10",
+            "amountPerShare": 0.0822
+          },
+          {
+            "id": "E0801a89edd47025cc0143517a0d8872d1e67190e61e423f0e50e90f2c4c91f91",
+            "date": "2025-04-17",
+            "amountPerShare": 0.0852
+          },
+          {
+            "id": "Ed7bbaf23df01b0e911d3f5c29ab8f0167d402679e43f4da9e1245cbbd9c195b9",
+            "date": "2025-04-24",
+            "amountPerShare": 0.0836
+          },
+          {
+            "id": "E3d4db060f05fd2cd3ceecd608194c13045f7fc1c07da62fc39571bb54d1e1f48",
+            "date": "2025-05-01",
+            "amountPerShare": 0.0936
+          },
+          {
+            "id": "E8f115f222c720633674f08c714cfa328ac0caf029e696b554cbaa295dc3a90fa",
+            "date": "2025-05-08",
+            "amountPerShare": 0.1181
+          },
+          {
+            "id": "Eadb5b1f455d977264e668802b962b7dc896bfd91de316d567dad4af72d9dd286",
+            "date": "2025-05-15",
+            "amountPerShare": 0.1059
+          },
+          {
+            "id": "Ed386b75f3fd8757cb008b9bdd4c85bd6ac5442c30732601c29d7d73fced45e87",
+            "date": "2025-05-22",
+            "amountPerShare": 0.0979
+          },
+          {
+            "id": "Ed6efc8f1f19d46207d155209b2da8fadd81c82e5b0025e373058441d8a017dac",
+            "date": "2025-05-29",
+            "amountPerShare": 0.0954
+          },
+          {
+            "id": "E4d8caf99e20c1354be7013e83f764277dba9cd69189c8349692e2d684c700a91",
+            "date": "2025-06-05",
+            "amountPerShare": 0.0945
+          },
+          {
+            "id": "E27ba4c7c5a82ce6a668c016e9ab5d42115987271f57491729989f9efd362f392",
+            "date": "2025-06-12",
+            "amountPerShare": 0.095
+          },
+          {
+            "id": "E3517db9324690234973ad7c79160c356d1cb762ba5cbff778d7b9806001f5e2f",
+            "date": "2025-06-20",
+            "amountPerShare": 0.0875
+          },
+          {
+            "id": "E5698e5bdf609c4ec8f8a770e95280e4eb73962fce5b762976de61d295ff2404a",
+            "date": "2025-06-26",
+            "amountPerShare": 0.0923
+          },
+          {
+            "id": "E2e163663069acb69ed6173e527e0b32034b3191f9cb27aa197bf1e8dc4502a32",
+            "date": "2025-07-03",
+            "amountPerShare": 0.0952
+          },
+          {
+            "id": "Ee07795e039b02ab016129c8ebdea8276c29b243d91bb1e935b6c824c6c08daf5",
+            "date": "2025-07-10",
+            "amountPerShare": 0.096
+          },
+          {
+            "id": "Ee55a183167a723753ad97b52e2fc6cc4ad99d34ba8390ee3e06adc83bd26254a",
+            "date": "2025-07-17",
+            "amountPerShare": 0.1035
+          },
+          {
+            "id": "E3e8598779fc18c1eb7906cc14b459bf9a38e2d3017ea2f09589a8f77b064cc80",
+            "date": "2025-07-24",
+            "amountPerShare": 0.1029
+          },
+          {
+            "id": "Efdd5907b05018406230a287465241dfcc5313019810db3f6f6b5087cf8633aa7",
+            "date": "2025-07-31",
+            "amountPerShare": 0.1008
+          },
+          {
+            "id": "Ea0c2a1941f624f9dab7d9bd17e67c1f4c739fc38541591ab8c3f18ba901ab70d",
+            "date": "2025-08-07",
+            "amountPerShare": 0.1003
+          },
+          {
+            "id": "E48456d8571c792b963582b4b47e5ae5d70edb4f299339958c68b20ce855adba6",
+            "date": "2025-08-14",
+            "amountPerShare": 0.1006
+          },
+          {
+            "id": "Ead0d69b1dcbb2ad3af93f6f81ab5f002844c8cd75bcdf8f08cb62ef62e13328f",
+            "date": "2025-08-21",
+            "amountPerShare": 0.1
+          },
+          {
+            "id": "Ee1bf01e2c5a4bedbc73630ca9b3211e1c6d1e33a7e540fd157d391415ba943cf",
+            "date": "2025-08-28",
+            "amountPerShare": 0.0949
+          },
+          {
+            "id": "Eb46b4d98340667a954144f853e2de801c084daf42f52d55b27d78366f1bff258",
+            "date": "2025-09-04",
+            "amountPerShare": 0.09
+          },
+          {
+            "id": "Ed3a09d5a7b8d4be113a9047609f026a7c89cfd213e0a9dea60394501292fa853",
+            "date": "2025-09-11",
+            "amountPerShare": 0.0928
+          },
+          {
+            "id": "Ec8c92b3a3205b9a7cd4d7f6b44dcc269159b386fee88e62ca750d8194c5d5f4e",
+            "date": "2025-09-18",
+            "amountPerShare": 0.0926
+          },
+          {
+            "id": "E2eee12e555fa6e3b4c149777acd81b2f4024b061f4b385e683e6ceaf5cf8c001",
+            "date": "2025-09-25",
+            "amountPerShare": 0.0921
+          },
+          {
+            "id": "E568b62142a438825f8c69dd737ce6cf7da1342a4531673e2c20e6319af813897",
+            "date": "2025-10-02",
+            "amountPerShare": 0.0913
+          }
+        ],
+        "navHistory": []
+      },
+      {
+        "symbol": "SPAXX",
+        "name": "SPAXX",
+        "sector": "Manual Entry",
+        "shares": 0,
+        "averageCost": 1,
+        "currentPrice": 1,
+        "dividends": [
+          {
+            "id": "E1d4cf342e86a20bdddeac736153d0d4683259016cfb3ff74720b079a9dec4076",
+            "date": "2025-02-28",
+            "amountPerShare": 0.003075052
+          },
+          {
+            "id": "E7b2c697305a2512b7908de7e5c71477d21e3ee07a4d85a29af589bcbd7dcb100",
+            "date": "2025-03-31",
+            "amountPerShare": 0.003375998
+          },
+          {
+            "id": "Ec1e1ddbc6e7f88b45db798aaf6a8710630f91817511f3e71142d178773ffcf70",
+            "date": "2025-04-30",
+            "amountPerShare": 0.003268342
+          },
+          {
+            "id": "E69bf908ed183db7745dbaa7377896a6ee004270768d70587fce83750f9dbbd23",
+            "date": "2025-05-31",
+            "amountPerShare": 0.003349943
+          },
+          {
+            "id": "Eadc7061a51d831aa4a4f607aea7940780ac4387ef5ac7a26e4a8cf02fad900a5",
+            "date": "2025-06-30",
+            "amountPerShare": 0.003242024
+          },
+          {
+            "id": "Ec88712ae5790e657a79753eb7bd24b0576b7f031bfba43d1a7970b80c76ef6ae",
+            "date": "2025-07-31",
+            "amountPerShare": 0.003365398
+          },
+          {
+            "id": "E77f7c5618ed473842d923415296a91a17357403ac188053dfdab441f40e64a2e",
+            "date": "2025-08-31",
+            "amountPerShare": 0.003365985
+          },
+          {
+            "id": "E6bb34ae36e52094513918a9194e1b30d89489d67a54cedb0ab242cee9382f27c",
+            "date": "2025-09-30",
+            "amountPerShare": 0.003205307
+          }
+        ],
+        "navHistory": []
+      },
+      {
+        "symbol": "YMAX",
+        "name": "YMAX",
+        "sector": "Manual Entry",
+        "shares": 0,
+        "averageCost": 14.053666666666668,
+        "currentPrice": 12.81,
+        "dividends": [
+          {
+            "id": "E84e5f88810397001357232b6d897df696717eacc0295a8ab03e66af6ff7b6d77",
+            "date": "2025-02-13",
+            "amountPerShare": 0.1503
+          },
+          {
+            "id": "E3475e3db70c8d12c9a1f97947c3caaca7540596824787c76d98531f3f218be04",
+            "date": "2025-02-20",
+            "amountPerShare": 0.1852
+          },
+          {
+            "id": "Ed1bcbe3d0a33657d7fe7d8b6d6a0d91fa4c2b8474ef8fed9702925bc8c296d2b",
+            "date": "2025-02-27",
+            "amountPerShare": 0.1327
+          },
+          {
+            "id": "E25d64fa3dda8f300fb2b71e8b0f86082457fcbf7209290020eda206d0a7f8b6f",
+            "date": "2025-03-06",
+            "amountPerShare": 0.2405
+          },
+          {
+            "id": "E5513137ac39009823fe9650308d3def35f2b39a04c28ecc0c616dbd4a7b2889f",
+            "date": "2025-03-13",
+            "amountPerShare": 0.1002
+          },
+          {
+            "id": "E20ae007878538ff8075f2cae12f1281d955f9ca678cbfecc4aa98808eee93b1c",
+            "date": "2025-03-20",
+            "amountPerShare": 0.1526
+          },
+          {
+            "id": "E3f697f1a5d9b51e09db04a3354a694c96cb75f3082a33a4cc3734d21434350df",
+            "date": "2025-03-27",
+            "amountPerShare": 0.1315
+          },
+          {
+            "id": "Ea2d04222c8f453479e68f763e52ba13ab3a4867a460e7c79806e2525827490fc",
+            "date": "2025-04-03",
+            "amountPerShare": 0.1781
+          },
+          {
+            "id": "E45224c7d387fd28614f3f49f9be2635c2b4b44a36e1cf3a147e4bdbcc0d4a9bb",
+            "date": "2025-04-10",
+            "amountPerShare": 0.1289
+          },
+          {
+            "id": "Eb4a637d2c90f88846facc4be93ad0d01c6b03e8305feed4cfd8fef5849e35424",
+            "date": "2025-04-17",
+            "amountPerShare": 0.1334
+          },
+          {
+            "id": "E4d6066be3389922a2b529841c49b589476a39662cbb68c8497ab367d5f5b6473",
+            "date": "2025-04-24",
+            "amountPerShare": 0.1367
+          },
+          {
+            "id": "Ed51342680ae9a4e64aaa01531cfa92c815044ae72d7819f0d0985dfdc342673f",
+            "date": "2025-05-01",
+            "amountPerShare": 0.1744
+          },
+          {
+            "id": "E02ef4e45763c391b83c3574182ee633e8db85689ac7ae8dd12a88980d57a2eed",
+            "date": "2025-05-08",
+            "amountPerShare": 0.1679
+          },
+          {
+            "id": "E121d82c6815aff25b29c9165a63453d674507a1b5d4770be6f6ac11bef511f2b",
+            "date": "2025-05-15",
+            "amountPerShare": 0.191
+          },
+          {
+            "id": "Ead77401f899c346f7096be7976379bc83a47a9ef151e83b4c10b7345e5c057ec",
+            "date": "2025-05-22",
+            "amountPerShare": 0.186
+          },
+          {
+            "id": "E3f60cc40ac8a31ffe5e12faab4f59c359efa61bf5624531530771bb902cc27d8",
+            "date": "2025-05-29",
+            "amountPerShare": 0.2149
+          },
+          {
+            "id": "E2908516a552edf1b61605c47b5cb85754f5992f6af15ffeb743955625bef04e0",
+            "date": "2025-06-05",
+            "amountPerShare": 0.1721
+          },
+          {
+            "id": "E8bd7cbfb5f189a2c974acdb35d07c3eb749a4f454f566b7ff74f295c8222beff",
+            "date": "2025-06-12",
+            "amountPerShare": 0.1803
+          },
+          {
+            "id": "E7cd7bd59d9c147029bf5f661aeed749444aa08147312fd61c2664173006ff080",
+            "date": "2025-06-20",
+            "amountPerShare": 0.1424
+          },
+          {
+            "id": "E0c3f5dfc69ca5a0f19996981798656f4891d9f3fbc0474979d6dc0adc9aa497d",
+            "date": "2025-06-26",
+            "amountPerShare": 0.1548
+          },
+          {
+            "id": "Ec40cfd2a467f9da324bc05f0d09d974a5c97e599ac51b1cd417c6f42668b33f9",
+            "date": "2025-07-03",
+            "amountPerShare": 0.1574
+          },
+          {
+            "id": "E3dccdc0b941fb0049d5e7c4c2792810edb3b5b50e5ee3f1d7269657e0a11c9aa",
+            "date": "2025-07-10",
+            "amountPerShare": 0.1347
+          },
+          {
+            "id": "E40640f37d6cfaf99939a47acaae00f4213468955de2c21a2164b27e9b10f2437",
+            "date": "2025-07-17",
+            "amountPerShare": 0.1041
+          },
+          {
+            "id": "Eba983dfed337f3dec75c7bb03d87b3af3d3c2fbd48ef6e4bea2a625bcc096ddb",
+            "date": "2025-07-24",
+            "amountPerShare": 0.1838
+          },
+          {
+            "id": "E15d2a98d25d631789321f5fefb6c4c6893ad94563f233b50811d6ce3d1169ca9",
+            "date": "2025-07-31",
+            "amountPerShare": 0.1646
+          },
+          {
+            "id": "E5186e0907a55e4e5aadb342ff00925a0c26dfb3d54531cf902c3a245edce5baf",
+            "date": "2025-08-07",
+            "amountPerShare": 0.1453
+          },
+          {
+            "id": "Efd5423cb09109815a795d4362112c679659d90e9cd74cc6aa8bbfb389916c9be",
+            "date": "2025-08-14",
+            "amountPerShare": 0.1102
+          },
+          {
+            "id": "Ebb2730841b83452aeea700cad4d37686745bd1de2243a4d4f270719e90f79682",
+            "date": "2025-08-21",
+            "amountPerShare": 0.1622
+          },
+          {
+            "id": "Ed712f3dcf6b74d55e933161957b80b7b6e30b2a8bff6c3e98751bc2869f801d3",
+            "date": "2025-08-28",
+            "amountPerShare": 0.1372
+          },
+          {
+            "id": "E9c5eb70842aac9730d6384397d461c8f9266757d39e9459ba7bee83fb5248d0c",
+            "date": "2025-09-04",
+            "amountPerShare": 0.1094
+          },
+          {
+            "id": "E06884377a4d334239ac60ef855132dca689ff892a47a10c8d1733532e47efcfc",
+            "date": "2025-09-11",
+            "amountPerShare": 0.1321
+          },
+          {
+            "id": "E77b7b896ab1e4a9d595ed9d64433da4726c4f339666b420f9c89e2ab30099239",
+            "date": "2025-09-18",
+            "amountPerShare": 0.1289
+          },
+          {
+            "id": "E5d5e7a4336d0f0a401e3dea356861c0163587dd7829af55d966e20c0a323d47a",
+            "date": "2025-09-25",
+            "amountPerShare": 0.0821
+          },
+          {
+            "id": "E804eff62dc4a8745227f0aee3500cdd48e4b42b609a44654ec560105ea8e657a",
+            "date": "2025-10-02",
+            "amountPerShare": 0.1399
+          }
+        ],
+        "navHistory": []
+      }
+    ],
+    "cashPosition": 12500,
+    "lastPriceUpdate": "2025-10-06T03:10:01.780Z",
+    "lastDividendUpdate": "2025-10-06T03:10:04.602Z",
+    "seedAmount": 90000,
+    "seedDate": "2025-02-10"
+  },
+  "customLots": [
+    {
+      "id": "7d049dff-f1c3-46bb-843f-56a4f7c2f75c",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-10",
+      "shares": 100,
+      "pricePerShare": 26.95
+    },
+    {
+      "id": "e533e241-d1f0-4c6f-a955-a7477e1b800b",
+      "symbol": "CONY",
+      "tradeDate": "2025-02-10",
+      "shares": 100,
+      "pricePerShare": 12.15
+    },
+    {
+      "id": "51ae548c-44a1-4b67-8293-cc2ab0886f00",
+      "symbol": "CONY",
+      "tradeDate": "2025-02-18",
+      "shares": 500,
+      "pricePerShare": 11.8
+    },
+    {
+      "id": "8bd98800-8962-4409-a0a7-5d86898ae18a",
+      "symbol": "CONY",
+      "tradeDate": "2025-02-18",
+      "shares": 900,
+      "pricePerShare": 12.02
+    },
+    {
+      "id": "bb28cd67-61ed-4b24-975e-e3f6b91edfbd",
+      "symbol": "ULTY",
+      "tradeDate": "2025-08-08",
+      "shares": 500,
+      "pricePerShare": 6.03
+    },
+    {
+      "id": "b4b6578e-b2f0-43c9-a5c6-d7fc6fc4cd1c",
+      "symbol": "ULTY",
+      "tradeDate": "2025-08-06",
+      "shares": 1000,
+      "pricePerShare": 6.08
+    },
+    {
+      "id": "307adb3d-1de5-4c91-9b4b-e91cac0c071c",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-10",
+      "shares": 100,
+      "pricePerShare": 27.17
+    },
+    {
+      "id": "f932312d-d0f9-46bd-bb4e-a7f0cc9cbdc3",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-10",
+      "shares": 96,
+      "pricePerShare": 26.94
+    },
+    {
+      "id": "13aa10b4-7e63-4b8b-98bb-e9c71cf5b900",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-10",
+      "shares": 100,
+      "pricePerShare": 26.97
+    },
+    {
+      "id": "92a4afc9-80ae-430c-89f8-bd188c6d769a",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-10",
+      "shares": 200,
+      "pricePerShare": 26.96
+    },
+    {
+      "id": "6643d43b-5a7f-4edc-ab34-9e32cdcef1c1",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-10",
+      "shares": 0.585,
+      "pricePerShare": 26.94
+    },
+    {
+      "id": "d29f9f78-9a93-4702-81a5-74dd37dafc15",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-11",
+      "shares": 0.688,
+      "pricePerShare": 26.98
+    },
+    {
+      "id": "b1ea3c01-a53b-4dca-a90e-33515f2852e0",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-11",
+      "shares": 190,
+      "pricePerShare": 26.97
+    },
+    {
+      "id": "358ecb80-94b3-4733-9f06-1a084c08fab7",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-11",
+      "shares": 100,
+      "pricePerShare": 27.17
+    },
+    {
+      "id": "bc1196df-db18-4825-81c0-4097ba76b611",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-11",
+      "shares": 0.185,
+      "pricePerShare": 27.03
+    },
+    {
+      "id": "352f161b-60dd-4b50-9d31-7f74ce2f7793",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-13",
+      "shares": 300,
+      "pricePerShare": 24.75
+    },
+    {
+      "id": "36ea37f3-e102-4ef9-aa20-74139c32b553",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-13",
+      "shares": 500,
+      "pricePerShare": 24.75
+    },
+    {
+      "id": "cc5da936-2a4e-4d36-9667-d1918488996a",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-13",
+      "shares": 300,
+      "pricePerShare": 24.45
+    },
+    {
+      "id": "ea2d91b4-6520-47ca-aca2-ebc32ebdaf8c",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-13",
+      "shares": 13,
+      "pricePerShare": 24.51
+    },
+    {
+      "id": "e394ae85-7fac-4466-93ba-07f72a1afc11",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-19",
+      "shares": 500,
+      "pricePerShare": 24.72
+    },
+    {
+      "id": "e4d43128-0206-4121-88a8-6e1c5c74217b",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-21",
+      "shares": 350,
+      "pricePerShare": 24.04
+    },
+    {
+      "id": "dda7e9aa-a653-46eb-b57e-faffdea4d76a",
+      "symbol": "MSTY",
+      "tradeDate": "2025-02-21",
+      "shares": 0.644,
+      "pricePerShare": 24.04
+    },
+    {
+      "id": "d201305d-4b2f-4167-bf6b-daea2eb0da2e",
+      "symbol": "MSTY",
+      "tradeDate": "2025-04-10",
+      "shares": 150,
+      "pricePerShare": 18.07
+    },
+    {
+      "id": "8590f8c9-366e-4329-b22d-fa3ea237d291",
+      "symbol": "MSTY",
+      "tradeDate": "2025-08-04",
+      "shares": 500,
+      "pricePerShare": 18
+    },
+    {
+      "id": "37d70cb9-fc64-4ec5-a499-740d43b3db97",
+      "symbol": "MSTY",
+      "tradeDate": "2025-08-28",
+      "shares": 700,
+      "pricePerShare": 15.69
+    },
+    {
+      "id": "1951ed37-f203-4f87-ad31-66c626dfbeb1",
+      "symbol": "CASH",
+      "tradeDate": "2025-10-01",
+      "shares": 9855.21,
+      "pricePerShare": 1
+    },
+    {
+      "id": "6334e06a-9402-4813-a431-ab8b42e99a83",
+      "symbol": "YMAX",
+      "tradeDate": "2025-02-20",
+      "shares": 10,
+      "pricePerShare": 16.51
+    },
+    {
+      "id": "1594c845-f609-42f9-bef0-ed49ff37ba2c",
+      "symbol": "YMAX",
+      "tradeDate": "2025-02-21",
+      "shares": 90,
+      "pricePerShare": 16.5
+    },
+    {
+      "id": "a7f79e78-852b-4dcd-98db-f126abdbea37",
+      "symbol": "YMAX",
+      "tradeDate": "2025-04-03",
+      "shares": 200,
+      "pricePerShare": 12.83
+    }
+  ]
+}

@@ -19,7 +19,7 @@ describe('OverviewMetrics', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [
+          equityMetadata: [
             {
               symbol: 'AAPL',
               name: 'Apple Inc.',
@@ -61,7 +61,7 @@ describe('OverviewMetrics', () => {
         snapshot: {
           asOf: '2025-01-15',
           seedAmount: 10000,
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [],
       };

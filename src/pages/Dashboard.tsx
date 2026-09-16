@@ -8,6 +8,7 @@ import { RecentDividendsList } from '../components/portfolio/RecentDividendsList
 import { CombinedEquityTable } from '../components/portfolio/CombinedEquityTable';
 import { EquityHoldingsManager } from '../components/portfolio/EquityHoldingsManager';
 import { CashFlowReport } from '../components/portfolio/CashFlowReport';
+import { StrategyAnalysis } from '../components/portfolio/StrategyAnalysis';
 import { usePortfolioStore } from '../store/portfolioStore';
 import { formatDate } from '../utils/formatters';
 
@@ -15,10 +16,11 @@ const TAB_DEFINITIONS: Tab[] = [
   { id: 'overview', label: 'Portfolio Overview' },
   { id: 'equities', label: 'Equity Performance' },
   { id: 'cashflow', label: 'Cash Flow & Investment' },
+  { id: 'strategy', label: 'Strategy Analysis' },
   { id: 'holdings', label: 'Holdings Manager' },
 ];
 
-type TabId = 'overview' | 'equities' | 'cashflow' | 'holdings';
+type TabId = 'overview' | 'equities' | 'cashflow' | 'strategy' | 'holdings';
 
 export const Dashboard: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabId>('overview');
@@ -57,6 +59,15 @@ export const Dashboard: React.FC = () => {
             subtitle="Track your seed capital, monthly investments, and dividend income"
           >
             <CashFlowReport />
+          </Card>
+        );
+      case 'strategy':
+        return (
+          <Card
+            title="Dividend Strategy Analysis"
+            subtitle="Compare reinvestment vs collection strategies and see the impact on your portfolio"
+          >
+            <StrategyAnalysis />
           </Card>
         );
       case 'holdings':

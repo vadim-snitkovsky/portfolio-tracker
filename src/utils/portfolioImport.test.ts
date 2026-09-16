@@ -7,7 +7,7 @@ describe('portfolioImport', () => {
     it('should parse valid snapshot', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -23,14 +23,14 @@ describe('portfolioImport', () => {
 
       const result = parsePortfolioSnapshot(raw);
       expect(result.asOf).toBe('2025-01-15');
-      expect(result.equities).toHaveLength(1);
-      expect(result.equities[0].symbol).toBe('AAPL');
+      expect(result.equityMetadata).toHaveLength(1);
+      expect(result.equityMetadata[0].symbol).toBe('AAPL');
     });
 
     it('should parse snapshot with cash position', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [],
+        equityMetadata: [],
         cashPosition: 5000,
       };
 
@@ -46,7 +46,7 @@ describe('portfolioImport', () => {
 
     it('should throw error if asOf is missing', () => {
       const raw = {
-        equities: [],
+        equityMetadata: [],
       };
       expect(() => parsePortfolioSnapshot(raw)).toThrow(
         'Snapshot requires an "asOf" ISO date string'
@@ -58,13 +58,13 @@ describe('portfolioImport', () => {
         asOf: '2025-01-15',
         equities: 'not an array',
       };
-      expect(() => parsePortfolioSnapshot(raw)).toThrow('Snapshot requires an array of equities');
+      expect(() => parsePortfolioSnapshot(raw)).toThrow('Snapshot must contain equityMetadata');
     });
 
     it('should throw error if equity has invalid fields', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             // missing required fields
@@ -79,7 +79,7 @@ describe('portfolioImport', () => {
     it('should parse dividends correctly', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -97,15 +97,15 @@ describe('portfolioImport', () => {
       };
 
       const result = parsePortfolioSnapshot(raw);
-      expect(result.equities[0].dividends).toHaveLength(2);
-      expect(result.equities[0].dividends[0].amountPerShare).toBe(0.25);
-      expect(result.equities[0].dividends[1].amountPerShare).toBe(0.3);
+      expect(result.equityMetadata[0].dividends).toHaveLength(2);
+      expect(result.equityMetadata[0].dividends[0].amountPerShare).toBe(0.25);
+      expect(result.equityMetadata[0].dividends[1].amountPerShare).toBe(0.3);
     });
 
     it('should filter out invalid dividends', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -124,13 +124,13 @@ describe('portfolioImport', () => {
       };
 
       const result = parsePortfolioSnapshot(raw);
-      expect(result.equities[0].dividends).toHaveLength(1);
+      expect(result.equityMetadata[0].dividends).toHaveLength(1);
     });
 
     it('should parse navHistory correctly', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -148,14 +148,14 @@ describe('portfolioImport', () => {
       };
 
       const result = parsePortfolioSnapshot(raw);
-      expect(result.equities[0].navHistory).toHaveLength(2);
-      expect(result.equities[0].navHistory[0].value).toBe(170);
+      expect(result.equityMetadata[0].navHistory).toHaveLength(2);
+      expect(result.equityMetadata[0].navHistory[0].value).toBe(170);
     });
 
     it('should filter out invalid navHistory entries', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -174,13 +174,13 @@ describe('portfolioImport', () => {
       };
 
       const result = parsePortfolioSnapshot(raw);
-      expect(result.equities[0].navHistory).toHaveLength(1);
+      expect(result.equityMetadata[0].navHistory).toHaveLength(1);
     });
 
     it('should handle empty dividends and navHistory arrays', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -195,14 +195,14 @@ describe('portfolioImport', () => {
       };
 
       const result = parsePortfolioSnapshot(raw);
-      expect(result.equities[0].dividends).toEqual([]);
-      expect(result.equities[0].navHistory).toEqual([]);
+      expect(result.equityMetadata[0].dividends).toEqual([]);
+      expect(result.equityMetadata[0].navHistory).toEqual([]);
     });
 
     it('should handle missing dividends and navHistory fields', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -215,15 +215,15 @@ describe('portfolioImport', () => {
       };
 
       const result = parsePortfolioSnapshot(raw);
-      expect(result.equities[0].dividends).toEqual([]);
-      expect(result.equities[0].navHistory).toEqual([]);
+      expect(result.equityMetadata[0].dividends).toEqual([]);
+      expect(result.equityMetadata[0].navHistory).toEqual([]);
     });
 
     it('should parse snapshot with cashPosition', () => {
       const raw = {
         asOf: '2025-01-15',
         cashPosition: 5000,
-        equities: [],
+        equityMetadata: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -233,7 +233,7 @@ describe('portfolioImport', () => {
     it('should parse snapshot without cashPosition', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [],
+        equityMetadata: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -244,7 +244,7 @@ describe('portfolioImport', () => {
       const raw = {
         asOf: '2025-01-15',
         cashPosition: 'invalid',
-        equities: [],
+        equityMetadata: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -254,7 +254,7 @@ describe('portfolioImport', () => {
     it('should parse snapshot with seedAmount and seedDate', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [],
+        equityMetadata: [],
         seedAmount: 90000,
         seedDate: '2025-02-10',
       };
@@ -267,7 +267,7 @@ describe('portfolioImport', () => {
     it('should parse snapshot without seedAmount and seedDate', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [],
+        equityMetadata: [],
       };
 
       const result = parsePortfolioSnapshot(raw);
@@ -278,7 +278,7 @@ describe('portfolioImport', () => {
     it('should ignore invalid seedAmount and seedDate types', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [],
+        equityMetadata: [],
         seedAmount: 'invalid',
         seedDate: 12345,
       };
@@ -291,7 +291,7 @@ describe('portfolioImport', () => {
     it('should parse snapshot with lastPriceUpdate and lastDividendUpdate', () => {
       const raw = {
         asOf: '2025-01-15',
-        equities: [],
+        equityMetadata: [],
         lastPriceUpdate: '2025-01-15T10:00:00.000Z',
         lastDividendUpdate: '2025-01-15T09:00:00.000Z',
       };
@@ -306,7 +306,7 @@ describe('portfolioImport', () => {
     it('should read and parse a valid snapshot file', async () => {
       const snapshot: PortfolioSnapshot = {
         asOf: '2025-01-15',
-        equities: [
+        equityMetadata: [
           {
             symbol: 'AAPL',
             name: 'Apple Inc.',
@@ -329,7 +329,7 @@ describe('portfolioImport', () => {
 
       const result = await readSnapshotFile(file);
       expect(result.snapshot.asOf).toBe('2025-01-15');
-      expect(result.snapshot.equities).toHaveLength(1);
+      expect(result.snapshot.equityMetadata).toHaveLength(1);
       expect(result.customLots).toEqual([]);
     });
 
@@ -337,7 +337,7 @@ describe('portfolioImport', () => {
       const data = {
         snapshot: {
           asOf: '2025-01-15',
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [
           {
@@ -365,7 +365,7 @@ describe('portfolioImport', () => {
       const data = {
         snapshot: {
           asOf: '2025-01-15',
-          equities: [],
+          equityMetadata: [],
         },
         customLots: [
           {

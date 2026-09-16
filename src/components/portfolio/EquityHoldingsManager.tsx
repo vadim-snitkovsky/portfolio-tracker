@@ -8,6 +8,7 @@ interface FormState {
   shares: string;
   pricePerShare: string;
   tradeDate: string;
+  fundingSource: 'seed' | 'dividend' | 'external';
 }
 
 interface EditableLot {
@@ -16,6 +17,7 @@ interface EditableLot {
   shares: number;
   pricePerShare: number;
   tradeDate: string;
+  fundingSource?: 'seed' | 'dividend' | 'external';
 }
 
 const generateLotId = () => {
@@ -34,6 +36,7 @@ export const EquityHoldingsManager: React.FC = () => {
     shares: '',
     pricePerShare: '',
     tradeDate: '',
+    fundingSource: 'seed',
   });
   const [formError, setFormError] = useState<string | null>(null);
   const [expandedSymbol, setExpandedSymbol] = useState<string | null>(null);
@@ -136,6 +139,7 @@ export const EquityHoldingsManager: React.FC = () => {
       shares: '',
       pricePerShare: '',
       tradeDate: lastTradeDate,
+      fundingSource: 'seed',
     });
     setEditingLotId(null);
     setFormError(null);
@@ -176,6 +180,7 @@ export const EquityHoldingsManager: React.FC = () => {
         shares,
         pricePerShare,
         tradeDate,
+        fundingSource: formState.fundingSource,
       });
       setExpandedSymbol(symbol);
       resetForm();
@@ -186,6 +191,7 @@ export const EquityHoldingsManager: React.FC = () => {
         shares,
         pricePerShare,
         tradeDate,
+        fundingSource: formState.fundingSource,
       });
       // Save symbol and trade date for next entry (only when adding, not editing)
       setLastSymbol(symbol);
@@ -197,6 +203,7 @@ export const EquityHoldingsManager: React.FC = () => {
         shares: '',
         pricePerShare: '',
         tradeDate: tradeDate,
+        fundingSource: 'seed',
       });
       setEditingLotId(null);
       setFormError(null);
@@ -209,6 +216,7 @@ export const EquityHoldingsManager: React.FC = () => {
       shares: lot.shares.toString(),
       pricePerShare: lot.pricePerShare.toString(),
       tradeDate: lot.tradeDate,
+      fundingSource: lot.fundingSource || 'seed',
     });
     setEditingLotId(lot.id);
     setFormError(null);
@@ -284,6 +292,20 @@ export const EquityHoldingsManager: React.FC = () => {
               onChange={handleChange('tradeDate')}
               required
             />
+          </label>
+          <label>
+            <span>Funding Source</span>
+            <select
+              value={formState.fundingSource}
+              onChange={(e) => setFormState(prev => ({
+                ...prev,
+                fundingSource: e.target.value as 'seed' | 'dividend' | 'external'
+              }))}
+            >
+              <option value="seed">Seed Capital</option>
+              <option value="dividend">Dividend Reinvestment</option>
+              <option value="external">External Deposit</option>
+            </select>
           </label>
         </div>
         {formError && <div className="form-error">{formError}</div>}
@@ -370,6 +392,7 @@ export const EquityHoldingsManager: React.FC = () => {
                                 <th>Shares</th>
                                 <th>Price/Share</th>
                                 <th>Lot Cost</th>
+                                <th>Funding</th>
                                 <th>Actions</th>
                               </tr>
                             </thead>
@@ -387,6 +410,13 @@ export const EquityHoldingsManager: React.FC = () => {
                                     <td>{formatCurrency(lot.pricePerShare)}</td>
                                     <td>{formatCurrency(lot.shares * lot.pricePerShare)}</td>
                                     <td>
+                                      <span className={`funding-badge funding-badge--${lot.fundingSource || 'seed'}`}>
+                                        {lot.fundingSource === 'dividend' ? '💰 Dividend' :
+                                         lot.fundingSource === 'external' ? '📥 External' :
+                                         '🌱 Seed'}
+                                      </span>
+                                    </td>
+                                    <td>
                                       <div className="holdings-manager__lot-actions">
                                         <button
                                           type="button"
@@ -399,6 +429,7 @@ export const EquityHoldingsManager: React.FC = () => {
                                               shares: lot.shares,
                                               pricePerShare: lot.pricePerShare,
                                               tradeDate: lot.tradeDate,
+                                              fundingSource: lot.fundingSource,
                                             });
                                           }}
                                         >
