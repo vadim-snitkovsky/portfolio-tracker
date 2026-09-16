@@ -16,7 +16,6 @@ comment:
 ignore:
   - '**/*.test.ts'
   - '**/*.test.tsx'
-  - '**/tests/**'
   - '**/*.config.ts'
   - '**/*.config.js'
   - '**/vite-env.d.ts'

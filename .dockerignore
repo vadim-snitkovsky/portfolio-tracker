@@ -6,7 +6,6 @@ coverage
 .git
 .gitignore
 *.md
-tests
 Dockerfile
 docker-compose.yml
 .vscode

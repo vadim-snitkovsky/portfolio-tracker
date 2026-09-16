@@ -28,7 +28,6 @@ export default defineConfig({
         '**/*.d.ts',
         '**/*.test.ts',
         '**/*.test.tsx',
-        'tests/**',
         'src/main.tsx',
         'src/vite-env.d.ts',
         // Exclude complex UI components from coverage thresholds
@@ -38,7 +37,6 @@ export default defineConfig({
         'src/pages/Dashboard.tsx',
         'src/components/portfolio/EquityHoldingsManager.tsx',
         'src/components/portfolio/CombinedEquityTable.tsx',
-        'src/components/portfolio/DividendTable.tsx',
         'src/components/portfolio/CashFlowReport.tsx',
         // Exclude storage.ts due to SSR checks (typeof window === 'undefined')
         'src/utils/storage.ts',

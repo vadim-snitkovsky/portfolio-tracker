@@ -1,7 +1,7 @@
 import { render } from '@testing-library/react';
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 
-vi.mock('../src/utils/storage', () => ({
+vi.mock('../../utils/storage', () => ({
   loadCustomLots: () => [],
   persistCustomLots: () => {},
   clearCustomLots: () => {},
@@ -26,8 +26,8 @@ vi.mock('../src/utils/storage', () => ({
   getPortfolioMetadataList: () => [],
 }));
 
-import { EquityHoldingsManager } from '../src/components/portfolio/EquityHoldingsManager';
-import { usePortfolioStore } from '../src/store/portfolioStore';
+import { EquityHoldingsManager } from './EquityHoldingsManager';
+import { usePortfolioStore } from '../../store/portfolioStore';
 
 describe('EquityHoldingsManager', () => {
   beforeEach(() => {
