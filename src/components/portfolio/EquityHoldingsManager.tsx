@@ -297,10 +297,12 @@ export const EquityHoldingsManager: React.FC = () => {
             <span>Funding Source</span>
             <select
               value={formState.fundingSource}
-              onChange={(e) => setFormState(prev => ({
-                ...prev,
-                fundingSource: e.target.value as 'seed' | 'dividend' | 'external'
-              }))}
+              onChange={e =>
+                setFormState(prev => ({
+                  ...prev,
+                  fundingSource: e.target.value as 'seed' | 'dividend' | 'external',
+                }))
+              }
             >
               <option value="seed">Seed Capital</option>
               <option value="dividend">Dividend Reinvestment</option>
@@ -410,10 +412,14 @@ export const EquityHoldingsManager: React.FC = () => {
                                     <td>{formatCurrency(lot.pricePerShare)}</td>
                                     <td>{formatCurrency(lot.shares * lot.pricePerShare)}</td>
                                     <td>
-                                      <span className={`funding-badge funding-badge--${lot.fundingSource || 'seed'}`}>
-                                        {lot.fundingSource === 'dividend' ? '💰 Dividend' :
-                                         lot.fundingSource === 'external' ? '📥 External' :
-                                         '🌱 Seed'}
+                                      <span
+                                        className={`funding-badge funding-badge--${lot.fundingSource || 'seed'}`}
+                                      >
+                                        {lot.fundingSource === 'dividend'
+                                          ? '💰 Dividend'
+                                          : lot.fundingSource === 'external'
+                                            ? '📥 External'
+                                            : '🌱 Seed'}
                                       </span>
                                     </td>
                                     <td>

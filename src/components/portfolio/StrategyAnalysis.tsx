@@ -1,5 +1,9 @@
 import { useMemo, useCallback } from 'react';
-import { usePortfolioStore, calculatePortfolioMetrics, deriveEquityViews } from '../../store/portfolioStore';
+import {
+  usePortfolioStore,
+  calculatePortfolioMetrics,
+  deriveEquityViews,
+} from '../../store/portfolioStore';
 import { formatCurrency, formatPercent } from '../../utils/formatters';
 import { readSnapshotFile } from '../../utils/portfolioImport';
 import type { PurchaseLot, PortfolioSnapshot } from '../../types/portfolio';
@@ -43,7 +47,12 @@ type FundingDebugEvent = {
   cost: number;
   cumulativeBefore: number;
   cumulativeAfter: number;
-  decidedFunding: 'explicit-dividend' | 'explicit-seed' | 'explicit-external' | 'inferred-seed' | 'inferred-dividend';
+  decidedFunding:
+    | 'explicit-dividend'
+    | 'explicit-seed'
+    | 'explicit-external'
+    | 'inferred-seed'
+    | 'inferred-dividend';
 };
 
 function splitLotsByFunding(
@@ -65,19 +74,43 @@ function splitLotsByFunding(
     if (lot.fundingSource === 'dividend') {
       dividendLots.push(lot);
       cumulative += cost;
-      debugEvents.push({ id: lot.id, symbol: lot.symbol, tradeDate: lot.tradeDate, cost, cumulativeBefore: before, cumulativeAfter: cumulative, decidedFunding: 'explicit-dividend' });
+      debugEvents.push({
+        id: lot.id,
+        symbol: lot.symbol,
+        tradeDate: lot.tradeDate,
+        cost,
+        cumulativeBefore: before,
+        cumulativeAfter: cumulative,
+        decidedFunding: 'explicit-dividend',
+      });
       continue;
     }
     if (lot.fundingSource === 'seed') {
       baseLots.push(lot);
       cumulative += cost;
-      debugEvents.push({ id: lot.id, symbol: lot.symbol, tradeDate: lot.tradeDate, cost, cumulativeBefore: before, cumulativeAfter: cumulative, decidedFunding: 'explicit-seed' });
+      debugEvents.push({
+        id: lot.id,
+        symbol: lot.symbol,
+        tradeDate: lot.tradeDate,
+        cost,
+        cumulativeBefore: before,
+        cumulativeAfter: cumulative,
+        decidedFunding: 'explicit-seed',
+      });
       continue;
     }
     if (lot.fundingSource === 'external') {
       baseLots.push(lot);
       cumulative += cost;
-      debugEvents.push({ id: lot.id, symbol: lot.symbol, tradeDate: lot.tradeDate, cost, cumulativeBefore: before, cumulativeAfter: cumulative, decidedFunding: 'explicit-external' });
+      debugEvents.push({
+        id: lot.id,
+        symbol: lot.symbol,
+        tradeDate: lot.tradeDate,
+        cost,
+        cumulativeBefore: before,
+        cumulativeAfter: cumulative,
+        decidedFunding: 'explicit-external',
+      });
       continue;
     }
 
@@ -86,18 +119,42 @@ function splitLotsByFunding(
       const decided = { ...lot, fundingSource: 'dividend' as const };
       dividendLots.push(decided);
       cumulative += cost;
-      debugEvents.push({ id: lot.id, symbol: lot.symbol, tradeDate: lot.tradeDate, cost, cumulativeBefore: before, cumulativeAfter: cumulative, decidedFunding: 'inferred-dividend' });
+      debugEvents.push({
+        id: lot.id,
+        symbol: lot.symbol,
+        tradeDate: lot.tradeDate,
+        cost,
+        cumulativeBefore: before,
+        cumulativeAfter: cumulative,
+        decidedFunding: 'inferred-dividend',
+      });
     } else if (cumulative + cost <= seed) {
       const decided = { ...lot, fundingSource: 'seed' as const };
       baseLots.push(decided);
       cumulative += cost;
-      debugEvents.push({ id: lot.id, symbol: lot.symbol, tradeDate: lot.tradeDate, cost, cumulativeBefore: before, cumulativeAfter: cumulative, decidedFunding: 'inferred-seed' });
+      debugEvents.push({
+        id: lot.id,
+        symbol: lot.symbol,
+        tradeDate: lot.tradeDate,
+        cost,
+        cumulativeBefore: before,
+        cumulativeAfter: cumulative,
+        decidedFunding: 'inferred-seed',
+      });
     } else {
       // Crossing the threshold: treat entire lot as dividend-funded (cannot split lot)
       const decided = { ...lot, fundingSource: 'dividend' as const };
       dividendLots.push(decided);
       cumulative += cost;
-      debugEvents.push({ id: lot.id, symbol: lot.symbol, tradeDate: lot.tradeDate, cost, cumulativeBefore: before, cumulativeAfter: cumulative, decidedFunding: 'inferred-dividend' });
+      debugEvents.push({
+        id: lot.id,
+        symbol: lot.symbol,
+        tradeDate: lot.tradeDate,
+        cost,
+        cumulativeBefore: before,
+        cumulativeAfter: cumulative,
+        decidedFunding: 'inferred-dividend',
+      });
     }
   }
 
@@ -118,8 +175,9 @@ const calculateStrategyComparison = (
 
   // Calculate total dividends from ALL holdings (to date)
   const totalDividendsReceived = allViews.reduce((sum: number, view) => {
-    const dividendTotal = view.dividendsWithShares.reduce((divSum: number, div) =>
-      divSum + (div.amountPerShare * div.sharesOwned), 0
+    const dividendTotal = view.dividendsWithShares.reduce(
+      (divSum: number, div) => divSum + div.amountPerShare * div.sharesOwned,
+      0
     );
     return sum + dividendTotal;
   }, 0);
@@ -132,30 +190,30 @@ const calculateStrategyComparison = (
   const currentPortfolioValue = currentMetrics.totalMarketValue;
 
   // How much was spent on reinvestment
-  const dividendsReinvested = dividendLots.reduce((sum, lot) =>
-    sum + (lot.shares * lot.pricePerShare), 0
+  const dividendsReinvested = dividendLots.reduce(
+    (sum, lot) => sum + lot.shares * lot.pricePerShare,
+    0
   );
 
   // Dividends kept as cash in current strategy
   const currentCashBalance = totalDividendsReceived - dividendsReinvested;
   const currentTotalValue = currentPortfolioValue + currentCashBalance;
-  const currentTrueROI = seedAmount > 0
-    ? ((currentPortfolioValue - seedAmount) / seedAmount) * 100
-    : 0;
+  const currentTrueROI =
+    seedAmount > 0 ? ((currentPortfolioValue - seedAmount) / seedAmount) * 100 : 0;
 
   // Calculate current annual dividends and yield
   const currentAnnualDividends = totalDividendsReceived;
-  const currentDividendYield = currentPortfolioValue > 0
-    ? (currentAnnualDividends / currentPortfolioValue) * 100
-    : 0;
+  const currentDividendYield =
+    currentPortfolioValue > 0 ? (currentAnnualDividends / currentPortfolioValue) * 100 : 0;
 
   // COLLECTION STRATEGY (What-If) - Only base-funded holdings (seed + external)
   const baseViews = deriveEquityViews(snapshot, baseLots);
 
   // Calculate dividends from BASE-funded holdings only (to date)
   const baseDividends = baseViews.reduce((sum: number, view) => {
-    const dividendTotal = view.dividendsWithShares.reduce((divSum: number, div) =>
-      divSum + (div.amountPerShare * div.sharesOwned), 0
+    const dividendTotal = view.dividendsWithShares.reduce(
+      (divSum: number, div) => divSum + div.amountPerShare * div.sharesOwned,
+      0
     );
     return sum + dividendTotal;
   }, 0);
@@ -170,27 +228,25 @@ const calculateStrategyComparison = (
   // In collection strategy, all dividends would be kept as cash
   const collectionCashBalance = baseDividends;
   const collectionTotalValue = collectionPortfolioValue + collectionCashBalance;
-  const collectionTrueROI = seedAmount > 0
-    ? ((collectionPortfolioValue - seedAmount) / seedAmount) * 100
-    : 0;
+  const collectionTrueROI =
+    seedAmount > 0 ? ((collectionPortfolioValue - seedAmount) / seedAmount) * 100 : 0;
 
   // Annual dividends from base-funded holdings only
   const collectionAnnualDividends = baseDividends;
-  const collectionDividendYield = collectionPortfolioValue > 0
-    ? (collectionAnnualDividends / collectionPortfolioValue) * 100
-    : 0;
+  const collectionDividendYield =
+    collectionPortfolioValue > 0 ? (collectionAnnualDividends / collectionPortfolioValue) * 100 : 0;
 
   // CALCULATE DIVIDENDS FROM DIVIDEND-FUNDED HOLDINGS
   // This is the key insight: dividends from reinvested positions
   const dividendOnlyViews = deriveEquityViews(snapshot, dividendLots);
 
   const dividendsFromReinvestedHoldings = dividendOnlyViews.reduce((sum: number, view) => {
-    const dividendTotal = view.dividendsWithShares.reduce((divSum: number, div) =>
-      divSum + (div.amountPerShare * div.sharesOwned), 0
+    const dividendTotal = view.dividendsWithShares.reduce(
+      (divSum: number, div) => divSum + div.amountPerShare * div.sharesOwned,
+      0
     );
     return sum + dividendTotal;
   }, 0);
-
 
   // DIFFERENCES
   const valueDifference = currentTotalValue - collectionTotalValue;
@@ -225,25 +281,27 @@ export const StrategyAnalysis: React.FC = () => {
   const snapshot = usePortfolioStore(state => state.snapshot);
   const customLots = usePortfolioStore(state => state.customLots);
 
-  const comparison = useMemo(() =>
-    calculateStrategyComparison(snapshot, customLots),
+  const comparison = useMemo(
+    () => calculateStrategyComparison(snapshot, customLots),
     [snapshot, customLots]
   );
 
   const seedAmount = snapshot.seedAmount ?? 0;
   const loadPortfolio = usePortfolioStore(state => state.loadPortfolio);
-  const handleLoadFile = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      const { snapshot: snap, customLots: lots } = await readSnapshotFile(file);
-      loadPortfolio(snap, lots);
-    } catch (err) {
-      console.error('Failed to load portfolio JSON', err);
-      alert('Failed to load portfolio JSON: ' + (err as Error).message);
-    }
-  }, [loadPortfolio]);
-
+  const handleLoadFile = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        const { snapshot: snap, customLots: lots } = await readSnapshotFile(file);
+        loadPortfolio(snap, lots);
+      } catch (err) {
+        console.error('Failed to load portfolio JSON', err);
+        alert('Failed to load portfolio JSON: ' + (err as Error).message);
+      }
+    },
+    [loadPortfolio]
+  );
 
   if (seedAmount <= 0) {
     return (
@@ -271,29 +329,56 @@ export const StrategyAnalysis: React.FC = () => {
 
       {/* Debug Section */}
       <details style={{ marginBottom: 16 }} open>
-        <summary style={{ cursor: 'pointer', fontWeight: 600 }}>Debug: Classification & Totals</summary>
+        <summary style={{ cursor: 'pointer', fontWeight: 600 }}>
+          Debug: Classification & Totals
+        </summary>
         <div style={{ padding: '8px 0' }}>
           <div style={{ display: 'flex', gap: 24, flexWrap: 'wrap' }}>
             <div>
-              <div>Seed Amount: <b>{formatCurrency(seedAmount)}</b></div>
-              <div>Total Dividends Received (all): <b>{formatCurrency(comparison.totalDividendsReceived)}</b></div>
-              <div>Dividends Reinvested (cost): <b>{formatCurrency(comparison.dividendsReinvested)}</b></div>
-              <div>Dividends from Reinvested Holdings: <b>{formatCurrency(comparison.dividendsFromReinvestedHoldings)}</b></div>
+              <div>
+                Seed Amount: <b>{formatCurrency(seedAmount)}</b>
+              </div>
+              <div>
+                Total Dividends Received (all):{' '}
+                <b>{formatCurrency(comparison.totalDividendsReceived)}</b>
+              </div>
+              <div>
+                Dividends Reinvested (cost): <b>{formatCurrency(comparison.dividendsReinvested)}</b>
+              </div>
+              <div>
+                Dividends from Reinvested Holdings:{' '}
+                <b>{formatCurrency(comparison.dividendsFromReinvestedHoldings)}</b>
+              </div>
             </div>
             <div>
-              <div>Current Portfolio Value: <b>{formatCurrency(comparison.currentPortfolioValue)}</b></div>
-              <div>Current Cash Balance: <b>{formatCurrency(comparison.currentCashBalance)}</b></div>
-              <div>Current Total Value: <b>{formatCurrency(comparison.currentTotalValue)}</b></div>
+              <div>
+                Current Portfolio Value: <b>{formatCurrency(comparison.currentPortfolioValue)}</b>
+              </div>
+              <div>
+                Current Cash Balance: <b>{formatCurrency(comparison.currentCashBalance)}</b>
+              </div>
+              <div>
+                Current Total Value: <b>{formatCurrency(comparison.currentTotalValue)}</b>
+              </div>
             </div>
             <div>
-              <div>Collection Portfolio Value: <b>{formatCurrency(comparison.collectionPortfolioValue)}</b></div>
-              <div>Collection Cash Balance: <b>{formatCurrency(comparison.collectionCashBalance)}</b></div>
-              <div>Collection Total Value: <b>{formatCurrency(comparison.collectionTotalValue)}</b></div>
+              <div>
+                Collection Portfolio Value:{' '}
+                <b>{formatCurrency(comparison.collectionPortfolioValue)}</b>
+              </div>
+              <div>
+                Collection Cash Balance: <b>{formatCurrency(comparison.collectionCashBalance)}</b>
+              </div>
+              <div>
+                Collection Total Value: <b>{formatCurrency(comparison.collectionTotalValue)}</b>
+              </div>
             </div>
           </div>
 
           <div style={{ marginTop: 12 }}>
-            <div style={{ fontWeight: 600, marginBottom: 6 }}>Funding Classification Timeline (first 25)</div>
+            <div style={{ fontWeight: 600, marginBottom: 6 }}>
+              Funding Classification Timeline (first 25)
+            </div>
             <table className="comparison-table" style={{ fontSize: 12 }}>
               <thead>
                 <tr>
@@ -328,7 +413,9 @@ export const StrategyAnalysis: React.FC = () => {
         <div className="impact-highlight">
           <div className="impact-value">
             <span className="label">Your Reinvestment Benefit</span>
-            <span className={`value ${comparison.reinvestmentBenefit >= 0 ? 'positive' : 'negative'}`}>
+            <span
+              className={`value ${comparison.reinvestmentBenefit >= 0 ? 'positive' : 'negative'}`}
+            >
               {comparison.reinvestmentBenefit >= 0 ? '+' : ''}
               {formatCurrency(comparison.reinvestmentBenefit)}
             </span>
@@ -346,8 +433,16 @@ export const StrategyAnalysis: React.FC = () => {
           <thead>
             <tr>
               <th>Metric</th>
-              <th>Current Strategy<br/><span className="subtitle">(Reinvested)</span></th>
-              <th>Collection Strategy<br/><span className="subtitle">(What-If)</span></th>
+              <th>
+                Current Strategy
+                <br />
+                <span className="subtitle">(Reinvested)</span>
+              </th>
+              <th>
+                Collection Strategy
+                <br />
+                <span className="subtitle">(What-If)</span>
+              </th>
               <th>Difference</th>
             </tr>
           </thead>
@@ -383,13 +478,21 @@ export const StrategyAnalysis: React.FC = () => {
               <td>Dividends from Reinvested Holdings</td>
               <td>{formatCurrency(comparison.dividendsFromReinvestedHoldings)}</td>
               <td>{formatCurrency(0)}</td>
-              <td className="positive">+{formatCurrency(comparison.dividendsFromReinvestedHoldings)}</td>
+              <td className="positive">
+                +{formatCurrency(comparison.dividendsFromReinvestedHoldings)}
+              </td>
             </tr>
             <tr>
               <td>Dividends Kept as Cash</td>
               <td>{formatCurrency(comparison.currentCashBalance)}</td>
               <td>{formatCurrency(comparison.collectionCashBalance)}</td>
-              <td className={comparison.currentCashBalance < comparison.collectionCashBalance ? 'negative' : 'neutral'}>
+              <td
+                className={
+                  comparison.currentCashBalance < comparison.collectionCashBalance
+                    ? 'negative'
+                    : 'neutral'
+                }
+              >
                 {formatCurrency(comparison.currentCashBalance - comparison.collectionCashBalance)}
               </td>
             </tr>
@@ -402,24 +505,44 @@ export const StrategyAnalysis: React.FC = () => {
               <td>Portfolio Market Value</td>
               <td>{formatCurrency(comparison.currentPortfolioValue)}</td>
               <td>{formatCurrency(comparison.collectionPortfolioValue)}</td>
-              <td className={comparison.currentPortfolioValue > comparison.collectionPortfolioValue ? 'positive' : 'negative'}>
+              <td
+                className={
+                  comparison.currentPortfolioValue > comparison.collectionPortfolioValue
+                    ? 'positive'
+                    : 'negative'
+                }
+              >
                 {comparison.currentPortfolioValue > comparison.collectionPortfolioValue ? '+' : ''}
-                {formatCurrency(comparison.currentPortfolioValue - comparison.collectionPortfolioValue)}
+                {formatCurrency(
+                  comparison.currentPortfolioValue - comparison.collectionPortfolioValue
+                )}
               </td>
             </tr>
             <tr>
               <td>Cash Balance</td>
               <td>{formatCurrency(comparison.currentCashBalance)}</td>
               <td>{formatCurrency(comparison.collectionCashBalance)}</td>
-              <td className={comparison.currentCashBalance > comparison.collectionCashBalance ? 'positive' : 'negative'}>
+              <td
+                className={
+                  comparison.currentCashBalance > comparison.collectionCashBalance
+                    ? 'positive'
+                    : 'negative'
+                }
+              >
                 {comparison.currentCashBalance > comparison.collectionCashBalance ? '+' : ''}
                 {formatCurrency(comparison.currentCashBalance - comparison.collectionCashBalance)}
               </td>
             </tr>
             <tr className="highlight-row">
-              <td><strong>Total Account Value</strong></td>
-              <td><strong>{formatCurrency(comparison.currentTotalValue)}</strong></td>
-              <td><strong>{formatCurrency(comparison.collectionTotalValue)}</strong></td>
+              <td>
+                <strong>Total Account Value</strong>
+              </td>
+              <td>
+                <strong>{formatCurrency(comparison.currentTotalValue)}</strong>
+              </td>
+              <td>
+                <strong>{formatCurrency(comparison.collectionTotalValue)}</strong>
+              </td>
               <td className={comparison.valueDifference >= 0 ? 'positive' : 'negative'}>
                 <strong>
                   {comparison.valueDifference >= 0 ? '+' : ''}
@@ -445,9 +568,17 @@ export const StrategyAnalysis: React.FC = () => {
               <td>Portfolio Dividend Yield</td>
               <td>{formatPercent(comparison.currentDividendYield)}</td>
               <td>{formatPercent(comparison.collectionDividendYield)}</td>
-              <td className={comparison.currentDividendYield > comparison.collectionDividendYield ? 'positive' : 'negative'}>
+              <td
+                className={
+                  comparison.currentDividendYield > comparison.collectionDividendYield
+                    ? 'positive'
+                    : 'negative'
+                }
+              >
                 {comparison.currentDividendYield > comparison.collectionDividendYield ? '+' : ''}
-                {formatPercent(comparison.currentDividendYield - comparison.collectionDividendYield)}
+                {formatPercent(
+                  comparison.currentDividendYield - comparison.collectionDividendYield
+                )}
               </td>
             </tr>
           </tbody>
@@ -460,7 +591,9 @@ export const StrategyAnalysis: React.FC = () => {
         <div className="explanation-grid">
           <div className="explanation-card">
             <h4>Current Strategy (Reinvested)</h4>
-            <p>Your actual portfolio where dividends have been used to purchase additional shares.</p>
+            <p>
+              Your actual portfolio where dividends have been used to purchase additional shares.
+            </p>
             <ul>
               <li>Benefits from compound growth</li>
               <li>Increases future dividend income</li>
@@ -469,7 +602,9 @@ export const StrategyAnalysis: React.FC = () => {
           </div>
           <div className="explanation-card">
             <h4>Collection Strategy (What-If)</h4>
-            <p>Hypothetical scenario where all dividends were kept as cash instead of reinvested.</p>
+            <p>
+              Hypothetical scenario where all dividends were kept as cash instead of reinvested.
+            </p>
             <ul>
               <li>More liquid cash available</li>
               <li>Same dividend yield on original holdings</li>
@@ -481,4 +616,3 @@ export const StrategyAnalysis: React.FC = () => {
     </div>
   );
 };
-

@@ -231,7 +231,10 @@ const isPortfolioSnapshot = (value: unknown): value is PortfolioSnapshot => {
   if (typeof value !== 'object' || value === null) return false;
   const obj = value as Record<string, unknown>;
   // Support both old 'equities' and new 'equityMetadata' field names
-  return typeof obj.asOf === 'string' && (Array.isArray(obj.equities) || Array.isArray(obj.equityMetadata));
+  return (
+    typeof obj.asOf === 'string' &&
+    (Array.isArray(obj.equities) || Array.isArray(obj.equityMetadata))
+  );
 };
 
 const parseStoredSnapshot = (data: unknown): PortfolioSnapshot | null => {

@@ -44,7 +44,10 @@ describe('portfolioStore', () => {
     // Reset the store to initial state
     const { result } = renderHook(() => usePortfolioStore());
     act(() => {
-      result.current.loadPortfolio({ asOf: '2025-01-01', seedAmount: 10000, equityMetadata: [] }, []);
+      result.current.loadPortfolio(
+        { asOf: '2025-01-01', seedAmount: 10000, equityMetadata: [] },
+        []
+      );
     });
   });
 
