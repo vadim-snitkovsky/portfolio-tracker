@@ -13,8 +13,8 @@ Thank you for your interest in contributing to Portfolio Tracker! This document 
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- npm >= 8.0.0
+- Node.js >= 20.0.0
+- npm >= 9.0.0
 - Git
 
 ### Setup Development Environment
@@ -35,7 +35,7 @@ Thank you for your interest in contributing to Portfolio Tracker! This document 
 3. **Add upstream remote**
 
    ```bash
-   git remote add upstream https://github.com/ORIGINAL_OWNER/portfolio-tracker.git
+   git remote add upstream https://github.com/vadim-snitkovsky/portfolio-tracker.git
    ```
 
 4. **Install dependencies**

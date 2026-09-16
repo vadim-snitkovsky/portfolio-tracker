@@ -20,13 +20,13 @@ We take the security of Portfolio Tracker seriously. If you believe you have fou
 
 ### Please Do
 
-1. **Email us directly** at [(https://github.com/vadim-snitkovsky)] with:
+1. **Contact the maintainer privately** via [GitHub](https://github.com/vadim-snitkovsky) with:
    - Description of the vulnerability
    - Steps to reproduce the issue
    - Potential impact
    - Suggested fix (if any)
 
-2. **Allow us time to respond** - We will acknowledge your email within 48 hours and provide a more detailed response within 7 days.
+2. **Allow us time to respond** - We will acknowledge your report within 48 hours and provide a more detailed response within 7 days.
 
 3. **Work with us** - We may ask for additional information or guidance.
 

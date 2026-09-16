@@ -1,13 +1,13 @@
-# Dividend Portfolio Command Center
+# Dividend Portfolio Facts
 
 [![CI](https://github.com/vadim-snitkovsky/portfolio-tracker/workflows/CI/badge.svg)](https://github.com/vadim-snitkovsky/portfolio-tracker/actions)
-[![codecov](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker/branch/main/graph/badge.svg?token=0daabe2c-a1a4-46fd-abf6-bd317bf499af)](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker)
+[![codecov](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker/branch/main/graph/badge.svg)](https://codecov.io/gh/vadim-snitkovsky/portfolio-tracker)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 [![React](https://img.shields.io/badge/React-19.1-61dafb.svg)](https://reactjs.org/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
-A modern React 18 + TypeScript web app for monitoring income-oriented equity portfolios. Track performance, dividend cash flow, NAV erosion, and manage multiple portfolios with ease.
+A modern React 19 + TypeScript web app for monitoring income-oriented equity portfolios. Track performance, dividend cash flow, NAV erosion, and manage multiple portfolios with ease.
 
 ## ✨ Key Features
 
@@ -43,7 +43,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 
 - **One-click price refresh** - Updates all positions with latest market prices
 - **Automatic NAV history** - Fetches 12 months of monthly price data for erosion tracking
-- **One-click dividend refresh** - Pulls last 12 months of dividend history automatically
+- **One-click dividend refresh** - Pulls dividend history back to your earliest purchase or seed date
 - **Error handling** - Graceful fallback if symbols can't be fetched
 
 ### 📝 Holdings Management
@@ -63,7 +63,7 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 
 ## 🛠️ Tech Stack
 
-- **Frontend**: React 18 + TypeScript
+- **Frontend**: React 19 + TypeScript
 - **Build Tool**: Vite
 - **State Management**: Zustand
 - **Styling**: Vanilla CSS
@@ -74,8 +74,8 @@ A modern React 18 + TypeScript web app for monitoring income-oriented equity por
 
 ### Prerequisites
 
-- Node.js >= 18.0.0
-- npm >= 8.0.0
+- Node.js >= 20.0.0
+- npm >= 9.0.0
 - Polygon.io API key (free tier available at https://polygon.io/)
 
 ### Environment Setup
@@ -117,6 +117,8 @@ npm run build
 Then open http://localhost:5174 (or the URL shown in your terminal) to explore the dashboard.
 
 ## 🐳 Docker Deployment
+
+See [DOCKER.md](DOCKER.md) for the full guide, including troubleshooting, reverse proxy, and SSL setup.
 
 ### Using Docker Compose (Recommended)
 
@@ -190,7 +192,7 @@ docker-compose ps
 
 ```
 portfolio-tracker/
-├── src/
+├── src/                      # *.test.ts(x) files sit next to the code they test
 │   ├── components/
 │   │   ├── common/           # Shared UI (DataMenu, PortfolioManager)
 │   │   └── portfolio/        # Portfolio-specific components
@@ -200,7 +202,6 @@ portfolio-tracker/
 │   ├── store/                # Zustand state management
 │   ├── types/                # TypeScript type definitions
 │   └── utils/                # Utility functions (formatters, storage)
-├── tests/                    # Test files (mirrors src structure)
 ├── .env.sample              # Environment variable template
 ├── .env                     # Your local environment (gitignored)
 ├── docker-compose.yml       # Docker Compose configuration
