@@ -10,6 +10,14 @@ const STORAGE_KEY_SNAPSHOT = 'portfolio-snapshot';
 const STORAGE_KEY_PORTFOLIOS = 'saved-portfolios';
 const STORAGE_KEY_ACTIVE_PORTFOLIO = 'active-portfolio-id';
 
+/** Every localStorage key this app writes, in the order "Clear all storage" removes them. */
+export const STORAGE_KEYS = [
+  STORAGE_KEY_SNAPSHOT,
+  STORAGE_KEY_LOTS,
+  STORAGE_KEY_PORTFOLIOS,
+  STORAGE_KEY_ACTIVE_PORTFOLIO,
+] as const;
+
 export const loadCustomLots = <T>(parser: (data: unknown) => T, fallback: T): T => {
   if (typeof window === 'undefined') return fallback;
 
@@ -36,7 +44,11 @@ export const persistCustomLots = <T>(value: T) => {
 
 export const clearCustomLots = () => {
   if (typeof window === 'undefined') return;
-  window.localStorage.removeItem(STORAGE_KEY_LOTS);
+  try {
+    window.localStorage.removeItem(STORAGE_KEY_LOTS);
+  } catch (error) {
+    console.warn('Failed to clear custom lots', error);
+  }
 };
 
 export const loadSnapshot = <T>(parser: (data: unknown) => T, fallback: T): T => {
@@ -65,7 +77,11 @@ export const persistSnapshot = <T>(value: T) => {
 
 export const clearSnapshot = () => {
   if (typeof window === 'undefined') return;
-  window.localStorage.removeItem(STORAGE_KEY_SNAPSHOT);
+  try {
+    window.localStorage.removeItem(STORAGE_KEY_SNAPSHOT);
+  } catch (error) {
+    console.warn('Failed to clear snapshot', error);
+  }
 };
 
 // Multi-portfolio management functions

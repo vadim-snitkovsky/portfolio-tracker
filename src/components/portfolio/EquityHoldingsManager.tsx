@@ -214,7 +214,7 @@ export const EquityHoldingsManager: React.FC = () => {
     setFormState({
       symbol: lot.symbol,
       shares: lot.shares.toString(),
-      pricePerShare: lot.pricePerShare.toString(),
+      pricePerShare: lot.pricePerShare.toFixed(2),
       tradeDate: lot.tradeDate,
       fundingSource: lot.fundingSource || 'seed',
     });

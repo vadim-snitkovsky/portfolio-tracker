@@ -148,6 +148,7 @@ interface PortfolioState {
   refreshDividends: () => Promise<DividendResult[]>;
   // Multi-portfolio management
   saveCurrentPortfolio: (name: string) => SavedPortfolio;
+  saveCurrentPortfolioAs: (name: string) => SavedPortfolio;
   loadSavedPortfolio: (id: string) => boolean;
   deleteSavedPortfolio: (id: string) => boolean;
   renameSavedPortfolio: (id: string, newName: string) => boolean;
@@ -538,6 +539,22 @@ export const usePortfolioStore = create<PortfolioState>((set, get) => ({
   saveCurrentPortfolio: (name: string) => {
     const state = get();
     const id = state.activePortfolioId || `portfolio-${Date.now()}`;
+
+    const saved = savePortfolio(id, name, state.snapshot, state.customLots);
+    setActivePortfolioId(id);
+
+    set({
+      activePortfolioId: id,
+      activePortfolioName: name,
+    });
+
+    return saved;
+  },
+
+  // Always writes a new entry, so "Save As" copies the active portfolio instead of renaming it.
+  saveCurrentPortfolioAs: (name: string) => {
+    const state = get();
+    const id = `portfolio-${Date.now()}`;
 
     const saved = savePortfolio(id, name, state.snapshot, state.customLots);
     setActivePortfolioId(id);

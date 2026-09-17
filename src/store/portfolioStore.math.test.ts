@@ -327,6 +327,22 @@ describe('refreshDividends', () => {
 });
 
 describe('saved portfolio bookkeeping', () => {
+  it('Save As writes a new entry even when a portfolio is active', () => {
+    usePortfolioStore.setState({ activePortfolioId: 'p1', activePortfolioName: 'One' });
+    const saved = usePortfolioStore.getState().saveCurrentPortfolioAs('Copy of One');
+    expect(saved.id).not.toBe('p1');
+    expect(saved.name).toBe('Copy of One');
+    expect(usePortfolioStore.getState().activePortfolioId).toBe(saved.id);
+    expect(usePortfolioStore.getState().activePortfolioName).toBe('Copy of One');
+  });
+
+  it('plain Save keeps writing to the active entry', () => {
+    usePortfolioStore.setState({ activePortfolioId: 'p1', activePortfolioName: 'One' });
+    const saved = usePortfolioStore.getState().saveCurrentPortfolio('One renamed');
+    expect(saved.id).toBe('p1');
+    expect(usePortfolioStore.getState().activePortfolioName).toBe('One renamed');
+  });
+
   it('clears the active portfolio when it is the one deleted', () => {
     usePortfolioStore.setState({ activePortfolioId: 'p1', activePortfolioName: 'One' });
     expect(usePortfolioStore.getState().deleteSavedPortfolio('p1')).toBe(true);

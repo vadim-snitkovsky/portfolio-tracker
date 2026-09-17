@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { ChangeEvent } from 'react';
 import { usePortfolioStore } from '../../store/portfolioStore';
+import { STORAGE_KEYS } from '../../utils/storage';
 import { formatDate } from '../../utils/formatters';
 import { readSnapshotFile } from '../../utils/portfolioImport';
 import { PortfolioManager } from './PortfolioManager';
@@ -178,8 +179,7 @@ export const DataMenu: React.FC = () => {
       )
     ) {
       try {
-        localStorage.removeItem('portfolio-snapshot');
-        localStorage.removeItem('portfolio-custom-lots');
+        STORAGE_KEYS.forEach(key => localStorage.removeItem(key));
         setStatus({
           type: 'success',
           message: 'Storage cleared. Reloading page...',

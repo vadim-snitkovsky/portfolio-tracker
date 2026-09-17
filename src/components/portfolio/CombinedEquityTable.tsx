@@ -360,7 +360,10 @@ export const CombinedEquityTable: React.FC = () => {
 
                           {/* Dividend History */}
                           <div className="equity-details-section">
-                            <h4>Dividend History ({row.dividendsWithShares.length} payments)</h4>
+                            <h4>
+                              Dividend History ({row.dividendsWithShares.length}{' '}
+                              {row.dividendsWithShares.length === 1 ? 'payment' : 'payments'})
+                            </h4>
                             {row.dividendsWithShares.length > 0 ? (
                               <div className="dividend-history-scroll">
                                 <table className="dividend-details-table">

@@ -24,6 +24,7 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
   const deleteSavedPortfolio = usePortfolioStore(state => state.deleteSavedPortfolio);
   const renameSavedPortfolio = usePortfolioStore(state => state.renameSavedPortfolio);
   const saveCurrentPortfolio = usePortfolioStore(state => state.saveCurrentPortfolio);
+  const saveCurrentPortfolioAs = usePortfolioStore(state => state.saveCurrentPortfolioAs);
   const createNewPortfolio = usePortfolioStore(state => state.createNewPortfolio);
 
   const portfolios = getSavedPortfolios();
@@ -46,8 +47,8 @@ export const PortfolioManager: React.FC<PortfolioManagerProps> = ({ isOpen, onCl
       return;
     }
 
-    saveCurrentPortfolio(saveAsName.trim());
-    setMessage({ type: 'success', text: `Saved portfolio as: ${saveAsName}` });
+    saveCurrentPortfolioAs(saveAsName.trim());
+    setMessage({ type: 'success', text: `Saved portfolio as: ${saveAsName.trim()}` });
     setSaveAsName('');
     setShowSaveAsForm(false);
   };
