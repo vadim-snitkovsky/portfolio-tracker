@@ -409,4 +409,156 @@ describe('portfolioImport', () => {
       await expect(readSnapshotFile(file)).rejects.toThrow();
     });
   });
+
+  describe('malformed entries', () => {
+    const validEquity = {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      sector: 'Technology',
+      shares: 100,
+      averageCost: 150,
+      currentPrice: 180,
+    };
+
+    const makeFile = (content: string): File => {
+      const file = new File([content], 'portfolio.json', { type: 'application/json' });
+      file.text = async () => content;
+      return file;
+    };
+
+    describe('parsePortfolioSnapshot', () => {
+      it('should parse the legacy equities array', () => {
+        const result = parsePortfolioSnapshot({ asOf: '2025-01-15', equities: [validEquity] });
+
+        expect(result.equityMetadata).toHaveLength(1);
+        expect(result.equityMetadata[0].symbol).toBe('AAPL');
+        expect(result).not.toHaveProperty('equities');
+      });
+
+      it('should prefer equityMetadata over legacy equities when both are present', () => {
+        const result = parsePortfolioSnapshot({
+          asOf: '2025-01-15',
+          equityMetadata: [validEquity],
+          equities: [{ ...validEquity, symbol: 'LEGACY' }],
+        });
+
+        expect(result.equityMetadata.map(equity => equity.symbol)).toEqual(['AAPL']);
+      });
+
+      it('should throw when equityMetadata is not an array and equities is absent', () => {
+        expect(() =>
+          parsePortfolioSnapshot({ asOf: '2025-01-15', equityMetadata: 'not an array' })
+        ).toThrow('Snapshot must contain equityMetadata or equities array');
+      });
+
+      it('should reject null or primitive equity entries', () => {
+        expect(() =>
+          parsePortfolioSnapshot({ asOf: '2025-01-15', equityMetadata: [null] })
+        ).toThrow('One or more equities contain invalid fields');
+        expect(() => parsePortfolioSnapshot({ asOf: '2025-01-15', equityMetadata: [42] })).toThrow(
+          'One or more equities contain invalid fields'
+        );
+      });
+
+      it('should drop null or primitive dividend entries', () => {
+        const result = parsePortfolioSnapshot({
+          asOf: '2025-01-15',
+          equityMetadata: [
+            {
+              ...validEquity,
+              dividends: [null, 'x', 7, { id: '1', date: '2025-01-01', amountPerShare: 0.25 }],
+            },
+          ],
+        });
+
+        expect(result.equityMetadata[0].dividends).toEqual([
+          { id: '1', date: '2025-01-01', amountPerShare: 0.25 },
+        ]);
+      });
+
+      it('should ignore a legacy amount that is not a number', () => {
+        const result = parsePortfolioSnapshot({
+          asOf: '2025-01-15',
+          equityMetadata: [
+            { ...validEquity, dividends: [{ id: '1', date: '2025-01-01', amount: '0.25' }] },
+          ],
+        });
+
+        expect(result.equityMetadata[0].dividends).toEqual([]);
+      });
+
+      it('should drop null or primitive navHistory entries', () => {
+        const result = parsePortfolioSnapshot({
+          asOf: '2025-01-15',
+          equityMetadata: [
+            { ...validEquity, navHistory: [null, 'x', 7, { date: '2025-01-01', value: 180 }] },
+          ],
+        });
+
+        expect(result.equityMetadata[0].navHistory).toEqual([{ date: '2025-01-01', value: 180 }]);
+      });
+    });
+
+    describe('readSnapshotFile', () => {
+      it('should reject JSON that is not an object', async () => {
+        await expect(readSnapshotFile(makeFile('null'))).rejects.toThrow(
+          'Snapshot must be an object'
+        );
+        await expect(readSnapshotFile(makeFile('"text"'))).rejects.toThrow(
+          'Snapshot must be an object'
+        );
+        await expect(readSnapshotFile(makeFile('42'))).rejects.toThrow(
+          'Snapshot must be an object'
+        );
+      });
+
+      it('should default customLots to an empty array when the wrapper has none', async () => {
+        const result = await readSnapshotFile(
+          makeFile(JSON.stringify({ snapshot: { asOf: '2025-01-15', equityMetadata: [] } }))
+        );
+
+        expect(result.snapshot.asOf).toBe('2025-01-15');
+        expect(result.customLots).toEqual([]);
+      });
+
+      it('should ignore customLots that is not an array', async () => {
+        const result = await readSnapshotFile(
+          makeFile(
+            JSON.stringify({
+              snapshot: { asOf: '2025-01-15', equityMetadata: [] },
+              customLots: 'not an array',
+            })
+          )
+        );
+
+        expect(result.customLots).toEqual([]);
+      });
+
+      it('should drop null or primitive custom lots', async () => {
+        const lot = {
+          id: '1',
+          symbol: 'AAPL',
+          tradeDate: '2025-01-01',
+          shares: 10,
+          pricePerShare: 150,
+        };
+        const result = await readSnapshotFile(
+          makeFile(
+            JSON.stringify({
+              snapshot: { asOf: '2025-01-15', equityMetadata: [] },
+              customLots: [null, 7, 'x', lot],
+            })
+          )
+        );
+
+        expect(result.customLots).toEqual([lot]);
+      });
+
+      it('should treat a wrapper whose snapshot is not an object as a bare snapshot', async () => {
+        await expect(
+          readSnapshotFile(makeFile(JSON.stringify({ snapshot: 'not an object' })))
+        ).rejects.toThrow('Snapshot requires an "asOf" ISO date string');
+      });
+    });
+  });
 });

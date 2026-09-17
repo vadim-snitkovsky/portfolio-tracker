@@ -513,4 +513,153 @@ describe('storage', () => {
       expect(localStorage.getItem('portfolio-snapshot')).toBeNull();
     });
   });
+
+  describe('when localStorage throws', () => {
+    // Browsers throw from Storage methods in private mode or when the quota is exhausted.
+    const quotaError = new Error('QuotaExceededError');
+    const throwQuota = () => {
+      throw quotaError;
+    };
+
+    const lots: PurchaseLot[] = [
+      { id: 'lot-1', symbol: 'AAPL', tradeDate: '2025-01-01', shares: 10, pricePerShare: 150 },
+    ];
+    const snapshot: PortfolioSnapshot = {
+      asOf: '2025-01-01',
+      seedAmount: 10000,
+      equityMetadata: [],
+    };
+    const portfolios: SavedPortfolio[] = [
+      {
+        id: 'portfolio-1',
+        name: 'Test',
+        snapshot,
+        customLots: lots,
+        createdAt: '2025-01-01T00:00:00Z',
+        updatedAt: '2025-01-01T00:00:00Z',
+      },
+    ];
+
+    it('persistCustomLots warns instead of throwing', () => {
+      vi.spyOn(localStorage, 'setItem').mockImplementation(throwQuota);
+
+      expect(() => persistCustomLots(lots)).not.toThrow();
+      expect(console.warn).toHaveBeenCalledWith('Failed to persist custom lots', quotaError);
+    });
+
+    it('persistSnapshot warns instead of throwing', () => {
+      vi.spyOn(localStorage, 'setItem').mockImplementation(throwQuota);
+
+      expect(() => persistSnapshot(snapshot)).not.toThrow();
+      expect(console.warn).toHaveBeenCalledWith('Failed to persist snapshot', quotaError);
+    });
+
+    it('saveSavedPortfolios warns instead of throwing', () => {
+      vi.spyOn(localStorage, 'setItem').mockImplementation(throwQuota);
+
+      expect(() => saveSavedPortfolios(portfolios)).not.toThrow();
+      expect(console.warn).toHaveBeenCalledWith('Failed to save portfolios', quotaError);
+    });
+
+    it('setActivePortfolioId warns when setItem throws', () => {
+      vi.spyOn(localStorage, 'setItem').mockImplementation(throwQuota);
+
+      expect(() => setActivePortfolioId('portfolio-1')).not.toThrow();
+      expect(console.warn).toHaveBeenCalledWith('Failed to set active portfolio ID', quotaError);
+    });
+
+    it('setActivePortfolioId warns when removeItem throws', () => {
+      vi.spyOn(localStorage, 'removeItem').mockImplementation(throwQuota);
+
+      expect(() => setActivePortfolioId(null)).not.toThrow();
+      expect(console.warn).toHaveBeenCalledWith('Failed to set active portfolio ID', quotaError);
+    });
+
+    it('getActivePortfolioId returns null and warns when getItem throws', () => {
+      vi.spyOn(localStorage, 'getItem').mockImplementation(throwQuota);
+
+      expect(getActivePortfolioId()).toBeNull();
+      expect(console.warn).toHaveBeenCalledWith('Failed to get active portfolio ID', quotaError);
+    });
+
+    it('loadSavedPortfolios returns an empty list and warns when getItem throws', () => {
+      vi.spyOn(localStorage, 'getItem').mockImplementation(throwQuota);
+
+      expect(loadSavedPortfolios()).toEqual([]);
+      expect(console.warn).toHaveBeenCalledWith('Failed to load saved portfolios', quotaError);
+    });
+
+    it('loadCustomLots returns the fallback and warns when getItem throws', () => {
+      vi.spyOn(localStorage, 'getItem').mockImplementation(throwQuota);
+      const parser = vi.fn((data: unknown) => data as PurchaseLot[]);
+
+      expect(loadCustomLots(parser, lots)).toBe(lots);
+      expect(parser).not.toHaveBeenCalled();
+      expect(console.warn).toHaveBeenCalledWith(
+        'Failed to load custom lots from storage',
+        quotaError
+      );
+    });
+
+    it('loadSnapshot returns the fallback and warns when getItem throws', () => {
+      vi.spyOn(localStorage, 'getItem').mockImplementation(throwQuota);
+      const parser = vi.fn((data: unknown) => data as PortfolioSnapshot);
+
+      expect(loadSnapshot(parser, snapshot)).toBe(snapshot);
+      expect(parser).not.toHaveBeenCalled();
+      expect(console.warn).toHaveBeenCalledWith('Failed to load snapshot from storage', quotaError);
+    });
+  });
+
+  describe('when window is undefined', () => {
+    // Every function guards on typeof window so the module can load during SSR or in a
+    // worker. Blanking the global is enough: typeof reports 'undefined' for it.
+    const fallbackLots: PurchaseLot[] = [
+      { id: 'lot-1', symbol: 'AAPL', tradeDate: '2025-01-01', shares: 10, pricePerShare: 150 },
+    ];
+    const fallbackSnapshot: PortfolioSnapshot = {
+      asOf: '2025-01-01',
+      seedAmount: 10000,
+      equityMetadata: [],
+    };
+
+    beforeEach(() => {
+      vi.stubGlobal('window', undefined);
+    });
+
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('load functions return their fallbacks without reading storage', () => {
+      const getItem = vi.spyOn(localStorage, 'getItem');
+      const parser = vi.fn((data: unknown) => data);
+
+      expect(loadCustomLots(parser, fallbackLots)).toBe(fallbackLots);
+      expect(loadSnapshot(parser, fallbackSnapshot)).toBe(fallbackSnapshot);
+      expect(loadSavedPortfolios()).toEqual([]);
+      expect(getActivePortfolioId()).toBeNull();
+
+      expect(parser).not.toHaveBeenCalled();
+      expect(getItem).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+
+    it('write and clear functions are no-ops', () => {
+      const setItem = vi.spyOn(localStorage, 'setItem');
+      const removeItem = vi.spyOn(localStorage, 'removeItem');
+
+      persistCustomLots(fallbackLots);
+      persistSnapshot(fallbackSnapshot);
+      saveSavedPortfolios([]);
+      setActivePortfolioId('portfolio-1');
+      setActivePortfolioId(null);
+      clearCustomLots();
+      clearSnapshot();
+
+      expect(setItem).not.toHaveBeenCalled();
+      expect(removeItem).not.toHaveBeenCalled();
+      expect(console.warn).not.toHaveBeenCalled();
+    });
+  });
 });

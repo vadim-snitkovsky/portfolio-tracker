@@ -24,25 +24,13 @@ export default defineConfig({
         '**/*.test.tsx',
         'src/main.tsx',
         'src/vite-env.d.ts',
-        // Exclude complex UI components from coverage thresholds
-        // These are tested but require extensive mocking
-        'src/components/common/DataMenu.tsx',
-        'src/components/common/PortfolioManager.tsx',
-        'src/pages/Dashboard.tsx',
-        'src/components/portfolio/EquityHoldingsManager.tsx',
-        'src/components/portfolio/CombinedEquityTable.tsx',
-        'src/components/portfolio/CashFlowReport.tsx',
-        'src/components/portfolio/StrategyAnalysis.tsx',
-        // Exclude storage.ts due to SSR checks (typeof window === 'undefined')
-        'src/utils/storage.ts',
+        'src/test/**',
       ],
       thresholds: {
-        lines: 85,
-        functions: 85,
-        // Vitest 4+ remaps V8 coverage with an AST-based method that counts branches
-        // more strictly than the old v8-to-istanbul path. Measured 72.8% at the switch.
-        branches: 70,
-        statements: 85,
+        lines: 95,
+        functions: 95,
+        branches: 90,
+        statements: 95,
       },
     },
   },
