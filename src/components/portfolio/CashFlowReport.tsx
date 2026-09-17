@@ -5,39 +5,8 @@ import {
   usePortfolioStore,
 } from '../../store/portfolioStore';
 import { formatCurrency, formatDate, formatPercent } from '../../utils/formatters';
-
-interface DividendTransaction {
-  id: string;
-  symbol: string;
-  name: string;
-  date: string;
-  shares: number;
-  amountPerShare: number;
-  totalAmount: number;
-}
-
-interface PurchaseTransaction {
-  id: string;
-  symbol: string;
-  date: string;
-  shares: number;
-  pricePerShare: number;
-  totalCost: number;
-}
-
-interface MonthlyData {
-  month: string; // YYYY-MM format
-  monthLabel: string; // "Jan 2025" format
-  cashInvested: number;
-  dividendsReceived: number;
-  netCashFlow: number;
-  cumulativeCashInvested: number;
-  cumulativeDividends: number;
-  purchaseCount: number;
-  dividendCount: number;
-  dividendTransactions: DividendTransaction[];
-  purchaseTransactions: PurchaseTransaction[];
-}
+import { buildMonthlyCashFlow, summarizeCashFlow } from '../../utils/cashFlow';
+import { summarizeAccount } from '../../utils/portfolioMath';
 
 export const CashFlowReport: React.FC = () => {
   const snapshot = usePortfolioStore(state => state.snapshot);
@@ -54,7 +23,7 @@ export const CashFlowReport: React.FC = () => {
   const [editSeedDate, setEditSeedDate] = useState('');
 
   const seedAmount = snapshot.seedAmount ?? 0;
-  const seedDate = snapshot.seedDate ?? '2025-02-10';
+  const seedDate = snapshot.seedDate;
 
   // Calculate current portfolio value
   const currentPortfolioValue = useMemo(() => {
@@ -67,7 +36,7 @@ export const CashFlowReport: React.FC = () => {
 
   const handleEditSeed = () => {
     setEditSeedAmount(seedAmount.toString());
-    setEditSeedDate(seedDate);
+    setEditSeedDate(seedDate ?? '');
     setIsEditingSeed(true);
   };
 
@@ -76,7 +45,7 @@ export const CashFlowReport: React.FC = () => {
     setSnapshot({
       ...snapshot,
       seedAmount: newSeedAmount,
-      seedDate: editSeedDate,
+      seedDate: editSeedDate || undefined,
     });
     setIsEditingSeed(false);
   };
@@ -85,142 +54,28 @@ export const CashFlowReport: React.FC = () => {
     setIsEditingSeed(false);
   };
 
-  // Calculate monthly cash flow data
-  const monthlyData = useMemo(() => {
-    const monthMap = new Map<string, MonthlyData>();
+  const monthlyData = useMemo(
+    () => buildMonthlyCashFlow(customLots, equityViews),
+    [customLots, equityViews]
+  );
 
-    // Process all purchase lots
-    customLots.forEach(lot => {
-      const date = new Date(lot.tradeDate + 'T00:00:00');
-      const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-      const monthLabel = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-
-      if (!monthMap.has(monthKey)) {
-        monthMap.set(monthKey, {
-          month: monthKey,
-          monthLabel,
-          cashInvested: 0,
-          dividendsReceived: 0,
-          netCashFlow: 0,
-          cumulativeCashInvested: 0,
-          cumulativeDividends: 0,
-          purchaseCount: 0,
-          dividendCount: 0,
-          dividendTransactions: [],
-          purchaseTransactions: [],
-        });
-      }
-
-      const data = monthMap.get(monthKey)!;
-      const totalCost = lot.shares * lot.pricePerShare;
-      data.cashInvested += totalCost;
-      data.purchaseCount += 1;
-
-      // Add purchase transaction details
-      data.purchaseTransactions.push({
-        id: lot.id,
-        symbol: lot.symbol,
-        date: lot.tradeDate,
-        shares: lot.shares,
-        pricePerShare: lot.pricePerShare,
-        totalCost,
-      });
-    });
-
-    // Process all dividends
-    equityViews.forEach(view => {
-      const { position, earliestAcquisitionDate, dividendsWithShares } = view;
-
-      dividendsWithShares.forEach(dividend => {
-        // Only count dividends on or after earliest acquisition date
-        if (earliestAcquisitionDate && dividend.date >= earliestAcquisitionDate) {
-          const date = new Date(dividend.date + 'T00:00:00');
-          const monthKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-          const monthLabel = date.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
-
-          if (!monthMap.has(monthKey)) {
-            monthMap.set(monthKey, {
-              month: monthKey,
-              monthLabel,
-              cashInvested: 0,
-              dividendsReceived: 0,
-              netCashFlow: 0,
-              cumulativeCashInvested: 0,
-              cumulativeDividends: 0,
-              purchaseCount: 0,
-              dividendCount: 0,
-              dividendTransactions: [],
-              purchaseTransactions: [],
-            });
-          }
-
-          const data = monthMap.get(monthKey)!;
-          const totalAmount = dividend.amountPerShare * dividend.sharesOwned;
-          data.dividendsReceived += totalAmount;
-          data.dividendCount += 1;
-
-          // Add transaction details
-          data.dividendTransactions.push({
-            id: dividend.id,
-            symbol: position.symbol,
-            name: position.name,
-            date: dividend.date,
-            shares: dividend.sharesOwned,
-            amountPerShare: dividend.amountPerShare,
-            totalAmount,
-          });
-        }
-      });
-    });
-
-    // Sort by month and calculate cumulative values
-    const sortedMonths = Array.from(monthMap.values()).sort((a, b) =>
-      a.month.localeCompare(b.month)
-    );
-
-    let cumulativeCash = 0;
-    let cumulativeDivs = 0;
-
-    sortedMonths.forEach(data => {
-      cumulativeCash += data.cashInvested;
-      cumulativeDivs += data.dividendsReceived;
-      data.cumulativeCashInvested = cumulativeCash;
-      data.cumulativeDividends = cumulativeDivs;
-      data.netCashFlow = data.dividendsReceived - data.cashInvested;
-    });
-
-    return sortedMonths;
-  }, [customLots, equityViews]);
-
-  // Calculate totals
   const totals = useMemo(() => {
-    const totalCashInvested = monthlyData.reduce((sum, m) => sum + m.cashInvested, 0);
-    const totalDividends = monthlyData.reduce((sum, m) => sum + m.dividendsReceived, 0);
-    const netCashFlow = totalDividends - totalCashInvested;
-    const totalPurchases = monthlyData.reduce((sum, m) => sum + m.purchaseCount, 0);
-    const totalDividendPayments = monthlyData.reduce((sum, m) => sum + m.dividendCount, 0);
-
-    // New calculations (as percentages for formatPercent, which divides by 100)
-    const dividendROI = seedAmount > 0 ? (totalDividends / seedAmount) * 100 : 0;
-
-    // Cash balance derived from seed - invested + dividends
-    const currentCashBalance = seedAmount - totalCashInvested + totalDividends;
-
-    // True ROI is based on portfolio market value vs initial seed
-    const trueROI = seedAmount > 0 ? ((currentPortfolioValue - seedAmount) / seedAmount) * 100 : 0;
-
+    const flow = summarizeCashFlow(monthlyData);
+    const account = summarizeAccount({
+      seedAmount,
+      lots: customLots,
+      dividendsReceived: flow.totalDividends,
+      marketValue: currentPortfolioValue,
+    });
     return {
-      totalCashInvested,
-      totalDividends,
-      netCashFlow,
-      totalPurchases,
-      totalDividendPayments,
-      returnOnInvestment: totalCashInvested > 0 ? (totalDividends / totalCashInvested) * 100 : 0,
-      dividendROI,
-      trueROI,
-      currentCashBalance,
+      ...flow,
+      contributions: account.contributions,
+      externalContributions: account.externalContributions,
+      currentCashBalance: account.cashBalance,
+      dividendROI: account.dividendReturnPercent,
+      trueROI: account.returnPercent,
     };
-  }, [monthlyData, seedAmount, currentPortfolioValue]);
+  }, [monthlyData, customLots, seedAmount, currentPortfolioValue]);
 
   return (
     <div className="cash-flow-report">
@@ -232,7 +87,9 @@ export const CashFlowReport: React.FC = () => {
             <>
               <div className="metric-tile__value">{formatCurrency(seedAmount)}</div>
               <div className="metric-tile__trend">
-                <span className="metric-tile__trend-label">{formatDate(seedDate)}</span>
+                <span className="metric-tile__trend-label">
+                  {seedDate ? formatDate(seedDate) : 'Date not set'}
+                </span>
               </div>
               <button
                 onClick={handleEditSeed}
@@ -368,15 +225,21 @@ export const CashFlowReport: React.FC = () => {
 
         <div className="metric-tile">
           <div className="metric-tile__label">Current Cash Balance</div>
-          <div className="metric-tile__value">{formatCurrency(totals.currentCashBalance)}</div>
+          <div className="metric-tile__value">
+            {totals.contributions > 0 ? formatCurrency(totals.currentCashBalance) : '—'}
+          </div>
           <div className="metric-tile__trend">
-            <span className="metric-tile__trend-label">Seed - Invested + Dividends</span>
+            <span className="metric-tile__trend-label">
+              {totals.contributions > 0
+                ? 'Seed + external deposits - invested + dividends'
+                : 'Set initial seed to calculate'}
+            </span>
           </div>
         </div>
 
         <div className="metric-tile">
           <div className="metric-tile__label">Dividend ROI</div>
-          {seedAmount > 0 ? (
+          {totals.contributions > 0 ? (
             <>
               <div className="metric-tile__value">
                 {totals.dividendROI >= 0 ? '+' : ''}
@@ -384,7 +247,7 @@ export const CashFlowReport: React.FC = () => {
               </div>
               <div className="metric-tile__trend">
                 <span className="metric-tile__trend-label metric-tile__trend-positive">
-                  Dividends / Initial Seed
+                  Dividends / contributed capital
                 </span>
               </div>
             </>
@@ -402,7 +265,7 @@ export const CashFlowReport: React.FC = () => {
 
         <div className="metric-tile">
           <div className="metric-tile__label">True ROI</div>
-          {seedAmount > 0 ? (
+          {totals.contributions > 0 ? (
             <>
               <div
                 className="metric-tile__value"
@@ -421,7 +284,7 @@ export const CashFlowReport: React.FC = () => {
                       : 'metric-tile__trend-negative'
                   }
                 >
-                  (Market Value - Seed) / Seed
+                  (Market value + cash - contributed) / contributed
                 </span>
               </div>
             </>
@@ -457,23 +320,16 @@ export const CashFlowReport: React.FC = () => {
           <tbody>
             {monthlyData.map(data => {
               const isExpanded = expandedMonth === data.month;
-              const hasTransactions =
-                data.dividendTransactions.length > 0 || data.purchaseTransactions.length > 0;
-
               return (
                 <Fragment key={data.month}>
                   <tr
-                    onClick={() =>
-                      hasTransactions && setExpandedMonth(isExpanded ? null : data.month)
-                    }
-                    style={{ cursor: hasTransactions ? 'pointer' : 'default' }}
+                    onClick={() => setExpandedMonth(isExpanded ? null : data.month)}
+                    style={{ cursor: 'pointer' }}
                     className={isExpanded ? 'expanded-row' : ''}
                   >
                     <td>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-                        {hasTransactions && (
-                          <span style={{ fontSize: '0.8rem' }}>{isExpanded ? '▼' : '▶'}</span>
-                        )}
+                        <span style={{ fontSize: '0.8rem' }}>{isExpanded ? '▼' : '▶'}</span>
                         {data.monthLabel}
                       </div>
                     </td>
@@ -497,7 +353,7 @@ export const CashFlowReport: React.FC = () => {
                     <td style={{ textAlign: 'right' }}>{data.purchaseCount}</td>
                     <td style={{ textAlign: 'right' }}>{data.dividendCount}</td>
                   </tr>
-                  {isExpanded && hasTransactions && (
+                  {isExpanded && (
                     <tr key={`${data.month}-details`} className="dividend-details-row">
                       <td colSpan={8} style={{ padding: 0 }}>
                         <div

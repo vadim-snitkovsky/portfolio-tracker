@@ -1,10 +1,7 @@
 import { useMemo } from 'react';
-import {
-  calculateEquityMetrics,
-  deriveEquityViews,
-  usePortfolioStore,
-} from '../../store/portfolioStore';
+import { deriveEquityViews, usePortfolioStore } from '../../store/portfolioStore';
 import { formatCurrency, formatDate } from '../../utils/formatters';
+import { trailingTwelveMonthDividends } from '../../utils/portfolioMath';
 
 export const RecentDividendsList: React.FC = () => {
   const snapshot = usePortfolioStore(state => state.snapshot);
@@ -15,27 +12,26 @@ export const RecentDividendsList: React.FC = () => {
     [snapshot, customLots]
   );
 
-  const payouts = useMemo(() => {
-    return activeViews
-      .flatMap(view =>
-        view.position.dividends.map(dividend => ({
-          symbol: view.position.symbol,
-          name: view.position.name,
-          amountPerShare: dividend.amountPerShare,
-          totalAmount: dividend.amountPerShare * view.position.shares,
-          date: dividend.date,
-        }))
-      )
-      .sort((a, b) => Number(new Date(b.date)) - Number(new Date(a.date)))
-      .slice(0, 8);
-  }, [activeViews]);
+  // The eight most recent payments, each sized by the shares owned before its ex-dividend date.
+  const payouts = useMemo(
+    () =>
+      activeViews
+        .flatMap(view =>
+          view.dividendsWithShares.map(dividend => ({
+            id: dividend.id,
+            symbol: view.position.symbol,
+            name: view.position.name,
+            totalAmount: dividend.amountPerShare * dividend.sharesOwned,
+            date: dividend.date,
+          }))
+        )
+        .sort((a, b) => b.date.localeCompare(a.date))
+        .slice(0, 8),
+    [activeViews]
+  );
 
   const trailingIncome = useMemo(
-    () =>
-      activeViews.reduce((acc, view) => {
-        const metrics = calculateEquityMetrics(view.position);
-        return acc + metrics.totalDividends;
-      }, 0),
+    () => trailingTwelveMonthDividends(activeViews, new Date()),
     [activeViews]
   );
 
@@ -43,11 +39,11 @@ export const RecentDividendsList: React.FC = () => {
     <div className="recent-dividends">
       <header className="recent-dividends__header">
         <h4>Recent Payouts</h4>
-        <span>{formatCurrency(trailingIncome)} in trailing income</span>
+        <span>{formatCurrency(trailingIncome)} in trailing 12-month income</span>
       </header>
       <ul className="recent-dividends__list">
         {payouts.map(payout => (
-          <li key={`${payout.symbol}-${payout.date}`}>
+          <li key={`${payout.symbol}-${payout.id}`}>
             <div>
               <div className="recent-dividends__symbol">{payout.symbol}</div>
               <div className="recent-dividends__name">{payout.name}</div>

@@ -58,27 +58,14 @@ const isCashPosition = (symbol: string): boolean => {
   return upper === 'CASH' || upper === 'SPAXX' || upper === 'FDRXX' || upper === 'FCASH';
 };
 
+/**
+ * Bring an older snapshot up to the current shape without mutating the input. The deprecated
+ * `equities` field becomes `equityMetadata`. A missing seed stays missing: the UI asks the user to
+ * set one rather than the app inventing a number, because every return figure divides by it.
+ */
 const migrateSnapshot = (snapshot: PortfolioSnapshot): PortfolioSnapshot => {
-  // Migrate old 'equities' field to 'equityMetadata'
-  if (!snapshot.equityMetadata && snapshot.equities) {
-    snapshot.equityMetadata = snapshot.equities;
-    delete snapshot.equities;
-  }
-
-  // Ensure equityMetadata exists
-  if (!snapshot.equityMetadata) {
-    snapshot.equityMetadata = [];
-  }
-
-  // Migrate old snapshots that don't have seedAmount/seedDate
-  if (snapshot.seedAmount === undefined) {
-    snapshot.seedAmount = samplePortfolio.seedAmount;
-  }
-  if (snapshot.seedDate === undefined) {
-    snapshot.seedDate = samplePortfolio.seedDate;
-  }
-
-  return snapshot;
+  const { equities, ...rest } = snapshot;
+  return { ...rest, equityMetadata: snapshot.equityMetadata ?? equities ?? [] };
 };
 
 const createSeedLotsFromSnapshot = (snapshot: PortfolioSnapshot): PurchaseLot[] =>
@@ -168,8 +155,13 @@ interface PortfolioState {
   createNewPortfolio: (name: string) => void;
 }
 
+// Use the shares owned on each payment date when the dividends carry that figure (deriveEquityViews
+// attaches it). Fall back to the position's current share count for raw snapshot data.
 const sumDividends = (dividends: DividendPayment[], shares: number): number =>
-  dividends.reduce((acc, payout) => acc + payout.amountPerShare * shares, 0);
+  dividends.reduce((acc, payout) => {
+    const owned = (payout as Partial<DividendPaymentWithShares>).sharesOwned;
+    return acc + payout.amountPerShare * (typeof owned === 'number' ? owned : shares);
+  }, 0);
 
 export const calculateEquityMetrics = (equity: EquityPosition): EquityMetrics => {
   const costBasis = equity.shares * equity.averageCost;
@@ -668,20 +660,21 @@ const getEarliestAcquisitionDate = (lots: PurchaseLot[]): string | undefined => 
   }, lots[0].tradeDate);
 };
 
+/**
+ * Keep only dividends the holder was entitled to. Dividend dates are ex-dividend dates, so shares
+ * must have been bought strictly before the date; a purchase on the ex-date does not qualify.
+ */
 const filterDividendsByAcquisitionDate = (
   dividends: DividendPayment[],
   acquisitionDate: string | undefined
 ): DividendPayment[] => {
   if (!acquisitionDate) return dividends;
-  return dividends.filter(dividend => dividend.date >= acquisitionDate);
+  return dividends.filter(dividend => dividend.date > acquisitionDate);
 };
 
-/**
- * Calculate the number of shares owned at a specific date based on purchase lots.
- * Only counts lots purchased on or before the given date.
- */
+/** Shares held before the given ex-dividend date: lots with a trade date strictly before it. */
 const calculateSharesAtDate = (lots: PurchaseLot[], date: string): number => {
-  return lots.filter(lot => lot.tradeDate <= date).reduce((total, lot) => total + lot.shares, 0);
+  return lots.filter(lot => lot.tradeDate < date).reduce((total, lot) => total + lot.shares, 0);
 };
 
 export const deriveEquityViews = (
@@ -692,7 +685,8 @@ export const deriveEquityViews = (
   const views: EquityWithLots[] = [];
 
   snapshot.equityMetadata.forEach(equity => {
-    const lots = lotsBySymbol.get(equity.symbol) ?? [];
+    const symbolKey = equity.symbol.toUpperCase();
+    const lots = lotsBySymbol.get(symbolKey) ?? [];
     const { totalShares, totalCost } = aggregateLots(lots);
     const earliestAcquisitionDate = getEarliestAcquisitionDate(lots);
 
@@ -722,12 +716,12 @@ export const deriveEquityViews = (
         ...equity,
         shares: combinedShares,
         averageCost: combinedShares === 0 ? equity.averageCost : combinedCost / combinedShares,
-        dividends: filteredDividends,
+        dividends: dividendsWithShares,
       };
     } else {
       combinedPosition = {
         ...equity,
-        dividends: filteredDividends,
+        dividends: dividendsWithShares,
       };
     }
 
@@ -740,13 +734,18 @@ export const deriveEquityViews = (
       dividendsWithShares,
     });
 
-    lotsBySymbol.delete(equity.symbol);
+    lotsBySymbol.delete(symbolKey);
   });
 
   lotsBySymbol.forEach((lots, symbol) => {
     const { totalShares, totalCost } = aggregateLots(lots);
     const averageCost = totalShares === 0 ? 0 : totalCost / totalShares;
     const earliestAcquisitionDate = getEarliestAcquisitionDate(lots);
+    // No quote yet for a lot-only symbol; the most recent trade price is the best placeholder.
+    const latestLot = lots.reduce(
+      (latest, lot) => (lot.tradeDate > latest.tradeDate ? lot : latest),
+      lots[0]
+    );
 
     const position: EquityPosition = {
       symbol,
@@ -754,7 +753,7 @@ export const deriveEquityViews = (
       sector: 'Manual Entry',
       shares: totalShares,
       averageCost,
-      currentPrice: lots[lots.length - 1]?.pricePerShare ?? averageCost,
+      currentPrice: latestLot?.pricePerShare ?? averageCost,
       dividends: [],
       navHistory: [],
     };
