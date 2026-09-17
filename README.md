@@ -9,6 +9,8 @@
 
 A modern React 19 + TypeScript web app for monitoring income-oriented equity portfolios. Track performance, dividend cash flow, NAV erosion, and manage multiple portfolios with ease.
 
+The [product spec](docs/product-spec.md) explains what the tool is for, what it is not, and how every displayed number is computed.
+
 ## ✨ Key Features
 
 ### 📊 Multi-Portfolio Management
@@ -38,6 +40,7 @@ A modern React 19 + TypeScript web app for monitoring income-oriented equity por
   - Average purchase price and total invested per equity
 - **Delete Dividends** - Remove incorrect dividend entries directly from the table
 - **Cumulative Tracking** - See running totals of invested capital and dividend income
+- **Account View** - Cash balance, dividend ROI, and true ROI measured against contributed capital (seed plus external deposits), with uninvested cash counted
 
 ### 🔄 Live Market Data (Polygon.io)
 
@@ -345,9 +348,9 @@ portfolio-tracker/
 
 ### 1. Portfolio Overview
 
-- **Key Metrics**: Market value, cost basis, total return, ROI
-- **Dividend Summary**: Total received, yield on cost, recent payments
-- **Recent Activity**: Last 10 dividend payments with dates and amounts
+- **Key Metrics**: Market value, cost basis, unrealized P&L, net total return with ROI
+- **Dividend Summary**: Dividends collected, sized by the shares owned on each payment date, with cumulative yield on cost
+- **Recent Payouts**: The last 8 dividend payments and the income received in the trailing 12 months
 
 ### 2. Equity Performance
 
@@ -394,7 +397,7 @@ Compares your portfolio with dividends reinvested (the current strategy) against
 
 ## 🧪 Testing
 
-The project includes comprehensive test coverage:
+Tests run on Vitest with Testing Library and jsdom:
 
 ```bash
 # Run all tests
@@ -410,14 +413,7 @@ npm test -- --coverage
 open coverage/index.html
 ```
 
-**Coverage target**: 85%+ across all modules
-
-**Test Statistics**:
-
-- 223 comprehensive tests
-- 93.5% line coverage
-- 96.1% function coverage
-- 85.55% branch coverage
+CI fails the build below 95% lines, 95% functions, 90% branches, or 95% statements. The financial math is asserted with hand-computed figures against the fixture in `src/test/fixtures.ts`; the formulas are written up in the [product spec](docs/product-spec.md).
 
 ## 🎨 Development Tools
 
